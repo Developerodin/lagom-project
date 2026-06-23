@@ -1,0 +1,4 @@
+.viewportBelowHeader {
+  height: calc(100svh - var(--header-height));
+  min-height: 18rem;
+}

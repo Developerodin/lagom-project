@@ -1,0 +1,124 @@
+.footer {
+  margin-top: auto;
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  padding-block: var(--space-48);
+  background-color: var(--color-primary);
+  background-image: url("/assets/home/footer.jpg");
+  background-size: cover;
+  background-position: right center;
+  background-repeat: no-repeat;
+  color: var(--color-paper);
+}
+
+.top {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--space-48);
+  padding-bottom: var(--space-48);
+}
+
+.brand {
+  flex-shrink: 0;
+  max-width: 20rem;
+}
+
+.logoLink {
+  display: inline-block;
+  line-height: 0;
+  transition: opacity var(--transition);
+}
+
+.logoLink:hover {
+  opacity: 0.75;
+}
+
+.logoLink:focus-visible {
+  outline: 2px solid var(--color-paper);
+  outline-offset: 4px;
+}
+
+.logoImage {
+  display: block;
+  width: auto;
+  height: 3.25rem;
+}
+
+.tagline {
+  margin-top: var(--space-16);
+  color: color-mix(in srgb, var(--color-paper) 70%, transparent);
+}
+
+.nav {
+  flex: 1;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.navList {
+  display: grid;
+  grid-template-columns: repeat(3, auto);
+  gap: var(--space-16) var(--space-48);
+  justify-content: end;
+}
+
+.navLink {
+  font-family: var(--font-heading);
+  font-size: var(--text-small);
+  font-weight: 500;
+  letter-spacing: var(--tracking-section);
+  text-transform: uppercase;
+  color: var(--color-paper);
+  transition: opacity var(--transition);
+}
+
+.navLink:hover {
+  opacity: 0.65;
+}
+
+.navLink:focus-visible {
+  outline: 2px solid var(--color-paper);
+  outline-offset: 4px;
+}
+
+.bottom {
+  padding-top: var(--space-32);
+}
+
+.copyright {
+  color: color-mix(in srgb, var(--color-paper) 55%, transparent);
+}
+
+@media (min-width: 993px) {
+  .logoImage {
+    height: 4rem;
+  }
+}
+
+@media (max-width: 992px) {
+  .navList {
+    grid-template-columns: repeat(3, auto);
+    gap: var(--space-16) var(--space-32);
+  }
+}
+
+@media (max-width: 768px) {
+  .top {
+    flex-direction: column;
+    gap: var(--space-32);
+  }
+
+  .nav {
+    justify-content: flex-start;
+    width: 100%;
+  }
+
+  .navList {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: var(--space-16) var(--space-24);
+    justify-content: start;
+    width: 100%;
+  }
+}

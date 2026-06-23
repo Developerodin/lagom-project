@@ -1,0 +1,255 @@
+.section {
+  width: 100%;
+  min-height: calc(100svh - var(--header-height));
+  background-color: var(--color-paper);
+}
+
+.layout {
+  display: grid;
+  grid-template-columns: minmax(0, 65fr) 1px minmax(0, 35fr);
+  align-items: stretch;
+  min-height: inherit;
+}
+
+.formCol,
+.infoCol {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  padding-block: clamp(var(--space-72), 10vh, var(--space-112));
+}
+
+.formCol {
+  padding-inline: var(--container-padding) clamp(var(--space-48), 6vw, var(--space-96));
+}
+
+.infoCol {
+  padding-inline: clamp(var(--space-48), 6vw, var(--space-96)) var(--container-padding);
+}
+
+.divider {
+  width: 1px;
+  background-color: var(--divider-color);
+  align-self: stretch;
+}
+
+.sectionTitle {
+  margin-bottom: clamp(var(--space-32), 4vh, var(--space-48));
+  font-family: var(--font-body);
+  font-size: clamp(1.75rem, 3vw, 2.25rem);
+  font-weight: 500;
+  font-style: normal;
+  line-height: 1.2;
+  letter-spacing: 0.01em;
+  text-transform: none;
+  color: var(--color-primary);
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-16);
+  width: 100%;
+  max-width: 100%;
+}
+
+.fieldRow {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--space-16);
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-8);
+  padding: var(--space-16) var(--space-16) var(--space-12);
+  border: 1px solid var(--border);
+  border-radius: var(--image-radius);
+  background-color: color-mix(in srgb, var(--color-primary) 4%, var(--color-paper));
+  transition: border-color var(--transition);
+}
+
+.field:focus-within {
+  border-color: color-mix(in srgb, var(--color-primary) 35%, transparent);
+}
+
+.fieldTextarea {
+  min-height: 10rem;
+}
+
+.fieldLabel {
+  font-family: var(--font-heading);
+  font-size: 0.8125rem;
+  font-weight: 400;
+  line-height: 1.4;
+  letter-spacing: 0.02em;
+  color: var(--text-secondary);
+}
+
+.fieldInput {
+  width: 100%;
+  min-width: 0;
+  padding: 0;
+  border: none;
+  background: transparent;
+  font-family: var(--font-heading);
+  font-size: var(--text-small);
+  font-weight: 400;
+  line-height: 1.5;
+  color: var(--color-primary);
+  resize: vertical;
+}
+
+.fieldInput:focus {
+  outline: none;
+}
+
+.fieldTextarea .fieldInput {
+  flex: 1;
+  min-height: 6rem;
+  resize: none;
+}
+
+.submitButton {
+  align-self: flex-start;
+  margin-top: var(--space-8);
+}
+
+.infoList {
+  display: flex;
+  flex-direction: column;
+  gap: clamp(var(--space-24), 3.5vh, var(--space-32));
+  width: 100%;
+  max-width: 24rem;
+}
+
+.infoItem {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-16);
+}
+
+.iconBox {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 2.75rem;
+  height: 2.75rem;
+  border-radius: var(--image-radius);
+  background-color: color-mix(in srgb, var(--color-primary) 6%, var(--color-paper));
+  color: var(--color-primary);
+}
+
+.iconSvg {
+  width: 1.125rem;
+  height: 1.125rem;
+}
+
+.infoText {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  min-width: 0;
+  padding-top: 0.125rem;
+}
+
+.infoLabel {
+  font-family: var(--font-heading);
+  font-size: var(--text-small);
+  font-weight: 600;
+  line-height: 1.4;
+  letter-spacing: 0.01em;
+  color: var(--color-primary);
+}
+
+.infoValue {
+  font-family: var(--font-heading);
+  font-size: var(--text-small);
+  font-weight: 400;
+  line-height: 1.55;
+  color: var(--text-secondary);
+  transition: color var(--transition);
+}
+
+a.infoValue:hover {
+  color: var(--color-primary);
+}
+
+@media (max-width: 992px) {
+  .layout {
+    grid-template-columns: 1fr;
+  }
+
+  .divider {
+    width: 100%;
+    height: 1px;
+    margin-inline: var(--container-padding);
+  }
+
+  .formCol {
+    width: 65%;
+    padding-block: var(--space-72) var(--space-48);
+    padding-inline: var(--container-padding);
+  }
+
+  .infoCol {
+    padding-block: var(--space-48) var(--space-72);
+    padding-inline: var(--container-padding);
+  }
+
+  .form,
+  .infoList {
+    max-width: 100%;
+  }
+}
+
+@media (max-width: 768px) {
+  .formCol {
+    width: 100%;
+  }
+  .section {
+    min-height: auto;
+  }
+
+  .formCol,
+  .infoCol {
+    padding-block: var(--space-48);
+  }
+
+  .infoCol {
+    padding-bottom: var(--space-72);
+  }
+
+  .fieldRow {
+    grid-template-columns: 1fr;
+  }
+
+  .sectionTitle {
+    margin-bottom: var(--space-24);
+  }
+}
+
+@media (max-width: 480px) {
+  .formCol,
+  .infoCol {
+    padding-block: var(--space-32);
+  }
+
+  .infoCol {
+    padding-bottom: var(--space-48);
+  }
+
+  .form {
+    gap: var(--space-12);
+  }
+
+  .fieldRow {
+    gap: var(--space-12);
+  }
+
+  .infoList {
+    gap: var(--space-24);
+  }
+}

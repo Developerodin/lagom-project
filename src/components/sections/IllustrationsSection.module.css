@@ -1,0 +1,145 @@
+.section {
+  width: 100%;
+}
+
+.layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  align-items: center;
+  column-gap: var(--grid-gap-column);
+  row-gap: var(--space-48);
+  width: 100%;
+}
+
+.imageCol,
+.contentCol {
+  min-width: 0;
+}
+
+.imageCol {
+  display: flex;
+  justify-content: center;
+}
+
+.imageComposition {
+  position: relative;
+  width: min(100%, 28rem);
+  aspect-ratio: 1;
+}
+
+.imageBack,
+.imageFront {
+  position: absolute;
+  overflow: hidden;
+  border-radius: calc(var(--image-radius) * 2.5);
+}
+
+.imageBack {
+  top: 0;
+  right: 0;
+  z-index: 1;
+  width: 72%;
+  aspect-ratio: 1;
+}
+
+.imageFront {
+  bottom: 0;
+  left: 0;
+  z-index: 2;
+  width: 72%;
+  aspect-ratio: 1;
+}
+
+.image {
+  object-fit: cover;
+  object-position: center;
+}
+
+.title {
+  max-width: none;
+  margin-bottom: var(--space-32);
+  font-family: var(--font-lora), serif;
+  font-size: clamp(2rem, 4vw, var(--text-service-heading));
+  font-weight: 500;
+  line-height: 1.15;
+  letter-spacing: 0.01em;
+  text-transform: none;
+  color: var(--color-paper);
+}
+
+.paragraphs {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-24);
+  margin-bottom: var(--paragraph-button-spacing);
+}
+
+.paragraph {
+  max-width: 36rem;
+  color: var(--color-paper);
+}
+
+.cta {
+  background-color: var(--color-paper);
+  color: var(--color-primary);
+}
+
+.cta:hover {
+  opacity: 0.88;
+}
+
+@media (max-width: 992px) {
+  .layout {
+    column-gap: var(--space-48);
+  }
+
+  .imageComposition {
+    width: min(100%, 22rem);
+  }
+}
+
+@media (max-width: 768px) {
+  .layout {
+    grid-template-columns: 1fr;
+    row-gap: var(--space-48);
+  }
+
+  .imageCol {
+    order: 1;
+  }
+
+  .contentCol {
+    order: 2;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .imageComposition {
+    width: min(100%, 20rem);
+  }
+
+  .title {
+    margin-bottom: var(--space-24);
+  }
+
+  .paragraphs {
+    gap: var(--space-16);
+    margin-bottom: var(--space-32);
+  }
+}
+
+@media (max-width: 480px) {
+  .layout {
+    row-gap: var(--space-32);
+  }
+
+  .imageComposition {
+    width: min(100%, 17.5rem);
+  }
+
+  .imageBack,
+  .imageFront {
+    border-radius: calc(var(--image-radius) * 2);
+  }
+}
