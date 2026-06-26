@@ -1,5 +1,6 @@
 import Image from "next/image";
 
+import { RevealOnScroll } from "@/components/ui/RevealOnScroll";
 import { theStudioSectionContent } from "@/content/about";
 import styles from "./TheStudioSection.module.css";
 
@@ -7,7 +8,8 @@ export function TheStudioSection() {
   const { title, paragraphs, image } = theStudioSectionContent;
 
   return (
-    <section
+    <RevealOnScroll
+      as="section"
       className={styles.section}
       aria-labelledby="the-studio-title"
     >
@@ -46,6 +48,6 @@ export function TheStudioSection() {
           </div>
         </div>
       </div>
-    </section>
+    </RevealOnScroll>
   );
 }

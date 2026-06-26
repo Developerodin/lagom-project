@@ -8,6 +8,7 @@ import philosophyFour from "../../../public/assets/home/philosophy/p4.png";
 import philosophyFive from "../../../public/assets/home/philosophy/p5.png";
 import philosophySix from "../../../public/assets/home/philosophy/p6.png";
 
+import { RevealOnScroll } from "@/components/ui/RevealOnScroll";
 import styles from "./OurPhilosophySection.module.css";
 
 type PhilosophyCard = {
@@ -51,7 +52,11 @@ const philosophyCards: PhilosophyCard[] = [
 
 export function OurPhilosophySection() {
   return (
-    <section className={styles.section} aria-labelledby="our-philosophy-title">
+    <RevealOnScroll
+      as="section"
+      className={styles.section}
+      aria-labelledby="our-philosophy-title"
+    >
       <div className="container">
         <h2
           id="our-philosophy-title"
@@ -75,6 +80,6 @@ export function OurPhilosophySection() {
           ))}
         </ul>
       </div>
-    </section>
+    </RevealOnScroll>
   );
 }

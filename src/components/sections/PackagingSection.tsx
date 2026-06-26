@@ -1,6 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 
+import { RevealOnScroll } from "@/components/ui/RevealOnScroll";
 import { packagingSectionContent } from "@/content/services";
 import styles from "./PackagingSection.module.css";
 
@@ -8,7 +9,8 @@ export function PackagingSection() {
   const { title, paragraphs, cta, images } = packagingSectionContent;
 
   return (
-    <section
+    <RevealOnScroll
+      as="section"
       className={`surface-accent section-md ${styles.section}`}
       aria-labelledby="packaging-title"
     >
@@ -56,6 +58,6 @@ export function PackagingSection() {
           </div>
         </div>
       </div>
-    </section>
+    </RevealOnScroll>
   );
 }

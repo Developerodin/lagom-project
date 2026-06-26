@@ -1,5 +1,6 @@
 import Image from "next/image";
 
+import { RevealOnScroll } from "@/components/ui/RevealOnScroll";
 import { ourProcessSectionContent } from "@/content/services";
 import styles from "./OurProcessSection.module.css";
 
@@ -11,7 +12,8 @@ export function OurProcessSection({ loraTitle = false }: OurProcessSectionProps)
   const { title, subtitle, steps } = ourProcessSectionContent;
 
   return (
-    <section
+    <RevealOnScroll
+      as="section"
       className={`section-md ${styles.section}`}
       aria-labelledby="our-process-title"
     >
@@ -50,7 +52,7 @@ export function OurProcessSection({ loraTitle = false }: OurProcessSectionProps)
           </ol>
         </div>
       </div>
-    </section>
+    </RevealOnScroll>
   );
 }
 

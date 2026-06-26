@@ -1,0 +1,36 @@
+# Lagom Design — Apache reverse proxy for Next.js
+#
+# Hostinger Node.js hosting usually auto-generates public_html/.htaccess.
+# Copy or adapt this file there if you need custom routing, or when using
+# Apache with a manually managed Node process.
+#
+# Requires: mod_rewrite, mod_proxy, mod_proxy_http, mod_headers
+#
+# Set APP_PORT to the port your Node app listens on (npm start uses PORT
+# from the environment; local default is 3000).
+
+# --- Force HTTPS ----------------------------------------------------------
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+  RewriteCond %{HTTPS} !=on
+  RewriteCond %{HTTP:X-Forwarded-Proto} !https
+  RewriteRule ^ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
+</IfModule>
+
+# --- Reverse proxy to Next.js ---------------------------------------------
+<IfModule mod_proxy.c>
+  ProxyPreserveHost On
+  ProxyRequests Off
+
+  ProxyPass / http://127.0.0.1:3000/
+  ProxyPassReverse / http://127.0.0.1:3000/
+</IfModule>
+
+# --- Block direct access to sensitive files in the document root ----------
+<FilesMatch "^(\.env|\.gitignore|package(-lock)?\.json|tsconfig\.json)$">
+  Require all denied
+</FilesMatch>
+
+<IfModule mod_rewrite.c>
+  RewriteRule ^(\.env|\.git|node_modules|prisma)(/|$) - [F,L]
+</IfModule>

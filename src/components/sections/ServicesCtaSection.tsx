@@ -1,5 +1,6 @@
 import Link from "next/link";
 
+import { RevealOnScroll } from "@/components/ui/RevealOnScroll";
 import { servicesCtaContent } from "@/content/services";
 import styles from "./ServicesCtaSection.module.css";
 
@@ -24,7 +25,8 @@ export function ServicesCtaSection() {
   );
 
   return (
-    <section
+    <RevealOnScroll
+      as="section"
       className={styles.section}
       aria-labelledby="services-cta-title"
     >
@@ -40,6 +42,6 @@ export function ServicesCtaSection() {
           </Link>
         </div>
       </div>
-    </section>
+    </RevealOnScroll>
   );
 }

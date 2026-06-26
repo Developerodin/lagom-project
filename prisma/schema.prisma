@@ -1,0 +1,67 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model WorkCategory {
+  id        String   @id @default(cuid())
+  name      String
+  slug      String   @unique
+  sortOrder Int      @default(0)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  works ClientWork[]
+}
+
+model ClientWork {
+  id          String   @id @default(cuid())
+  slug        String   @unique
+  title       String
+  cardImage   String
+  cardAlt     String
+  heroImage   String
+  heroAlt     String
+  description String   @db.Text
+  sortOrder   Int      @default(0)
+  published   Boolean  @default(true)
+  categoryId  String?
+  category    WorkCategory? @relation(fields: [categoryId], references: [id], onDelete: SetNull)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  gallery ClientWorkImage[]
+
+  @@index([categoryId])
+}
+
+model ClientWorkImage {
+  id           String     @id @default(cuid())
+  clientWorkId String
+  clientWork   ClientWork @relation(fields: [clientWorkId], references: [id], onDelete: Cascade)
+  imageUrl     String
+  alt          String     @default("")
+  width        Int?
+  height       Int?
+  sortOrder    Int        @default(0)
+
+  @@index([clientWorkId])
+}
+
+model ContactSubmission {
+  id        String   @id @default(cuid())
+  name      String
+  email     String
+  company   String?
+  subject   String
+  message   String   @db.Text
+  status    String   @default("new")
+  createdAt DateTime @default(now())
+
+  @@index([status])
+  @@index([createdAt])
+}

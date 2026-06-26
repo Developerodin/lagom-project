@@ -10,6 +10,7 @@ import socialMediaIcon from "../../../public/assets/home/Icons_ 150 x 150px/soci
 import illustrationIcon from "../../../public/assets/home/Icons_ 150 x 150px/illustration.png";
 import brandApplicationsIcon from "../../../public/assets/home/Icons_ 150 x 150px/brand-applications.png";
 
+import { RevealOnScroll } from "@/components/ui/RevealOnScroll";
 import styles from "./OurServicesSection.module.css";
 
 type OurServicesSectionProps = {
@@ -112,7 +113,8 @@ export function OurServicesSection({
   ];
 
   return (
-    <section
+    <RevealOnScroll
+      as="section"
       className={`${styles.section} ${
         variant === "dark" ? styles.sectionDark : ""
       }`}
@@ -156,6 +158,6 @@ export function OurServicesSection({
           </div>
         </div>
       </div>
-    </section>
+    </RevealOnScroll>
   );
 }

@@ -1,6 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 
+import { RevealOnScroll } from "@/components/ui/RevealOnScroll";
 import { brandingSectionContent } from "@/content/services";
 import styles from "./BrandingSection.module.css";
 
@@ -8,7 +9,8 @@ export function BrandingSection() {
   const { title, paragraphs, cta, images } = brandingSectionContent;
 
   return (
-    <section
+    <RevealOnScroll
+      as="section"
       className={`surface-primary section-md ${styles.section}`}
       aria-labelledby="branding-title"
     >
@@ -56,6 +58,6 @@ export function BrandingSection() {
           </div>
         </div>
       </div>
-    </section>
+    </RevealOnScroll>
   );
 }

@@ -13,7 +13,7 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding-block: var(--space-32);
+  padding-block: var(--space-48);
 }
 
 .layout {
@@ -45,12 +45,13 @@
 .grid {
   --cols: 3;
   --rows: 2;
+  --card-scale: 1.15;
   --gap: calc(var(--grid-gap-column) * 0.75);
   --gap-x: var(--gap);
   --gap-y: var(--gap);
   --cell: min(
-    calc((100cqi - (var(--cols) - 1) * var(--gap-x)) / var(--cols)),
-    calc((100cqh - (var(--rows) - 1) * var(--gap-y)) / var(--rows))
+    calc((100cqi - (var(--cols) - 1) * var(--gap-x)) / var(--cols) * var(--card-scale)),
+    calc((100cqh - (var(--rows) - 1) * var(--gap-y)) / var(--rows) * var(--card-scale))
   );
   display: grid;
   grid-template-columns: repeat(var(--cols), var(--cell));
@@ -121,13 +122,22 @@
     padding-inline: var(--space-12);
   }
 
+  .gridWrap {
+    min-width: 0;
+    max-width: 100%;
+    overflow: hidden;
+  }
+
   .grid {
+    --card-scale: 1;
     --gap: var(--space-16);
     --gap-x: var(--gap);
     --gap-y: var(--gap);
     grid-template-columns: repeat(2, minmax(0, 1fr));
     grid-template-rows: repeat(3, auto);
+    width: 100%;
     height: auto;
+    margin-inline: auto;
   }
 
   .card {
@@ -146,7 +156,7 @@
   .inner {
     flex: none;
     min-height: auto;
-    padding-block: var(--space-24);
+    padding-block: var(--space-32);
   }
 
   .layout {

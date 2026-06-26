@@ -5,6 +5,7 @@ import portraitOne from "../../../public/assets/home/portrait_-900-x-1200px/p1.j
 import portraitTwo from "../../../public/assets/home/portrait_-900-x-1200px/p2.jpg";
 import arrowGraphic from "../../../public/assets/home/arrow.svg";
 
+import { RevealOnScroll } from "@/components/ui/RevealOnScroll";
 import styles from "./TheLagomWaySection.module.css";
 
 const whoWeAreParagraphs = [
@@ -65,7 +66,11 @@ function ContentBlock({ heading, paragraphs, headingId }: ContentBlockProps) {
 
 export function TheLagomWaySection() {
   return (
-    <section className={styles.section} aria-labelledby="the-lagom-way-title">
+    <RevealOnScroll
+      as="section"
+      className={styles.section}
+      aria-labelledby="the-lagom-way-title"
+    >
       <div className="container">
         <h2
           id="the-lagom-way-title"
@@ -91,7 +96,11 @@ export function TheLagomWaySection() {
             </div>
           </div>
 
-          <div className={styles.arrowWrap} aria-hidden="true">
+          <RevealOnScroll
+            as="div"
+            className={styles.arrowWrap}
+            aria-hidden="true"
+          >
             <Image
               src={arrowGraphic}
               alt=""
@@ -99,7 +108,7 @@ export function TheLagomWaySection() {
               height={400}
               className={styles.arrow}
             />
-          </div>
+          </RevealOnScroll>
 
           <div className={`${styles.row} ${styles.rowMirrored}`}>
             <div className={styles.textCol}>
@@ -118,6 +127,6 @@ export function TheLagomWaySection() {
           </div>
         </div>
       </div>
-    </section>
+    </RevealOnScroll>
   );
 }

@@ -77,6 +77,18 @@
   outline-offset: 3px;
 }
 
+@media (max-width: 991px) {
+  .section {
+    height: auto;
+    aspect-ratio: var(--banner-aspect-ratio);
+    min-height: 0;
+  }
+
+  .image {
+    object-fit: contain;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   .container {
     will-change: auto;

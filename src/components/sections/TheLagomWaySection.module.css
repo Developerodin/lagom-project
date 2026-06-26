@@ -7,6 +7,7 @@
   --lagom-way-paragraph-gap: var(--space-24);
   --lagom-way-card-offset: var(--space-16);
   --lagom-way-arrow-size: clamp(140px, 14vw, 220px);
+  --lagom-way-arrow-sway-duration: 2.5s;
   --lagom-way-portrait-width: 50%;
   width: 100%;
   background-color: var(--color-paper);
@@ -134,6 +135,41 @@
   width: var(--lagom-way-arrow-size);
   height: auto;
   flex-shrink: 0;
+  transform-origin: center center;
+  will-change: transform;
+}
+
+.arrowWrap[data-revealed="true"] .arrow {
+  animation: lagomWayArrowSway var(--lagom-way-arrow-sway-duration) ease-in-out
+    1 forwards;
+}
+
+@keyframes lagomWayArrowSway {
+  0%,
+  100% {
+    transform: rotate(0deg);
+  }
+
+  33% {
+    transform: rotate(30deg);
+  }
+
+  66% {
+    transform: rotate(-30deg);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .arrow {
+    animation: none;
+    transform: none;
+  }
+}
+
+@media (min-width: 769px) {
+  .section {
+    padding-inline: 10rem;
+  }
 }
 
 @media (min-width: 993px) {

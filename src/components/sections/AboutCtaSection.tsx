@@ -1,8 +1,16 @@
-import Image from "next/image";
 import Link from "next/link";
 
-import { aboutCtaCollageItems, aboutCtaContent } from "@/content/about";
+import { RevealOnScroll } from "@/components/ui/RevealOnScroll";
+import {
+  aboutCtaCollageColumns,
+  aboutCtaCollageItems,
+  aboutCtaContent,
+} from "@/content/about";
 import styles from "./AboutCtaSection.module.css";
+
+const collageItemsById = Object.fromEntries(
+  aboutCtaCollageItems.map((item) => [item.id, item]),
+);
 
 export function AboutCtaSection() {
   const { headline, cta } = aboutCtaContent;
@@ -26,25 +34,53 @@ export function AboutCtaSection() {
   );
 
   return (
-    <section
+    <RevealOnScroll
+      as="section"
       className={styles.section}
       aria-labelledby="about-cta-title"
     >
       <div className={styles.layout}>
         <div className={styles.collageCol} aria-hidden="true">
           <div className={styles.collage}>
-            {aboutCtaCollageItems.map((item) => (
+            {aboutCtaCollageColumns.map((column) => (
               <div
-                key={item.id}
-                className={`${styles.collageItem} ${styles[`item${item.id}`]}`}
+                key={column.id}
+                className={`${styles.collageColumn} ${
+                  column.wide ? styles.collageColumnWide : ""
+                }`.trim()}
               >
-                <Image
-                  src={item.src}
-                  alt={item.alt}
-                  fill
-                  sizes="(min-width: 993px) 12vw, (min-width: 769px) 18vw, 44vw"
-                  className={styles.collageImage}
-                />
+                {Array.from({ length: column.leadingEmptySlots ?? 0 }).map(
+                  (_, index) => (
+                    <div
+                      key={`${column.id}-spacer-${index}`}
+                      className={styles.collageSpacer}
+                      aria-hidden="true"
+                    />
+                  ),
+                )}
+                {column.itemIds.map((itemId) => {
+                  const item = collageItemsById[itemId];
+                  const isSaveur = item.id === "b3";
+
+                  return (
+                    <div
+                      key={item.id}
+                      className={`${styles.collageItem} ${
+                        isSaveur ? styles.collageItemSaveur : ""
+                      }`.trim()}
+                    >
+                      <img
+                        src={item.src}
+                        alt={item.alt}
+                        className={`${styles.collageImage} ${
+                          isSaveur ? styles.collageImageSaveur : ""
+                        }`.trim()}
+                        loading="lazy"
+                        decoding="async"
+                      />
+                    </div>
+                  );
+                })}
               </div>
             ))}
           </div>
@@ -61,6 +97,6 @@ export function AboutCtaSection() {
           </Link>
         </div>
       </div>
-    </section>
+    </RevealOnScroll>
   );
 }

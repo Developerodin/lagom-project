@@ -5,7 +5,10 @@
 }
 
 .inner {
-  padding-block: clamp(var(--space-96), 12vh, var(--space-144));
+  padding-block: var(
+    --brand-statement-padding-block,
+    clamp(var(--space-96), 12vh, var(--space-144))
+  );
 }
 
 .content {

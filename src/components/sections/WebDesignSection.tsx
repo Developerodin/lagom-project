@@ -1,6 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 
+import { RevealOnScroll } from "@/components/ui/RevealOnScroll";
 import { webDesignSectionContent } from "@/content/services";
 import styles from "./WebDesignSection.module.css";
 
@@ -8,7 +9,8 @@ export function WebDesignSection() {
   const { title, paragraphs, cta, images } = webDesignSectionContent;
 
   return (
-    <section
+    <RevealOnScroll
+      as="section"
       className={`surface-primary section-md ${styles.section}`}
       aria-labelledby="web-design-title"
     >
@@ -56,6 +58,6 @@ export function WebDesignSection() {
           </div>
         </div>
       </div>
-    </section>
+    </RevealOnScroll>
   );
 }

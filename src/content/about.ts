@@ -2,16 +2,6 @@ import type { StaticImageData } from "next/image";
 
 import aboutHeroImage from "../../public/assets/about/hero.jpg";
 import studioPortraitImage from "../../public/assets/about/studio-portrait.png";
-import collageS1 from "../../public/assets/home/square-images_-1024-x-1024px/s1.jpg";
-import collageS2 from "../../public/assets/home/square-images_-1024-x-1024px/s2.jpg";
-import collageS3 from "../../public/assets/home/square-images_-1024-x-1024px/s3.jpg";
-import collageS4 from "../../public/assets/home/square-images_-1024-x-1024px/s4.jpg";
-import collageS5 from "../../public/assets/home/square-images_-1024-x-1024px/s5.jpg";
-import collageS6 from "../../public/assets/home/square-images_-1024-x-1024px/s6.jpg";
-import collageB1 from "../../public/assets/home/banner_-1750-x-851px/1.jpg";
-import collageB2 from "../../public/assets/home/banner_-1750-x-851px/2.jpg";
-import collageB3 from "../../public/assets/home/banner_-1750-x-851px/3.jpg";
-import collageB4 from "../../public/assets/home/banner_-1750-x-851px/4.jpg";
 
 export type AboutHeroContent = {
   image: StaticImageData;
@@ -47,65 +37,78 @@ export const theStudioSectionContent: TheStudioSectionContent = {
   ],
   image: {
     src: studioPortraitImage,
-    alt: "Lagom Design studio workspace with a laptop displaying brand design work",
+    alt: "Lagom Design studio workspace with a laptop and notebooks",
   },
 };
 
 export type AboutCtaCollageItem = {
   id: string;
-  src: StaticImageData;
+  src: string;
   alt: string;
 };
+
+export type AboutCtaCollageColumn = {
+  id: string;
+  itemIds: readonly string[];
+  leadingEmptySlots?: number;
+  wide?: boolean;
+};
+
+export const aboutCtaCollageColumns: AboutCtaCollageColumn[] = [
+  { id: "col1", itemIds: ["s1", "s5", "b2"] },
+  { id: "col2", itemIds: ["s2", "s3", "s6", "b3"], leadingEmptySlots: 1, wide: true },
+  { id: "col3", itemIds: ["s4", "b1", "b4"], leadingEmptySlots: 2 },
+];
 
 export const aboutCtaCollageItems: AboutCtaCollageItem[] = [
   {
     id: "s1",
-    src: collageS1,
+    src: "/assets/about/4.jpg",
     alt: "Skincare product packaging design",
   },
   {
     id: "s2",
-    src: collageS2,
+    src: "/assets/about/5.jpg",
     alt: "Illustrated tote bag brand application",
   },
   {
     id: "s3",
-    src: collageS3,
+    src: "/assets/about/6.jpg",
     alt: "Colorful spice tin packaging lineup",
   },
   {
     id: "s4",
-    src: collageS4,
-    alt: "Architectural brand photography",
-  },
-  {
-    id: "s5",
-    src: collageS5,
-    alt: "NOCK NOCK branded packaging box",
-  },
-  {
-    id: "s6",
-    src: collageS6,
+    src: "/assets/about/7.jpg",
     alt: "Saffron product packaging design",
   },
   {
+    id: "s5",
+    src: "/assets/about/8.jpg",
+    alt: "Architectural brand photography",
+  },
+  {
+    id: "s6",
+    src: "/assets/about/9.jpg",
+    alt: "NOCK NOCK branded packaging box",
+  },
+  {
     id: "b1",
-    src: collageB1,
+    src: "/assets/about/10.jpg",
     alt: "WOW IDLI food brand packaging",
   },
   {
     id: "b2",
-    src: collageB2,
+    src: "/assets/about/11.jpg",
     alt: "Hair care product bottle design",
   },
   {
     id: "b3",
-    src: collageB3,
+    src: "/assets/about/12.jpg",
     alt: "SAVEUR luxury packaging box",
   },
   {
     id: "b4",
-    src: collageB4,
+    src: "/assets/about/13.jpg",
     alt: "Restaurant interior brand signage",
   },
 ];

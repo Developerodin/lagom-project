@@ -1,4 +1,6 @@
 import { contactFormContent, contactInfoContent } from "@/content/contact";
+import { RevealOnScroll } from "@/components/ui/RevealOnScroll";
+import { ContactForm } from "./ContactForm";
 import styles from "./ContactSection.module.css";
 
 function EmailIcon() {
@@ -80,91 +82,18 @@ const contactIcons = {
 } as const;
 
 export function ContactSection() {
-  const { title: formTitle, fields, submitLabel } = contactFormContent;
+  const { title: formTitle } = contactFormContent;
   const { title: infoTitle, items } = contactInfoContent;
 
   return (
-    <section className={styles.section} aria-labelledby="contact-form-title">
+    <RevealOnScroll as="section" className={styles.section} aria-labelledby="contact-form-title">
       <div className={styles.layout}>
         <div className={styles.formCol}>
           <h1 id="contact-form-title" className={styles.sectionTitle}>
             {formTitle}
           </h1>
 
-          <form className={styles.form} action="#" method="post">
-            <div className={styles.fieldRow}>
-              <div className={styles.field}>
-                <label htmlFor="contact-name" className={styles.fieldLabel}>
-                  {fields.name.label}
-                </label>
-                <input
-                  id="contact-name"
-                  name="name"
-                  type={fields.name.type}
-                  className={styles.fieldInput}
-                  autoComplete="name"
-                  required
-                />
-              </div>
-
-              <div className={styles.field}>
-                <label htmlFor="contact-email" className={styles.fieldLabel}>
-                  {fields.email.label}
-                </label>
-                <input
-                  id="contact-email"
-                  name="email"
-                  type={fields.email.type}
-                  className={styles.fieldInput}
-                  autoComplete="email"
-                  required
-                />
-              </div>
-            </div>
-
-            <div className={styles.field}>
-              <label htmlFor="contact-company" className={styles.fieldLabel}>
-                {fields.company.label}
-              </label>
-              <input
-                id="contact-company"
-                name="company"
-                type={fields.company.type}
-                className={styles.fieldInput}
-                autoComplete="organization"
-              />
-            </div>
-
-            <div className={styles.field}>
-              <label htmlFor="contact-subject" className={styles.fieldLabel}>
-                {fields.subject.label}
-              </label>
-              <input
-                id="contact-subject"
-                name="subject"
-                type={fields.subject.type}
-                className={styles.fieldInput}
-                required
-              />
-            </div>
-
-            <div className={`${styles.field} ${styles.fieldTextarea}`}>
-              <label htmlFor="contact-message" className={styles.fieldLabel}>
-                {fields.message.label}
-              </label>
-              <textarea
-                id="contact-message"
-                name="message"
-                className={styles.fieldInput}
-                rows={5}
-                required
-              />
-            </div>
-
-            <button type="submit" className={`button button-primary ${styles.submitButton}`}>
-              {submitLabel}
-            </button>
-          </form>
+          <ContactForm />
         </div>
 
         <div className={styles.divider} aria-hidden="true" />
@@ -198,6 +127,6 @@ export function ContactSection() {
           </ul>
         </div>
       </div>
-    </section>
+    </RevealOnScroll>
   );
 }

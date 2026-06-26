@@ -19,12 +19,15 @@
 .imageCol {
   display: flex;
   justify-content: center;
+  align-items: center;
+  width: 100%;
 }
 
 .imageComposition {
   position: relative;
   width: min(100%, 28rem);
   aspect-ratio: 1;
+  flex-shrink: 0;
 }
 
 .imageBack,
@@ -32,22 +35,20 @@
   position: absolute;
   overflow: hidden;
   border-radius: calc(var(--image-radius) * 2.5);
+  width: 56.31%;
+  aspect-ratio: 1;
 }
 
 .imageBack {
   top: 0;
   right: 0;
   z-index: 1;
-  width: 72%;
-  aspect-ratio: 1;
 }
 
 .imageFront {
   bottom: 0;
   left: 0;
   z-index: 2;
-  width: 72%;
-  aspect-ratio: 1;
 }
 
 .image {

@@ -16,3 +16,15 @@
   object-fit: cover;
   object-position: center;
 }
+
+@media (max-width: 991px) {
+  .section {
+    height: auto;
+    aspect-ratio: var(--about-banner-aspect-ratio);
+    min-height: 0;
+  }
+
+  .image {
+    object-fit: contain;
+  }
+}

@@ -3,6 +3,7 @@ import path from "node:path";
 
 import Image from "next/image";
 
+import { RevealOnScroll } from "@/components/ui/RevealOnScroll";
 import styles from "./ClientsSection.module.css";
 
 const CLIENTS_DIR = path.join(process.cwd(), "public/assets/home/Clients");
@@ -129,7 +130,11 @@ export function ClientsSection() {
   const logos = getClientLogos();
 
   return (
-    <section className={styles.section} aria-labelledby="clients-section-title">
+    <RevealOnScroll
+      as="section"
+      className={styles.section}
+      aria-labelledby="clients-section-title"
+    >
       <div className="container">
         <h2
           id="clients-section-title"
@@ -147,6 +152,6 @@ export function ClientsSection() {
           </div>
         ) : null}
       </div>
-    </section>
+    </RevealOnScroll>
   );
 }

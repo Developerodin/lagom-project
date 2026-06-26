@@ -1,13 +1,14 @@
 import Image from "next/image";
 import Link from "next/link";
 import { footerNavigation, siteConfig } from "@/content/site";
+import { RevealOnScroll } from "@/components/ui/RevealOnScroll";
 import styles from "./Footer.module.css";
 
 export function Footer() {
   const year = new Date().getFullYear();
 
   return (
-    <footer className={styles.footer}>
+    <RevealOnScroll as="footer" className={styles.footer}>
       <div className="container">
         <div className={styles.top}>
           <div className={styles.brand}>
@@ -47,6 +48,6 @@ export function Footer() {
           </p>
         </div>
       </div>
-    </footer>
+    </RevealOnScroll>
   );
 }

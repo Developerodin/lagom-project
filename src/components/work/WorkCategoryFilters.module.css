@@ -1,0 +1,13 @@
+.filters {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: var(--space-16);
+  margin-bottom: var(--heading-content-spacing);
+}
+
+@media (max-width: 768px) {
+  .filters {
+    margin-bottom: var(--space-48);
+  }
+}

@@ -25,6 +25,11 @@
 
 .card {
   min-width: 0;
+  transition: transform var(--transition);
+}
+
+.card:hover {
+  transform: translateY(-8px);
 }
 
 .image {
@@ -79,5 +84,15 @@
 @media (max-width: 390px) {
   .section {
     padding-block: calc(var(--section-spacing-sm) * 0.5);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .card {
+    transition: none;
+  }
+
+  .card:hover {
+    transform: none;
   }
 }

@@ -56,6 +56,10 @@
   --section-spacing-md: var(--space-112);
   --section-spacing-sm: 80px;
   --hero-bottom-spacing: 160px;
+
+  /* Banner aspect ratios — preserve image proportions on mobile/tablet */
+  --banner-aspect-ratio: 1750 / 851;
+  --about-banner-aspect-ratio: 1024 / 575;
   --heading-content-spacing: var(--space-72);
   --grid-cta-spacing: var(--space-72);
   --paragraph-button-spacing: var(--space-48);
@@ -347,6 +351,18 @@ p {
 
 .button-accent:hover {
   opacity: 0.88;
+}
+
+.button-outline {
+  background-color: transparent;
+  color: var(--color-primary);
+  border: 1px solid var(--color-primary);
+}
+
+.button-outline:hover {
+  background-color: var(--color-primary);
+  color: var(--color-paper);
+  opacity: 1;
 }
 
 /* --------------------------------------------------------------------------

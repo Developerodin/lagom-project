@@ -1,6 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 
+import { RevealOnScroll } from "@/components/ui/RevealOnScroll";
 import { illustrationsSectionContent } from "@/content/services";
 import styles from "./IllustrationsSection.module.css";
 
@@ -8,7 +9,8 @@ export function IllustrationsSection() {
   const { title, paragraphs, cta, images } = illustrationsSectionContent;
 
   return (
-    <section
+    <RevealOnScroll
+      as="section"
       className={`surface-primary section-md ${styles.section}`}
       aria-labelledby="illustrations-title"
     >
@@ -56,6 +58,6 @@ export function IllustrationsSection() {
           </div>
         </div>
       </div>
-    </section>
+    </RevealOnScroll>
   );
 }

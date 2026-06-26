@@ -1,11 +1,29 @@
 import Image from "next/image";
 import Link from "next/link";
-import { featuredWorkItems } from "@/content/home";
+import { RevealOnScroll } from "@/components/ui/RevealOnScroll";
+import { getPublishedClients } from "@/lib/work";
 import styles from "./FeaturedWorkSection.module.css";
 
-export function FeaturedWorkSection() {
+const FEATURED_LIMIT = 6;
+
+export async function FeaturedWorkSection() {
+  let items: Awaited<ReturnType<typeof getPublishedClients>> = [];
+  try {
+    items = await getPublishedClients(FEATURED_LIMIT);
+  } catch {
+    items = [];
+  }
+
+  if (items.length === 0) {
+    return null;
+  }
+
   return (
-    <section className={styles.section} aria-labelledby="featured-work-title">
+    <RevealOnScroll
+      as="section"
+      className={styles.section}
+      aria-labelledby="featured-work-title"
+    >
       <div className={`container ${styles.inner}`}>
         <div className={styles.layout}>
           <h2
@@ -17,7 +35,7 @@ export function FeaturedWorkSection() {
 
           <div className={styles.gridWrap}>
             <ul className={styles.grid}>
-              {featuredWorkItems.map((item) => (
+              {items.map((item) => (
                 <li key={item.slug}>
                   <Link
                     href={`/work/${item.slug}`}
@@ -26,8 +44,8 @@ export function FeaturedWorkSection() {
                   >
                     <div className={styles.cardMedia}>
                       <Image
-                        src={item.image}
-                        alt={item.alt}
+                        src={item.cardImage}
+                        alt={item.cardAlt}
                         fill
                         sizes="(min-width: 993px) 33vw, 50vw"
                         className={styles.image}
@@ -40,15 +58,12 @@ export function FeaturedWorkSection() {
           </div>
 
           <div className={styles.ctaWrap}>
-            <Link
-              href="/work"
-              className="button button-primary"
-            >
+            <Link href="/work" className="button button-primary">
               View All Work
             </Link>
           </div>
         </div>
       </div>
-    </section>
+    </RevealOnScroll>
   );
 }

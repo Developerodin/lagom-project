@@ -1,4 +1,5 @@
 import { brandStatementContent } from "@/content/home";
+import { RevealOnScroll } from "@/components/ui/RevealOnScroll";
 import styles from "./BrandStatementSection.module.css";
 
 type BrandStatementSectionProps = {
@@ -9,7 +10,8 @@ export function BrandStatementSection({
   loraTitle = false,
 }: BrandStatementSectionProps) {
   return (
-    <section
+    <RevealOnScroll
+      as="section"
       className={styles.section}
       aria-labelledby="brand-statement-title"
     >
@@ -39,6 +41,6 @@ export function BrandStatementSection({
           </div>
         </div>
       </div>
-    </section>
+    </RevealOnScroll>
   );
 }

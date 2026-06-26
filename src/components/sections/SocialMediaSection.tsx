@@ -1,6 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 
+import { RevealOnScroll } from "@/components/ui/RevealOnScroll";
 import { socialMediaSectionContent } from "@/content/services";
 import styles from "./SocialMediaSection.module.css";
 
@@ -8,7 +9,8 @@ export function SocialMediaSection() {
   const { title, paragraphs, cta, images } = socialMediaSectionContent;
 
   return (
-    <section
+    <RevealOnScroll
+      as="section"
       className={`surface-accent section-md ${styles.section}`}
       aria-labelledby="social-media-title"
     >
@@ -56,6 +58,6 @@ export function SocialMediaSection() {
           </div>
         </div>
       </div>
-    </section>
+    </RevealOnScroll>
   );
 }

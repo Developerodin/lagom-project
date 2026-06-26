@@ -16,19 +16,19 @@ export const contactInfoContent = {
     {
       id: "email",
       label: "Email",
-      value: "hello@lagomdesign.in",
-      href: "mailto:hello@lagomdesign.in",
+      value: "studiolagomdesign@gmail.com",
+      href: "mailto:studiolagomdesign@gmail.com",
     },
     {
       id: "phone",
       label: "Phone",
-      value: "+91 98765 43210",
-      href: "tel:+919876543210",
+      value: "+91 89551 06651",
+      href: "tel:+918955106651",
     },
     {
       id: "location",
       label: "Location",
-      value: "Bengaluru, India",
+      value: "Jaipur, India",
     },
     {
       id: "hours",
