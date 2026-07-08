@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, type FormEvent } from "react";
-import { contactFormContent } from "@/content/contact";
+import { contactFormContent, contactServiceOptions } from "@/content/contact";
 import styles from "./ContactSection.module.css";
 
 type Status = "idle" | "submitting" | "success" | "error";
@@ -10,6 +10,15 @@ export function ContactForm() {
   const { fields, submitLabel } = contactFormContent;
   const [status, setStatus] = useState<Status>("idle");
   const [error, setError] = useState("");
+  const [selectedServices, setSelectedServices] = useState<string[]>([]);
+
+  function toggleService(serviceId: string) {
+    setSelectedServices((current) =>
+      current.includes(serviceId)
+        ? current.filter((id) => id !== serviceId)
+        : [...current, serviceId],
+    );
+  }
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -17,7 +26,20 @@ export function ContactForm() {
     setStatus("submitting");
     setError("");
 
-    const payload = Object.fromEntries(new FormData(form).entries());
+    if (selectedServices.length === 0) {
+      setError("Please select at least one service.");
+      setStatus("error");
+      return;
+    }
+
+    const formData = new FormData(form);
+    const payload = {
+      name: formData.get("name"),
+      email: formData.get("email"),
+      company: formData.get("company"),
+      message: formData.get("message"),
+      services: selectedServices,
+    };
 
     const response = await fetch("/api/contact", {
       method: "POST",
@@ -27,6 +49,7 @@ export function ContactForm() {
 
     if (response.ok) {
       form.reset();
+      setSelectedServices([]);
       setStatus("success");
       return;
     }
@@ -114,18 +137,44 @@ export function ContactForm() {
         />
       </div>
 
-      <div className={styles.field}>
-        <label htmlFor="contact-subject" className={styles.fieldLabel}>
-          {fields.subject.label}
-        </label>
-        <input
-          id="contact-subject"
-          name="subject"
-          type={fields.subject.type}
-          className={styles.fieldInput}
-          required
-        />
-      </div>
+      <fieldset className={`${styles.field} ${styles.servicesField}`}>
+        <legend className={styles.fieldLabel}>{fields.services.label}</legend>
+        <p className={styles.servicesHint}>{fields.services.hint}</p>
+        <div className={styles.servicesGrid}>
+          {contactServiceOptions.map((service) => {
+            const checked = selectedServices.includes(service.id);
+            return (
+              <label
+                key={service.id}
+                className={`${styles.serviceOption} ${
+                  checked ? styles.serviceOptionChecked : ""
+                }`}
+              >
+                <input
+                  type="checkbox"
+                  name="services"
+                  value={service.id}
+                  checked={checked}
+                  onChange={() => toggleService(service.id)}
+                  className={styles.serviceCheckbox}
+                />
+                <span className={styles.serviceCheckmark} aria-hidden="true">
+                  <svg viewBox="0 0 12 10" fill="none">
+                    <path
+                      d="M1 5.5L4.5 9L11 1.5"
+                      stroke="currentColor"
+                      strokeWidth="1.75"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    />
+                  </svg>
+                </span>
+                <span className={styles.serviceLabel}>{service.label}</span>
+              </label>
+            );
+          })}
+        </div>
+      </fieldset>
 
       <div className={`${styles.field} ${styles.fieldTextarea}`}>
         <label htmlFor="contact-message" className={styles.fieldLabel}>

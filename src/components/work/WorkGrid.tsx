@@ -1,13 +1,9 @@
-import Image from "next/image";
-import Link from "next/link";
 import { RevealOnScroll } from "@/components/ui/RevealOnScroll";
+import { WorkCard, type WorkCardItem } from "@/components/work/WorkCard";
 import styles from "./WorkGrid.module.css";
 
-export type WorkGridItem = {
-  slug: string;
-  title: string;
-  cardImage: string;
-  cardAlt: string;
+export type WorkGridItem = WorkCardItem & {
+  categorySlug?: string | null;
 };
 
 export function WorkGrid({ items }: { items: WorkGridItem[] }) {
@@ -15,22 +11,7 @@ export function WorkGrid({ items }: { items: WorkGridItem[] }) {
     <ul className={styles.grid}>
       {items.map((item, index) => (
         <RevealOnScroll as="li" key={item.slug} delay={index * 80}>
-          <Link
-            href={`/work/${item.slug}`}
-            className={styles.card}
-            aria-label={`View ${item.title} project`}
-          >
-            <div className={styles.cardMedia}>
-              <Image
-                src={item.cardImage}
-                alt={item.cardAlt}
-                fill
-                sizes="(min-width: 769px) 33vw, 50vw"
-                className={styles.image}
-              />
-            </div>
-            <span className={styles.cardTitle}>{item.title}</span>
-          </Link>
+          <WorkCard item={item} />
         </RevealOnScroll>
       ))}
     </ul>

@@ -12,6 +12,8 @@ export type ClientWorkInput = {
   title: string;
   slug: string;
   description: string;
+  services: string;
+  whatWeDid: string | null;
   cardImage: string;
   cardAlt: string;
   heroImage: string;
@@ -45,6 +47,12 @@ export function parseClientWorkInput(body: unknown): ValidationResult {
   const slug = slugify(slugSource || title);
   const description =
     typeof raw.description === "string" ? raw.description.trim() : "";
+  const whatWeDid =
+    typeof raw.whatWeDid === "string" ? raw.whatWeDid.trim() : "";
+  const services =
+    typeof raw.services === "string"
+      ? raw.services.trim()
+      : whatWeDid;
   const cardImage = typeof raw.cardImage === "string" ? raw.cardImage : "";
   const cardAlt = typeof raw.cardAlt === "string" ? raw.cardAlt.trim() : "";
   const heroImage = typeof raw.heroImage === "string" ? raw.heroImage : "";
@@ -92,6 +100,8 @@ export function parseClientWorkInput(body: unknown): ValidationResult {
       title,
       slug,
       description,
+      services,
+      whatWeDid: whatWeDid.length > 0 ? whatWeDid : null,
       cardImage,
       cardAlt,
       heroImage,
@@ -102,6 +112,17 @@ export function parseClientWorkInput(body: unknown): ValidationResult {
       gallery,
     },
   };
+}
+
+export function getClientWhatWeDid(client: {
+  whatWeDid: string | null;
+  services: string;
+}) {
+  const whatWeDid = client.whatWeDid?.trim();
+  if (whatWeDid) return whatWeDid;
+
+  const services = client.services?.trim();
+  return services || null;
 }
 
 export function getPublishedClients(limit?: number, categorySlug?: string) {
@@ -123,7 +144,10 @@ export function getPublishedClients(limit?: number, categorySlug?: string) {
 export function getClientBySlug(slug: string) {
   return prisma.clientWork.findFirst({
     where: { slug, published: true },
-    include: { gallery: { orderBy: { sortOrder: "asc" } } },
+    include: {
+      gallery: { orderBy: { sortOrder: "asc" } },
+      category: { select: { id: true, name: true, slug: true } },
+    },
   });
 }
 

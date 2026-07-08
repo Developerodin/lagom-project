@@ -12,15 +12,25 @@ import styles from "./RevealOnScroll.module.css";
 
 type RevealElement = "div" | "section" | "li" | "nav" | "footer" | "article";
 
+function scheduleStateUpdate(fn: () => void) {
+  if (typeof queueMicrotask === "function") {
+    queueMicrotask(fn);
+  } else {
+    window.setTimeout(fn, 0);
+  }
+}
+
 type RevealOnScrollProps<T extends RevealElement = "div"> = {
   as?: T;
   delay?: number;
+  fromLeft?: boolean;
   className?: string;
-} & Omit<ComponentPropsWithoutRef<T>, "as" | "delay" | "className">;
+} & Omit<ComponentPropsWithoutRef<T>, "as" | "delay" | "fromLeft" | "className">;
 
 export function RevealOnScroll<T extends RevealElement = "div">({
   as,
   delay = 0,
+  fromLeft = false,
   className,
   style,
   children,
@@ -34,7 +44,7 @@ export function RevealOnScroll<T extends RevealElement = "div">({
     const mediaQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
 
     if (mediaQuery.matches) {
-      setIsVisible(true);
+      scheduleStateUpdate(() => setIsVisible(true));
       return;
     }
 
@@ -60,6 +70,7 @@ export function RevealOnScroll<T extends RevealElement = "div">({
 
   const revealClassName = [
     styles.reveal,
+    fromLeft ? styles.fromLeft : "",
     isVisible ? styles.visible : "",
     className,
   ]

@@ -142,6 +142,7 @@ export function OurServicesSection({
               <ServiceRow items={tabletRows[0]} />
               <hr className={`divider ${styles.rowDivider}`} />
               <ServiceRow items={tabletRows[1]} />
+              <hr className={`divider ${styles.rowDivider}`} />
               <ServiceRow items={tabletRows[2]} />
             </div>
           </div>

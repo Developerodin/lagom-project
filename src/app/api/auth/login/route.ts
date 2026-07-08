@@ -2,9 +2,11 @@ import bcrypt from "bcryptjs";
 import { NextResponse } from "next/server";
 import { env } from "@/lib/env";
 import { getSession } from "@/lib/auth";
+import { prisma } from "@/lib/prisma";
 
 const WINDOW_MS = 15 * 60 * 1000;
 const MAX_ATTEMPTS = 5;
+const PASSWORD_SETTING_KEY = "admin_password_hash";
 
 const recentAttempts = new Map<string, number[]>();
 
@@ -39,6 +41,18 @@ function recordFailedAttempt(ip: string) {
   recentAttempts.set(ip, previous);
 }
 
+async function getActiveAdminPasswordHash() {
+  try {
+    const stored = await prisma.setting.findUnique({
+      where: { key: PASSWORD_SETTING_KEY },
+      select: { value: true },
+    });
+    return stored?.value ?? env.adminPasswordHash;
+  } catch {
+    return env.adminPasswordHash;
+  }
+}
+
 export async function POST(request: Request) {
   const ip = getClientIp(request);
 
@@ -58,7 +72,7 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: "Invalid request" }, { status: 400 });
   }
 
-  const hash = env.adminPasswordHash;
+  const hash = await getActiveAdminPasswordHash();
 
   if (!hash) {
     return NextResponse.json(

@@ -6,7 +6,6 @@ import styles from "./AboutHeroBanner.module.css";
 export function AboutHeroBanner() {
   return (
     <section className={styles.section} aria-label="About Lagom Design">
-      <h1 className="sr-only">About Us</h1>
       <div className={styles.imageWrap}>
         <Image
           src={aboutHeroContent.image}

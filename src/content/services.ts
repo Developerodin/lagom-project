@@ -10,11 +10,11 @@ import socialMediaImagePrimary from "../../public/assets/home/square-images_-102
 import socialMediaImageSecondary from "../../public/assets/home/square-images_-1024-x-1024px/s5.jpg";
 import illustrationsImagePrimary from "../../public/assets/home/square-images_-1024-x-1024px/s3.jpg";
 import illustrationsImageSecondary from "../../public/assets/home/square-images_-1024-x-1024px/s2.jpg";
-import processIconUnderstand from "../../public/assets/home/icons_-150-x-150px/branding.png";
-import processIconExplore from "../../public/assets/home/icons_-150-x-150px/brand-applications.png";
-import processIconDefine from "../../public/assets/home/icons_-150-x-150px/packaging.png";
-import processIconDesign from "../../public/assets/home/icons_-150-x-150px/illustration.png";
-import processIconFinalise from "../../public/assets/home/icons_-150-x-150px/web-design.png";
+import processIconUnderstand from "../../public/assets/home/icons_-150-x-150px/understand.png";
+import processIconExplore from "../../public/assets/home/icons_-150-x-150px/explore.png";
+import processIconDefine from "../../public/assets/home/icons_-150-x-150px/define.png";
+import processIconDesign from "../../public/assets/home/icons_-150-x-150px/design.png";
+import processIconFinalise from "../../public/assets/home/icons_-150-x-150px/finalise.png";
 
 export const brandingSectionContent = {
   title: "Branding",

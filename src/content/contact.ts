@@ -1,10 +1,29 @@
+import {
+  brandingSectionContent,
+  illustrationsSectionContent,
+  packagingSectionContent,
+  socialMediaSectionContent,
+  webDesignSectionContent,
+} from "@/content/services";
+
+export const contactServiceOptions = [
+  { id: "branding", label: brandingSectionContent.title },
+  { id: "packaging-design", label: packagingSectionContent.title },
+  { id: "web-design", label: webDesignSectionContent.title },
+  { id: "social-media", label: socialMediaSectionContent.title },
+  { id: "illustrations", label: illustrationsSectionContent.title },
+] as const;
+
 export const contactFormContent = {
   title: "Send us a message",
   fields: {
     name: { label: "Your Name", type: "text" as const },
     email: { label: "Email Address", type: "email" as const },
     company: { label: "Company (Optional)", type: "text" as const },
-    subject: { label: "Subject", type: "text" as const },
+    services: {
+      label: "What can we help you with?",
+      hint: "Select all services that apply to your project.",
+    },
     message: { label: "Tell us about your project", type: "textarea" as const },
   },
   submitLabel: "Send Message",

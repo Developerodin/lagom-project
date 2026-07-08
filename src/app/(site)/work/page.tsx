@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { RevealOnScroll } from "@/components/ui/RevealOnScroll";
 import { WorkPageContent } from "@/components/work/WorkPageContent";
 import { getPublishedCategories } from "@/lib/categories";
-import { getPublishedClients } from "@/lib/work";
+import { getPublishedClients, getClientWhatWeDid } from "@/lib/work";
 import styles from "./work.module.css";
 
 export const dynamic = "force-dynamic";
@@ -30,8 +30,7 @@ export default async function WorkPage() {
   return (
     <RevealOnScroll as="section" className={`section-md ${styles.section}`}>
       <div className="container">
-        <h1 className={`heading-section ${styles.heading}`}>Work</h1>
-
+        <h1 className="sr-only">Work</h1>
         {clients.length > 0 ? (
           <WorkPageContent
             categories={categories.map((category) => ({
@@ -44,6 +43,7 @@ export default async function WorkPage() {
               title: client.title,
               cardImage: client.cardImage,
               cardAlt: client.cardAlt,
+              whatWeDid: getClientWhatWeDid(client),
               categorySlug: client.category?.slug ?? null,
             }))}
           />

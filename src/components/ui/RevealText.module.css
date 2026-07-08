@@ -1,0 +1,217 @@
+.container {
+  display: block;
+}
+
+/* ── Default (subtle) ─────────────────────────────────────── */
+
+.wordWrapper {
+  display: inline-block;
+  overflow: hidden;
+  vertical-align: top;
+  line-height: inherit;
+}
+
+.word {
+  display: inline-block;
+  transform: translateY(115%);
+  opacity: 0;
+  transition:
+    transform 0.65s cubic-bezier(0.22, 1, 0.36, 1),
+    opacity 0.55s cubic-bezier(0.22, 1, 0.36, 1);
+  will-change: transform, opacity;
+}
+
+.wordSpace {
+  display: inline-block;
+  width: 0.28em;
+}
+
+.lineWrapper {
+  display: block;
+  overflow: hidden;
+}
+
+.line {
+  display: block;
+  transform: translateY(115%);
+  opacity: 0;
+  transition:
+    transform 0.65s cubic-bezier(0.22, 1, 0.36, 1),
+    opacity 0.55s cubic-bezier(0.22, 1, 0.36, 1);
+  will-change: transform, opacity;
+  font: inherit;
+  letter-spacing: inherit;
+  color: inherit;
+}
+
+.visible .word,
+.visible .line {
+  transform: translateY(0);
+  opacity: 1;
+}
+
+/* ── Expressive (cinematic) ───────────────────────────────── */
+
+.expressive {
+  perspective: 1400px;
+  perspective-origin: 50% 40%;
+}
+
+.expressive .wordWrapper {
+  overflow: hidden;
+  vertical-align: bottom;
+  padding-bottom: 0.08em;
+}
+
+.expressive .word {
+  transform: translate3d(0, 120%, 0) rotateX(-72deg) scale(0.82);
+  transform-origin: 50% 100%;
+  opacity: 0;
+  filter: blur(12px);
+  transition: none;
+  will-change: transform, opacity, filter;
+}
+
+.expressive.visible .word {
+  animation: expressiveWordIn 1.05s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.expressive .emphasisGroup {
+  display: inline;
+  white-space: nowrap;
+}
+
+.expressive .charWrapper {
+  display: inline-block;
+  overflow: hidden;
+  vertical-align: bottom;
+  line-height: inherit;
+}
+
+.expressive .char {
+  display: inline-block;
+  transform: translate3d(0, 130%, 0) rotate(14deg) scale(0.65);
+  transform-origin: 50% 100%;
+  opacity: 0;
+  filter: blur(14px);
+  will-change: transform, opacity, filter;
+}
+
+.expressive.visible .char {
+  animation: expressiveCharIn 0.82s cubic-bezier(0.34, 1.45, 0.64, 1) both;
+}
+
+.expressive .lineWrapper {
+  overflow: hidden;
+}
+
+.expressive .line {
+  transform: none;
+  opacity: 1;
+  filter: none;
+  transition: none;
+  display: flex;
+  flex-wrap: wrap;
+  overflow: visible;
+}
+
+.expressive .lineChar {
+  display: inline-block;
+  overflow: hidden;
+  vertical-align: bottom;
+  line-height: inherit;
+}
+
+.expressive .lineCharInner {
+  display: inline-block;
+  transform: translate3d(-18px, 105%, 0) skewX(-8deg);
+  opacity: 0;
+  filter: blur(8px);
+  will-change: transform, opacity, filter;
+  font: inherit;
+  letter-spacing: inherit;
+  color: inherit;
+}
+
+.expressive .lineCharSpace {
+  display: inline-block;
+  width: 0.3em;
+}
+
+.expressive.visible .lineCharInner {
+  animation: expressiveLineCharIn 0.72s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+@keyframes expressiveWordIn {
+  0% {
+    transform: translate3d(0, 120%, 0) rotateX(-72deg) scale(0.82);
+    opacity: 0;
+    filter: blur(12px);
+  }
+
+  45% {
+    opacity: 1;
+    filter: blur(3px);
+  }
+
+  100% {
+    transform: translate3d(0, 0, 0) rotateX(0deg) scale(1);
+    opacity: 1;
+    filter: blur(0);
+  }
+}
+
+@keyframes expressiveCharIn {
+  0% {
+    transform: translate3d(0, 130%, 0) rotate(14deg) scale(0.65);
+    opacity: 0;
+    filter: blur(14px);
+  }
+
+  55% {
+    opacity: 1;
+    filter: blur(2px);
+  }
+
+  78% {
+    transform: translate3d(0, -6%, 0) rotate(-2deg) scale(1.04);
+  }
+
+  100% {
+    transform: translate3d(0, 0, 0) rotate(0deg) scale(1);
+    opacity: 1;
+    filter: blur(0);
+  }
+}
+
+@keyframes expressiveLineCharIn {
+  0% {
+    transform: translate3d(-18px, 105%, 0) skewX(-8deg);
+    opacity: 0;
+    filter: blur(8px);
+  }
+
+  60% {
+    opacity: 1;
+    filter: blur(1px);
+  }
+
+  100% {
+    transform: translate3d(0, 0, 0) skewX(0deg);
+    opacity: 1;
+    filter: blur(0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .word,
+  .line,
+  .char,
+  .lineCharInner {
+    transform: none !important;
+    opacity: 1 !important;
+    filter: none !important;
+    transition: none !important;
+    animation: none !important;
+  }
+}

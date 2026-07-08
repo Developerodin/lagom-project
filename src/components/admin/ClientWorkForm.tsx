@@ -17,6 +17,7 @@ export type ClientWorkFormData = {
   title: string;
   slug: string;
   description: string;
+  services: string;
   cardImage: string;
   cardAlt: string;
   heroImage: string;
@@ -96,6 +97,7 @@ export function ClientWorkForm({ mode, initial, categories }: ClientWorkFormProp
   const [slug, setSlug] = useState(initial?.slug ?? "");
   const [slugEdited, setSlugEdited] = useState(mode === "edit");
   const [description, setDescription] = useState(initial?.description ?? "");
+  const [services, setServices] = useState(initial?.services ?? "");
   const [sortOrder, setSortOrder] = useState(String(initial?.sortOrder ?? 0));
   const [published, setPublished] = useState(initial?.published ?? true);
   const [categoryId, setCategoryId] = useState(initial?.categoryId ?? "");
@@ -213,6 +215,8 @@ export function ClientWorkForm({ mode, initial, categories }: ClientWorkFormProp
       title,
       slug: slugify(slug || title),
       description,
+      services,
+      whatWeDid: services,
       sortOrder: Number(sortOrder) || 0,
       published,
       categoryId: categoryId || null,
@@ -291,6 +295,15 @@ export function ClientWorkForm({ mode, initial, categories }: ClientWorkFormProp
             value={description}
             onChange={(event) => setDescription(event.target.value)}
             required
+          />
+        </div>
+
+        <div className="admin-field">
+          <label htmlFor={`${formId}-services`}>What we did</label>
+          <textarea
+            id={`${formId}-services`}
+            value={services}
+            onChange={(event) => setServices(event.target.value)}
           />
         </div>
 

@@ -7,6 +7,13 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+model Setting {
+  key       String   @id
+  value     String   @db.Text
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
 model WorkCategory {
   id        String   @id @default(cuid())
   name      String
@@ -27,6 +34,8 @@ model ClientWork {
   heroImage   String
   heroAlt     String
   description String   @db.Text
+  services    String   @default("") @db.Text
+  whatWeDid   String?  @db.Text
   sortOrder   Int      @default(0)
   published   Boolean  @default(true)
   categoryId  String?
@@ -50,6 +59,21 @@ model ClientWorkImage {
   sortOrder    Int        @default(0)
 
   @@index([clientWorkId])
+}
+
+model Testimonial {
+  id         String   @id @default(cuid())
+  quote      String   @db.Text
+  author     String   @default("")
+  company    String?
+  logoUrl    String
+  logoAlt    String   @default("")
+  bgImageUrl String   @default("")
+  bgImageAlt String   @default("")
+  sortOrder  Int      @default(0)
+  published  Boolean  @default(true)
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
 }
 
 model ContactSubmission {

@@ -5,7 +5,7 @@ import { RevealOnScroll } from "@/components/ui/RevealOnScroll";
 import { ClientWorkDescription } from "@/components/work/ClientWorkDescription";
 import { ClientWorkGallery } from "@/components/work/ClientWorkGallery";
 import { ClientWorkHero } from "@/components/work/ClientWorkHero";
-import { getClientBySlug } from "@/lib/work";
+import { getClientBySlug, getClientWhatWeDid } from "@/lib/work";
 import styles from "./detail.module.css";
 
 export const dynamic = "force-dynamic";
@@ -48,8 +48,9 @@ export default async function WorkDetailPage({
         title={client.title}
       />
       <ClientWorkDescription
-        title={client.title}
         description={client.description}
+        whatWeDid={getClientWhatWeDid(client)}
+        category={client.category?.name ?? null}
       />
       <ClientWorkGallery images={client.gallery} />
 

@@ -89,7 +89,7 @@ export function SubmissionDetail({ submission }: SubmissionDetailProps) {
             </>
           ) : null}
 
-          <dt>Subject</dt>
+          <dt>Services</dt>
           <dd>{submission.subject}</dd>
 
           <dt>Received</dt>

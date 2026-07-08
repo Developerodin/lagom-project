@@ -29,7 +29,7 @@ export function SubmissionList({
       <thead>
         <tr>
           <th>Name</th>
-          <th>Subject</th>
+          <th>Services</th>
           <th>Received</th>
           <th>Status</th>
           <th aria-label="Actions" />

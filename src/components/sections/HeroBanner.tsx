@@ -18,6 +18,15 @@ import styles from "./HeroBanner.module.css";
 const AUTOPLAY_DELAY_MS = 3500;
 const SCROLL_DURATION = 25;
 const SLIDE_COUNT = heroBannerSlides.length;
+type AutoplayPlugin = ReturnType<typeof Autoplay>;
+
+function scheduleStateUpdate(fn: () => void) {
+  if (typeof queueMicrotask === "function") {
+    queueMicrotask(fn);
+  } else {
+    window.setTimeout(fn, 0);
+  }
+}
 
 type HeroBannerSlideItemProps = {
   slide: HeroBannerSlide;
@@ -61,13 +70,14 @@ export function HeroBanner() {
   const [selectedIndex, setSelectedIndex] = useState(0);
   const [prefersReducedMotion, setPrefersReducedMotion] = useState(false);
 
-  const autoplayPlugin = useRef(
-    Autoplay({
+  const autoplayPlugin: AutoplayPlugin | null = useMemo(() => {
+    if (prefersReducedMotion) return null;
+    return Autoplay({
       delay: AUTOPLAY_DELAY_MS,
       playOnInit: false,
       stopOnInteraction: false,
-    }),
-  );
+    });
+  }, [prefersReducedMotion]);
 
   const emblaOptions = useMemo(
     () => ({
@@ -80,8 +90,8 @@ export function HeroBanner() {
   );
 
   const emblaPlugins = useMemo(
-    () => (prefersReducedMotion ? [] : [autoplayPlugin.current]),
-    [prefersReducedMotion],
+    () => (autoplayPlugin ? [autoplayPlugin] : []),
+    [autoplayPlugin],
   );
 
   const [emblaRef, emblaApi] = useEmblaCarousel(emblaOptions, emblaPlugins);
@@ -89,14 +99,15 @@ export function HeroBanner() {
   const resumeAutoplay = useCallback(() => {
     if (
       prefersReducedMotion ||
+      !autoplayPlugin ||
       !isVisibleRef.current ||
       isDraggingRef.current
     ) {
       return;
     }
 
-    autoplayPlugin.current.reset();
-  }, [prefersReducedMotion]);
+    autoplayPlugin.reset();
+  }, [autoplayPlugin, prefersReducedMotion]);
 
   const scrollTo = useCallback(
     (index: number) => {
@@ -157,7 +168,7 @@ export function HeroBanner() {
       return;
     }
 
-    onSelect();
+    scheduleStateUpdate(onSelect);
     emblaApi.on("select", onSelect);
     emblaApi.on("reInit", onSelect);
 
@@ -174,7 +185,7 @@ export function HeroBanner() {
 
     const onPointerDown = () => {
       isDraggingRef.current = true;
-      autoplayPlugin.current.stop();
+      autoplayPlugin?.stop();
     };
 
     const onPointerUp = () => {
@@ -203,9 +214,9 @@ export function HeroBanner() {
         isVisibleRef.current = entry.isIntersecting;
 
         if (entry.isIntersecting && !prefersReducedMotion) {
-          autoplayPlugin.current.play();
+          autoplayPlugin?.play();
         } else {
-          autoplayPlugin.current.stop();
+          autoplayPlugin?.stop();
         }
       },
       { threshold: 0.35 },
@@ -226,14 +237,14 @@ export function HeroBanner() {
 
   useEffect(() => {
     if (prefersReducedMotion) {
-      autoplayPlugin.current.stop();
+      autoplayPlugin?.stop();
       return;
     }
 
     if (isVisibleRef.current) {
-      autoplayPlugin.current.play();
+      autoplayPlugin?.play();
     }
-  }, [prefersReducedMotion]);
+  }, [autoplayPlugin, prefersReducedMotion]);
 
   return (
     <section

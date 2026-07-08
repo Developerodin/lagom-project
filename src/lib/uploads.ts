@@ -7,6 +7,7 @@ const ALLOWED_TYPES = new Map<string, string>([
   ["image/jpeg", "jpg"],
   ["image/png", "png"],
   ["image/webp", "webp"],
+  ["image/svg+xml", "svg"],
 ]);
 
 const MAX_BYTES = 10 * 1024 * 1024;
@@ -22,7 +23,7 @@ export async function saveUpload(file: File): Promise<{ url: string }> {
   const extension = ALLOWED_TYPES.get(file.type);
 
   if (!extension) {
-    throw new UploadError("Unsupported file type. Use JPEG, PNG or WebP.");
+    throw new UploadError("Unsupported file type. Use JPEG, PNG, WebP, or SVG.");
   }
 
   if (file.size > MAX_BYTES) {

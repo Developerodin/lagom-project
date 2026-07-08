@@ -5,9 +5,9 @@
 }
 
 .layout {
-  display: grid;
-  grid-template-columns: minmax(0, 65fr) 1px minmax(0, 35fr);
-  align-items: stretch;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
   min-height: inherit;
 }
 
@@ -16,21 +16,26 @@
   display: flex;
   flex-direction: column;
   min-width: 0;
-  padding-block: clamp(var(--space-72), 10vh, var(--space-112));
+  padding-block: clamp(var(--space-48), 10vh, var(--space-48));
+  width: 100%;
+  max-width: 48rem;
 }
 
 .formCol {
-  padding-inline: var(--container-padding) clamp(var(--space-48), 6vw, var(--space-96));
+  align-items: center;
+  padding-inline: var(--container-padding);
 }
 
 .infoCol {
-  padding-inline: clamp(var(--space-48), 6vw, var(--space-96)) var(--container-padding);
+  align-items: center;
+  padding-inline: var(--container-padding);
 }
 
 .divider {
-  width: 1px;
+  width: min(48rem, calc(100% - (var(--container-padding) * 2)));
+  height: 1px;
   background-color: var(--divider-color);
-  align-self: stretch;
+  align-self: center;
 }
 
 .sectionTitle {
@@ -43,6 +48,7 @@
   letter-spacing: 0.01em;
   text-transform: none;
   color: var(--color-primary);
+  text-align: center;
 }
 
 .form {
@@ -50,7 +56,7 @@
   flex-direction: column;
   gap: var(--space-16);
   width: 100%;
-  max-width: 100%;
+  max-width: 42rem;
 }
 
 .fieldRow {
@@ -76,6 +82,113 @@
 
 .fieldTextarea {
   min-height: 10rem;
+}
+
+.servicesField {
+  gap: var(--space-12);
+  border: none;
+  padding: 0;
+  background: transparent;
+}
+
+.servicesField:focus-within {
+  border-color: transparent;
+}
+
+.servicesHint {
+  margin: 0;
+  font-family: var(--font-heading);
+  font-size: 0.8125rem;
+  line-height: 1.5;
+  color: var(--text-secondary);
+}
+
+.servicesGrid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--space-12);
+}
+
+.serviceOption {
+  display: flex;
+  align-items: center;
+  gap: var(--space-12);
+  min-height: 3.25rem;
+  padding: var(--space-12) var(--space-16);
+  border: 1px solid var(--border);
+  border-radius: var(--image-radius);
+  background-color: color-mix(in srgb, var(--color-primary) 4%, var(--color-paper));
+  cursor: pointer;
+  transition:
+    border-color var(--transition),
+    background-color var(--transition),
+    transform var(--transition),
+    box-shadow var(--transition);
+  user-select: none;
+}
+
+.serviceOption:hover {
+  border-color: color-mix(in srgb, var(--color-primary) 25%, transparent);
+  background-color: color-mix(in srgb, var(--color-primary) 7%, var(--color-paper));
+}
+
+.serviceOptionChecked {
+  border-color: color-mix(in srgb, var(--color-primary) 45%, transparent);
+  background-color: color-mix(in srgb, var(--color-primary) 10%, var(--color-paper));
+  box-shadow: 0 0 0 1px color-mix(in srgb, var(--color-primary) 12%, transparent);
+}
+
+.serviceCheckbox {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  border: 0;
+}
+
+.serviceCheckmark {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 1.25rem;
+  height: 1.25rem;
+  border: 1.5px solid color-mix(in srgb, var(--color-primary) 30%, transparent);
+  border-radius: 0.3rem;
+  color: transparent;
+  background-color: var(--color-paper);
+  transition:
+    border-color var(--transition),
+    background-color var(--transition),
+    color var(--transition),
+    transform var(--transition);
+}
+
+.serviceCheckmark svg {
+  width: 0.7rem;
+  height: 0.7rem;
+}
+
+.serviceOption:hover .serviceCheckmark {
+  border-color: color-mix(in srgb, var(--color-primary) 50%, transparent);
+}
+
+.serviceOptionChecked .serviceCheckmark {
+  border-color: var(--color-primary);
+  background-color: var(--color-primary);
+  color: var(--color-paper);
+  transform: scale(1.04);
+}
+
+.serviceLabel {
+  font-family: var(--font-heading);
+  font-size: var(--text-small);
+  font-weight: 400;
+  line-height: 1.4;
+  color: var(--color-primary);
 }
 
 .fieldLabel {
@@ -112,7 +225,7 @@
 }
 
 .submitButton {
-  align-self: flex-start;
+  align-self: center;
   margin-top: var(--space-8);
 }
 
@@ -170,6 +283,21 @@
   display: flex;
   align-items: flex-start;
   gap: var(--space-16);
+  padding: var(--space-16);
+  margin: calc(var(--space-16) * -1);
+  border-radius: var(--image-radius);
+  transition:
+    transform var(--transition),
+    background-color var(--transition);
+}
+
+.infoItem:hover {
+  transform: translateY(-4px);
+  background-color: color-mix(in srgb, var(--color-primary) 5%, var(--color-paper));
+}
+
+.infoItem:hover .infoValue {
+  color: var(--color-primary);
 }
 
 .iconBox {
@@ -182,6 +310,14 @@
   border-radius: var(--image-radius);
   background-color: color-mix(in srgb, var(--color-primary) 6%, var(--color-paper));
   color: var(--color-primary);
+  transition:
+    background-color var(--transition),
+    transform var(--transition);
+}
+
+.infoItem:hover .iconBox {
+  background-color: color-mix(in srgb, var(--color-primary) 12%, var(--color-paper));
+  transform: scale(1.06);
 }
 
 .iconSvg {
@@ -219,26 +355,72 @@ a.infoValue:hover {
   color: var(--color-primary);
 }
 
-@media (max-width: 992px) {
-  .layout {
-    grid-template-columns: 1fr;
+@media (min-width: 993px) {
+  .infoCol {
+    max-width: min(var(--container-max-width), calc(100% - (var(--container-padding) * 2)));
   }
 
+  .infoList {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: var(--space-24);
+    max-width: 100%;
+  }
+
+  .infoItem {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: var(--space-12);
+    margin: 0;
+    padding: var(--space-24) var(--space-16);
+  }
+
+  .infoText {
+    align-items: center;
+    padding-top: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .infoItem,
+  .iconBox {
+    transition: background-color var(--transition);
+  }
+
+  .infoItem:hover {
+    transform: none;
+  }
+
+  .infoItem:hover .iconBox {
+    transform: none;
+  }
+
+  .serviceOption,
+  .serviceCheckmark {
+    transition:
+      border-color var(--transition),
+      background-color var(--transition),
+      color var(--transition);
+  }
+
+  .serviceOption:hover,
+  .serviceOptionChecked .serviceCheckmark {
+    transform: none;
+  }
+}
+
+@media (max-width: 992px) {
   .divider {
-    width: 100%;
-    height: 1px;
-    margin-inline: var(--container-padding);
+    width: min(48rem, calc(100% - (var(--container-padding) * 2)));
   }
 
   .formCol {
-    width: 65%;
     padding-block: var(--space-72) var(--space-48);
-    padding-inline: var(--container-padding);
   }
 
   .infoCol {
     padding-block: var(--space-48) var(--space-72);
-    padding-inline: var(--container-padding);
   }
 
   .form,
@@ -265,6 +447,10 @@ a.infoValue:hover {
   }
 
   .fieldRow {
+    grid-template-columns: 1fr;
+  }
+
+  .servicesGrid {
     grid-template-columns: 1fr;
   }
 

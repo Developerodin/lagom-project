@@ -94,7 +94,7 @@
   width: max-content;
   max-width: none;
   font-family: var(--font-lora), serif;
-  font-size: calc(var(--text-section-heading) * 0.6);
+  font-size: calc(var(--text-section-heading) * 0.8);
   font-weight: 400;
   font-style: normal;
   line-height: 1.1;

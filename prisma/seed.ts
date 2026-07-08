@@ -29,6 +29,7 @@ type SeedClient = {
   title: string;
   alt: string;
   description: string;
+  whatWeDid: string;
 };
 
 const clients: SeedClient[] = [
@@ -38,6 +39,7 @@ const clients: SeedClient[] = [
     alt: "Cafe Juliet brand identity — warm hospitality branding and packaging",
     description:
       "A warm, inviting brand identity for Cafe Juliet — balancing artisanal charm with a clean, contemporary visual language across menus, packaging and in-store touchpoints.",
+    whatWeDid: "Brand identity, packaging design, menu design, and in-store collateral.",
   },
   {
     slug: "klay-home",
@@ -45,6 +47,7 @@ const clients: SeedClient[] = [
     alt: "Klay Home visual identity — refined home and lifestyle branding",
     description:
       "A refined identity system for Klay Home, built around tactile textures, muted palettes and editorial layouts that speak to considered living and craft.",
+    whatWeDid: "Visual identity, brand guidelines, packaging, and lifestyle campaign assets.",
   },
   {
     slug: "tarinika",
@@ -52,6 +55,7 @@ const clients: SeedClient[] = [
     alt: "Tarinika jewellery branding — elegant packaging and brand applications",
     description:
       "An elegant brand world for Tarinika — from packaging and collateral to digital presence, designed to feel timeless, luxurious and unmistakably Indian.",
+    whatWeDid: "Brand identity, jewellery packaging, collateral, and digital brand applications.",
   },
   {
     slug: "bombay-republic",
@@ -59,6 +63,7 @@ const clients: SeedClient[] = [
     alt: "Bombay Republic brand identity — bold food and beverage packaging",
     description:
       "A bold, energetic identity for Bombay Republic — packaging and brand applications that capture the spirit of modern Indian dining with clarity and confidence.",
+    whatWeDid: "Brand identity, food packaging, restaurant collateral, and brand launch assets.",
   },
   {
     slug: "true-grain",
@@ -66,6 +71,7 @@ const clients: SeedClient[] = [
     alt: "True Grain packaging design — organic food brand visual system",
     description:
       "A grounded visual system for True Grain — honest typography, natural colour and packaging that communicates quality ingredients without excess.",
+    whatWeDid: "Packaging design, label system, brand identity, and retail shelf applications.",
   },
   {
     slug: "whimsy-beauty",
@@ -73,6 +79,7 @@ const clients: SeedClient[] = [
     alt: "Whimsy Beauty brand identity — playful beauty packaging and collateral",
     description:
       "A playful yet polished identity for Whimsy Beauty — packaging, social templates and brand collateral that feel fresh, feminine and distinctly ownable.",
+    whatWeDid: "Brand identity, beauty packaging, social templates, and launch collateral.",
   },
 ];
 
@@ -90,6 +97,45 @@ const clientCategories: Record<string, string> = {
   "whimsy-beauty": "fashion",
   "klay-home": "lifestyle",
 };
+
+const testimonials = [
+  {
+    id: "seed-testimonial-cafe-juliet",
+    quote:
+      "Lagom understood our café's personality from day one. The brand identity feels warm, intentional, and completely us — our guests notice it every time they walk in.",
+    author: "Priya Mehta",
+    company: "Cafe Juliet",
+    logoUrl: "/assets/home/Clients/cafe-juliet.png",
+    logoAlt: "Cafe Juliet logo",
+    bgImageUrl: "/assets/home/square-images_-1024-x-1024px/s1.jpg",
+    bgImageAlt: "Cafe Juliet brand identity and packaging",
+    sortOrder: 0,
+  },
+  {
+    id: "seed-testimonial-tarinika",
+    quote:
+      "They brought a rare balance of elegance and clarity to our jewellery brand. Every touchpoint — from packaging to digital — now feels cohesive and unmistakably Tarinika.",
+    author: "Ananya Reddy",
+    company: "Tarinika",
+    logoUrl: "/assets/home/Clients/tarinika.png",
+    logoAlt: "Tarinika logo",
+    bgImageUrl: "/assets/home/square-images_-1024-x-1024px/s3.jpg",
+    bgImageAlt: "Tarinika jewellery branding and packaging",
+    sortOrder: 1,
+  },
+  {
+    id: "seed-testimonial-klay-home",
+    quote:
+      "The team translated our vision for considered living into a visual language that feels tactile and timeless. Lagom made our brand feel as refined as the products we create.",
+    author: "Rohan Kapoor",
+    company: "Klay Home",
+    logoUrl: "/assets/home/Clients/klay-home.png",
+    logoAlt: "Klay Home logo",
+    bgImageUrl: "/assets/home/square-images_-1024-x-1024px/s2.jpg",
+    bgImageAlt: "Klay Home lifestyle brand visual system",
+    sortOrder: 2,
+  },
+];
 
 async function main() {
   const categoryIds = new Map<string, string>();
@@ -146,6 +192,8 @@ async function main() {
         heroImage,
         heroAlt: `${client.title} — hero banner`,
         description: client.description,
+        whatWeDid: client.whatWeDid,
+        services: client.whatWeDid,
         sortOrder: index,
         published: true,
         categoryId,
@@ -158,6 +206,8 @@ async function main() {
         heroImage,
         heroAlt: `${client.title} — hero banner`,
         description: client.description,
+        whatWeDid: client.whatWeDid,
+        services: client.whatWeDid,
         sortOrder: index,
         published: true,
         categoryId,
@@ -168,7 +218,30 @@ async function main() {
     });
   }
 
-  console.log(`Seeded ${categories.length} categories and ${clients.length} client work entries.`);
+  for (const testimonial of testimonials) {
+    await prisma.testimonial.upsert({
+      where: { id: testimonial.id },
+      update: {
+        quote: testimonial.quote,
+        author: testimonial.author,
+        company: testimonial.company,
+        logoUrl: testimonial.logoUrl,
+        logoAlt: testimonial.logoAlt,
+        bgImageUrl: testimonial.bgImageUrl,
+        bgImageAlt: testimonial.bgImageAlt,
+        sortOrder: testimonial.sortOrder,
+        published: true,
+      },
+      create: {
+        ...testimonial,
+        published: true,
+      },
+    });
+  }
+
+  console.log(
+    `Seeded ${categories.length} categories, ${clients.length} client work entries, and ${testimonials.length} testimonials.`,
+  );
 }
 
 main()

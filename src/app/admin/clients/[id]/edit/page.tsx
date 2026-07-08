@@ -36,6 +36,7 @@ export default async function EditClientPage({
           title: client.title,
           slug: client.slug,
           description: client.description,
+          services: client.whatWeDid ?? client.services,
           cardImage: client.cardImage,
           cardAlt: client.cardAlt,
           heroImage: client.heroImage,

@@ -1,31 +1,35 @@
 .section {
   width: 100%;
   background-color: var(--color-paper);
-  padding-block: var(--section-spacing-md);
+  padding-block: 2rem;
 }
 
 .layout {
   display: flex;
   flex-direction: column;
-  gap: clamp(var(--space-48), 6vw, var(--space-96));
+  gap: clamp(var(--space-48), 4vw, var(--space-96));
   width: 100%;
+  padding-inline: 8rem !important;
 }
 
 .header {
   display: grid;
   grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
-  align-items: center;
+  /* Keep divider aligned to the second line ("STUDIO") */
+  --title-line-height: 1.02;
+  align-items: start;
   column-gap: var(--grid-gap-column);
   width: 100%;
+  font-family: var(--font-heading);
+  font-size: clamp(3.25rem, 10vw, var(--text-section-heading));
 }
 
 .title {
   max-width: none;
   padding-inline-start: clamp(var(--space-96), 14vw, 11.5rem);
-  font-family: var(--font-heading);
-  font-size: clamp(3.25rem, 8vw, var(--text-section-heading));
+  font: inherit;
   font-weight: 800;
-  line-height: 1.02;
+  line-height: var(--title-line-height);
   letter-spacing: var(--tracking-section);
   text-transform: uppercase;
   color: var(--color-primary);
@@ -39,6 +43,11 @@
   width: 100%;
   height: 1px;
   background-color: var(--color-accent);
+  /*
+    Title is 2 lines. The center of the second line is roughly
+    1.5 lines down from the top: 1.5 * line-height * font-size.
+  */
+  margin-top: calc(1.5 * var(--title-line-height) * 1em);
 }
 
 .body {
@@ -99,8 +108,11 @@
     column-gap: var(--space-48);
   }
 
-  .title {
+  .header {
     font-size: clamp(2.75rem, 7vw, 3.5rem);
+  }
+
+  .title {
     padding-inline-start: clamp(var(--space-48), 10vw, 7rem);
   }
 
@@ -114,7 +126,9 @@
   .section {
     padding-block: var(--section-spacing-sm);
   }
-
+  .container {
+    width: 100%;
+  }
   .layout {
     gap: var(--space-32);
   }
@@ -122,12 +136,10 @@
   .header {
     grid-template-columns: 1fr;
     row-gap: var(--space-24);
-  }
-
-  .title {
-    padding-inline-start: 0;
     font-size: clamp(2.25rem, 10vw, var(--text-section-heading));
   }
+
+
 
   .divider {
     display: none;
@@ -154,12 +166,14 @@
 }
 
 @media (max-width: 480px) {
+
   .section {
     padding-block: var(--space-48);
   }
 
   .layout {
     gap: var(--space-24);
+    padding-inline: 0rem !important;
   }
 
   .imageWrap {
@@ -170,4 +184,11 @@
   .paragraphs {
     gap: var(--space-12);
   }
+  .container {
+    width: 100%;
+  }
+
+}
+.container {
+padding-inline: 10rem !important;
 }

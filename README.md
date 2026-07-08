@@ -10,8 +10,8 @@ self-hosted CMS for managing portfolio work and contact enquiries.
   (no site header), a description, and a stack of full-width gallery images.
 - Password-protected admin at `/admin` to create, edit, delete and reorder
   client work, upload images, and review contact form enquiries.
-- Contact form submissions are stored in the database and managed from
-  `/admin/submissions`.
+- Contact form submissions are stored in the database, emailed to
+  `studiolagomdesign@gmail.com`, and managed from `/admin/submissions`.
 
 ## Tech stack
 
@@ -55,6 +55,10 @@ node -e "console.log(require('crypto').randomBytes(32).toString('hex'))"
 
 - `UPLOAD_DIR` — absolute path to a writable, persistent directory for uploaded
   images. Defaults to `./uploads`.
+- `RESEND_API_KEY` — API key from [Resend](https://resend.com) for contact form
+  email notifications.
+- `EMAIL_FROM` — verified sender address in Resend, e.g.
+  `Lagom Design <noreply@lagomdesign.com>`.
 
 3. Create the database tables:
 
@@ -119,6 +123,8 @@ DATABASE_URL=mysql://USER:PASS@HOST:3306/DBNAME
 SESSION_SECRET=<64-char hex string>
 ADMIN_PASSWORD_HASH=<bcrypt hash — escape every $ as \$>
 UPLOAD_DIR=/home/<user>/lagom-uploads
+RESEND_API_KEY=<your Resend API key>
+EMAIL_FROM=Lagom Design <noreply@lagomdesign.com>
 NODE_ENV=production
 ```
 

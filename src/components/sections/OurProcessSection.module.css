@@ -7,7 +7,7 @@
   display: flex;
   flex-direction: column;
   gap: var(--space-16);
-  margin-bottom: var(--space-72);
+  margin-bottom: var(--space-96);
 }
 
 .title {
@@ -44,6 +44,15 @@
   position: relative;
 }
 
+.layoutDesktop,
+.layoutTablet {
+  width: 100%;
+}
+
+.layoutTablet {
+  display: none;
+}
+
 .stepsWrap::before {
   content: "";
   position: absolute;
@@ -52,6 +61,12 @@
   top: calc(var(--icon-size) + var(--space-24));
   height: 1px;
   background-color: var(--divider-color);
+  pointer-events: none;
+}
+
+.stepsRowWrap {
+  position: relative;
+  width: 100%;
 }
 
 .steps {
@@ -89,6 +104,15 @@
   object-fit: contain;
 }
 
+.iconWrapLarge {
+  --process-icon-size: calc(var(--icon-size) * 1.2);
+}
+
+.iconLarge {
+  max-width: 180px;
+  max-height: 180px;
+}
+
 .stepTitle {
   margin-top: var(--space-24);
   font-family: var(--font-heading);
@@ -113,9 +137,44 @@
 }
 
 @media (max-width: 992px) {
-  .steps {
+  .layoutDesktop {
+    display: none;
+  }
+
+  .layoutTablet {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-48);
+  }
+
+  .stepsWrap::before {
+    display: none;
+  }
+
+  .stepsRowWrap::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: calc(var(--icon-size) + var(--space-24));
+    height: 1px;
+    background-color: var(--divider-color);
+    pointer-events: none;
+    z-index: 1;
+  }
+
+  .stepsRow {
+    --process-icon-size: var(--icon-size);
+    display: grid;
     grid-template-columns: repeat(3, minmax(0, 1fr));
     gap: var(--space-32);
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  .stepsRow:last-child {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
   }
 
   .header {
@@ -125,12 +184,15 @@
 
 @media (max-width: 768px) {
   /* Per request: keep 3 cards per row on mobile */
-  .steps {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
+  .layoutTablet {
+    gap: var(--space-32);
+  }
+
+  .stepsRow {
     gap: var(--space-24);
   }
 
-  .stepsWrap::before {
+  .stepsRowWrap::before {
     top: calc(var(--icon-size) + var(--space-16));
   }
 
@@ -153,7 +215,11 @@
     margin-bottom: var(--space-32);
   }
 
-  .steps {
+  .layoutTablet {
+    gap: var(--space-24);
+  }
+
+  .stepsRow {
     gap: var(--space-16);
   }
 

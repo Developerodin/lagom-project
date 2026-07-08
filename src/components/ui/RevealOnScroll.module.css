@@ -6,6 +6,10 @@
     transform var(--transition);
 }
 
+.fromLeft {
+  transform: translateX(-48px);
+}
+
 .visible {
   opacity: 1;
   transform: none;

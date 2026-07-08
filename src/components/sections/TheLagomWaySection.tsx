@@ -50,9 +50,9 @@ type ContentBlockProps = {
 function ContentBlock({ heading, paragraphs, headingId }: ContentBlockProps) {
   return (
     <div className={styles.textBlock}>
-      <h3 id={headingId} className={styles.subheading}>
+      <h2 id={headingId} className={styles.subheading}>
         {heading}
-      </h3>
+      </h2>
       <div className={styles.paragraphs}>
         {paragraphs.map((paragraph) => (
           <p key={paragraph} className={`body ${styles.paragraph}`}>

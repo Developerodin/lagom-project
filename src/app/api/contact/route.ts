@@ -1,5 +1,11 @@
 import { NextResponse } from "next/server";
+import { contactServiceOptions } from "@/content/contact";
+import { sendContactNotification } from "@/lib/email";
 import { prisma } from "@/lib/prisma";
+
+const SERVICE_LABELS = Object.fromEntries(
+  contactServiceOptions.map((service) => [service.id, service.label]),
+) as Record<string, string>;
 
 const WINDOW_MS = 60 * 60 * 1000;
 const MAX_PER_WINDOW = 3;
@@ -39,10 +45,16 @@ export async function POST(request: Request) {
   const name = typeof body.name === "string" ? body.name.trim() : "";
   const email = typeof body.email === "string" ? body.email.trim() : "";
   const company = typeof body.company === "string" ? body.company.trim() : "";
-  const subject = typeof body.subject === "string" ? body.subject.trim() : "";
   const message = typeof body.message === "string" ? body.message.trim() : "";
+  const services = Array.isArray(body.services)
+    ? body.services
+        .filter((service): service is string => typeof service === "string")
+        .map((service) => service.trim())
+        .filter((service) => service in SERVICE_LABELS)
+    : [];
+  const subject = services.map((service) => SERVICE_LABELS[service]).join(", ");
 
-  if (!name || !email || !subject || !message) {
+  if (!name || !email || !message || services.length === 0) {
     return NextResponse.json(
       { error: "Please fill in all required fields." },
       { status: 400 },
@@ -79,6 +91,22 @@ export async function POST(request: Request) {
       },
     });
   } catch {
+    return NextResponse.json(
+      { error: "Could not send your message. Please try again." },
+      { status: 500 },
+    );
+  }
+
+  try {
+    await sendContactNotification({
+      name,
+      email,
+      company: company || null,
+      services: subject,
+      message,
+    });
+  } catch (error) {
+    console.error("[contact] Failed to send notification email:", error);
     return NextResponse.json(
       { error: "Could not send your message. Please try again." },
       { status: 500 },

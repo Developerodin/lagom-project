@@ -25,8 +25,8 @@
 
 .imageComposition {
   position: relative;
-  width: min(100%, 28rem);
-  aspect-ratio: 1;
+  width: min(100%, 30rem);
+  aspect-ratio: 1.15;
   flex-shrink: 0;
 }
 
@@ -35,7 +35,7 @@
   position: absolute;
   overflow: hidden;
   border-radius: calc(var(--image-radius) * 2.5);
-  width: 56.31%;
+  width: 48%;
   aspect-ratio: 1;
 }
 

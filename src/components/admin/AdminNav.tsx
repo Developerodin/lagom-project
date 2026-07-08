@@ -10,7 +10,9 @@ type AdminNavProps = {
 const links = [
   { href: "/admin/clients", label: "Work" },
   { href: "/admin/categories", label: "Categories" },
+  { href: "/admin/testimonials", label: "Testimonials" },
   { href: "/admin/submissions", label: "Enquiries" },
+  { href: "/admin/settings", label: "Settings" },
 ];
 
 export function AdminNav({ unreadCount }: AdminNavProps) {

@@ -53,7 +53,7 @@
 
   /* Section rhythm */
   --section-spacing-lg: var(--space-144);
-  --section-spacing-md: var(--space-112);
+  --section-spacing-md: var(--space-48);
   --section-spacing-sm: 80px;
   --hero-bottom-spacing: 160px;
 
@@ -203,7 +203,7 @@ p {
   width: 100%;
   max-width: var(--container-max-width);
   min-width: 0;
-  margin-inline: auto;
+  margin-inline: auto;  
   padding-inline: var(--container-padding);
 }
 
@@ -318,13 +318,13 @@ p {
   width: auto;
   max-width: 100%;
   height: auto;
-  min-height: calc(var(--button-height) * 0.875);
+  min-height: calc(var(--button-height) * 0.7);
   padding: var(--button-padding-block) var(--button-padding-inline);
   border: none;
   border-radius: var(--button-radius);
   box-shadow: none;
   font-family: var(--font-heading);
-  font-size: calc(var(--text-small) * 0.875);
+  font-size: calc(var(--text-small) * 0.8);
   font-weight: 500;
   letter-spacing: var(--tracking-section);
   text-transform: uppercase;
@@ -496,8 +496,9 @@ p {
   }
 
   .button {
-    min-height: calc(var(--button-height) * 0.75);
-    font-size: calc(var(--text-small) * 0.8125);
+    min-height: calc(var(--button-height) * 0.6);
+    font-size: calc(var(--text-small) * 0.7);
+    padding: .1rem var(--space-16);
   }
 
   .grid {

@@ -5,8 +5,7 @@
   width: 100%;
   max-width: 100%;
   min-width: 0;
-  background-color: var(--color-primary);
-  border-bottom: 1px solid color-mix(in srgb, var(--color-paper) 12%, transparent);
+  background-color: var(--color-primary)
 }
 
 .inner {
