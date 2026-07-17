@@ -18,17 +18,12 @@ export const mainNavigation: NavItem[] = [
   { label: "Contact", href: "/contact" },
 ];
 
-export const footerNavigationColumns: NavItem[][] = [
-  [
-    { label: "Home", href: "/" },
-    { label: "Work", href: "/work" },
-    { label: "Stationary", href: "/stationary" },
-  ],
-  [
-    { label: "About Us", href: "/about" },
-    { label: "Services", href: "/services" },
-    { label: "Contact", href: "/contact" },
-  ],
+export const footerNavigation: NavItem[] = [
+  { label: "Home", href: "/" },
+  { label: "About Us", href: "/about" },
+  { label: "Work", href: "/work" },
+  { label: "Services", href: "/services" },
+  { label: "Contact", href: "/contact" },
 ];
 
 export type SocialLink = {

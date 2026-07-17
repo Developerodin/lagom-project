@@ -39,6 +39,7 @@ export function ClientWorkGallery({ images }: { images: GalleryImage[] }) {
               src={image.imageUrl}
               alt={image.alt}
               loading="lazy"
+              decoding="async"
               className={styles.image}
             />
           )}

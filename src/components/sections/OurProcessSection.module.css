@@ -12,13 +12,16 @@
 
 .title {
   font-family: var(--font-heading);
-  font-size: calc(var(--text-section-heading) * 0.6);
+  font-size: calc(var(--text-section-heading) * 0.7);
   font-weight: 500;
   line-height: 1.1;
   letter-spacing: var(--tracking-section);
   text-transform: uppercase;
   color: var(--color-primary);
   max-width: 100%;
+  overflow-wrap: normal;
+  word-break: normal;
+  hyphens: none;
 }
 
 .titleLora {
@@ -123,7 +126,9 @@
   text-transform: uppercase;
   color: var(--color-primary);
   max-width: 100%;
-  overflow-wrap: anywhere;
+  overflow-wrap: normal;
+  word-break: normal;
+  hyphens: none;
 }
 
 .stepDescription {
@@ -134,6 +139,9 @@
   line-height: 1.55;
   color: var(--text-secondary);
   max-width: 18rem;
+  overflow-wrap: normal;
+  word-break: normal;
+  hyphens: none;
 }
 
 @media (max-width: 992px) {
@@ -165,16 +173,23 @@
 
   .stepsRow {
     --process-icon-size: var(--icon-size);
+    --process-row-gap: var(--space-32);
     display: grid;
     grid-template-columns: repeat(3, minmax(0, 1fr));
-    gap: var(--space-32);
+    gap: var(--process-row-gap);
     list-style: none;
     margin: 0;
     padding: 0;
   }
 
-  .stepsRow:last-child {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
+  /* Last row holds 2 items (Design, Finalise): center them while keeping
+     each column the same width as in the 3-column rows above. */
+  .stepsRowWrap:last-child .stepsRow {
+    grid-template-columns: repeat(
+      2,
+      minmax(0, calc((100% - 2 * var(--process-row-gap)) / 3))
+    );
+    justify-content: center;
   }
 
   .header {
@@ -189,7 +204,7 @@
   }
 
   .stepsRow {
-    gap: var(--space-24);
+    --process-row-gap: var(--space-24);
   }
 
   .stepsRowWrap::before {
@@ -207,6 +222,7 @@
 
   .stepDescription {
     font-size: calc(var(--text-small) * 0.875);
+    max-width: 100%;
   }
 }
 
@@ -220,11 +236,25 @@
   }
 
   .stepsRow {
-    gap: var(--space-16);
+    --process-row-gap: var(--space-16);
   }
 
   .stepTitle {
     font-size: calc(var(--text-service-heading) * 0.46);
+  }
+
+  .stepDescription {
+    font-size: calc(var(--text-small) * 0.8125);
+  }
+}
+
+@media (max-width: 360px) {
+  .stepsRow {
+    --process-row-gap: var(--space-12);
+  }
+
+  .stepTitle {
+    font-size: calc(var(--text-service-heading) * 0.4);
   }
 }
 

@@ -12,6 +12,7 @@ export const contactServiceOptions = [
   { id: "web-design", label: webDesignSectionContent.title },
   { id: "social-media", label: socialMediaSectionContent.title },
   { id: "illustrations", label: illustrationsSectionContent.title },
+  { id: "other", label: "Other" },
 ] as const;
 
 export const contactFormContent = {
@@ -19,6 +20,7 @@ export const contactFormContent = {
   fields: {
     name: { label: "Your Name", type: "text" as const },
     email: { label: "Email Address", type: "email" as const },
+    phone: { label: "Phone Number", type: "tel" as const },
     company: { label: "Company (Optional)", type: "text" as const },
     services: {
       label: "What can we help you with?",
@@ -48,11 +50,6 @@ export const contactInfoContent = {
       id: "location",
       label: "Location",
       value: "Jaipur, India",
-    },
-    {
-      id: "hours",
-      label: "Working Hours",
-      value: "Mon - Fri | 10:00 AM - 6:00 PM",
     },
   ],
 } as const;

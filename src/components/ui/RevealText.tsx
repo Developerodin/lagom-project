@@ -204,7 +204,7 @@ export function RevealText(props: RevealTextProps) {
 
     return (
       <Component
-        ref={usesExternalTrigger ? undefined : (ref as Ref<HTMLElement>)}
+        ref={usesExternalTrigger ? undefined : (ref as never)}
         id={id}
         className={containerClassName}
         data-revealed={isVisible ? "true" : undefined}
@@ -262,34 +262,42 @@ export function RevealText(props: RevealTextProps) {
             <span className={styles.lineWrapper}>
               {variant === "expressive" ? (
                 <span className={styles.line}>
-                  {line.split("").map((char, charIndex) => {
-                    if (char === " ") {
+                  {line
+                    .split(" ")
+                    .filter(Boolean)
+                    .map((word, wordIndex, words) => {
+                      const charOffset = words
+                        .slice(0, wordIndex)
+                        .reduce((sum, part) => sum + part.length + 1, 0);
+
                       return (
-                        <span
-                          key={`space-${lineIndex}-${charIndex}`}
-                          className={styles.lineCharSpace}
-                        >
-                          {" "}
+                        <span key={`word-${lineIndex}-${wordIndex}`}>
+                          <span className={styles.lineWord}>
+                            {word.split("").map((char, charIndex) => (
+                              <span
+                                key={`char-${lineIndex}-${wordIndex}-${charIndex}`}
+                                className={styles.lineChar}
+                              >
+                                <span
+                                  className={styles.lineCharInner}
+                                  style={{
+                                    animationDelay: `${
+                                      lineBaseDelay +
+                                      (charOffset + charIndex) * 22
+                                    }ms`,
+                                  }}
+                                >
+                                  {char}
+                                </span>
+                              </span>
+                            ))}
+                          </span>
+                          {wordIndex < words.length - 1 ? (
+                            <span className={styles.lineCharSpace}> </span>
+                          ) : null}
                         </span>
                       );
-                    }
-
-                    return (
-                      <span
-                        key={`char-${lineIndex}-${charIndex}`}
-                        className={styles.lineChar}
-                      >
-                        <span
-                          className={styles.lineCharInner}
-                          style={{
-                            animationDelay: `${lineBaseDelay + charIndex * 22}ms`,
-                          }}
-                        >
-                          {char}
-                        </span>
-                      </span>
-                    );
-                  })}
+                    })}
                 </span>
               ) : (
                 <span

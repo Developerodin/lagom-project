@@ -1,3 +1,4 @@
+import Image from "next/image";
 import Link from "next/link";
 
 import { RevealOnScroll } from "@/components/ui/RevealOnScroll";
@@ -69,14 +70,14 @@ export function AboutCtaSection() {
                         isSaveur ? styles.collageItemSaveur : ""
                       }`.trim()}
                     >
-                      <img
+                      <Image
                         src={item.src}
                         alt={item.alt}
                         className={`${styles.collageImage} ${
                           isSaveur ? styles.collageImageSaveur : ""
                         }`.trim()}
+                        sizes="(max-width: 768px) 33vw, 20vw"
                         loading="lazy"
-                        decoding="async"
                       />
                     </div>
                   );

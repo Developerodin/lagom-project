@@ -31,15 +31,32 @@ export default function StationaryPage() {
           <p className={styles.eyebrow}>Stationary</p>
 
           <h1 className={styles.title}>
-            {title.split("").map((char, index) => (
-              <span
-                key={`${char}-${index}`}
-                className={styles.letter}
-                style={{ animationDelay: `${0.75 + index * 0.055}s` }}
-              >
-                {char === " " ? "\u00A0" : char}
-              </span>
-            ))}
+            {title.split(" ").map((word, wordIndex, words) => {
+              const charOffset = words
+                .slice(0, wordIndex)
+                .reduce((sum, part) => sum + part.length + 1, 0);
+
+              return (
+                <span key={`word-${wordIndex}`} className={styles.word}>
+                  {word.split("").map((char, charIndex) => (
+                    <span
+                      key={`${word}-${charIndex}`}
+                      className={styles.letter}
+                      style={{
+                        animationDelay: `${0.75 + (charOffset + charIndex) * 0.055}s`,
+                      }}
+                    >
+                      {char}
+                    </span>
+                  ))}
+                  {wordIndex < words.length - 1 ? (
+                    <span className={styles.letterSpace} aria-hidden="true">
+                      {"\u00A0"}
+                    </span>
+                  ) : null}
+                </span>
+              );
+            })}
           </h1>
 
           <p className={styles.subtitle}>

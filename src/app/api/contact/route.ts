@@ -44,6 +44,7 @@ export async function POST(request: Request) {
 
   const name = typeof body.name === "string" ? body.name.trim() : "";
   const email = typeof body.email === "string" ? body.email.trim() : "";
+  const phone = typeof body.phone === "string" ? body.phone.trim() : "";
   const company = typeof body.company === "string" ? body.company.trim() : "";
   const message = typeof body.message === "string" ? body.message.trim() : "";
   const services = Array.isArray(body.services)
@@ -101,6 +102,7 @@ export async function POST(request: Request) {
     await sendContactNotification({
       name,
       email,
+      phone: phone || null,
       company: company || null,
       services: subject,
       message,

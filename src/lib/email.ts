@@ -9,6 +9,7 @@ const CONTACT_TO =
 export type ContactEmailPayload = {
   name: string;
   email: string;
+  phone: string | null;
   company: string | null;
   services: string;
   message: string;
@@ -26,6 +27,7 @@ function buildContactEmailHtml(payload: ContactEmailPayload) {
   const rows = [
     ["Name", payload.name],
     ["Email", payload.email],
+    ["Phone", payload.phone || "—"],
     ["Company", payload.company || "—"],
     ["Services", payload.services],
     ["Message", payload.message],
@@ -66,6 +68,7 @@ function buildContactEmailText(payload: ContactEmailPayload) {
     "",
     `Name: ${payload.name}`,
     `Email: ${payload.email}`,
+    `Phone: ${payload.phone || "—"}`,
     `Company: ${payload.company || "—"}`,
     `Services: ${payload.services}`,
     "",

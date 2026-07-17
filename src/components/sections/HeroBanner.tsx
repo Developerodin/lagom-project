@@ -53,7 +53,9 @@ const HeroBannerSlideItem = memo(function HeroBannerSlideItem({
           alt={slide.alt}
           fill
           priority={index === 0}
-          loading={index === 0 ? undefined : "lazy"}
+          // Slide 2 loads eagerly so autoplay never reveals an empty frame
+          // on slow connections; later slides stay lazy until needed.
+          loading={index === 0 ? undefined : index === 1 ? "eager" : "lazy"}
           sizes="100vw"
           className={styles.image}
           draggable={false}

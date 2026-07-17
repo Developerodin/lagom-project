@@ -23,7 +23,7 @@
 
   /* Typography families */
   --font-heading: var(--font-montserrat), system-ui, sans-serif;
-  --font-body: var(--font-montserrat), var(--font-montserrat), serif;
+  --font-body: var(--font-montserrat), system-ui, sans-serif;
 
   /* Typography sizes */
   --text-section-heading: 4rem; /* 64px */
@@ -32,7 +32,7 @@
   --text-small: 1rem; /* 16px */
 
   /* Letter-spacing */
-  --tracking-section: 0.08em;
+  --tracking-section: 0.04em;
 
   /* Spacing scale — only approved values (px) */
   --space-4: 4px;
@@ -168,6 +168,11 @@ a {
   text-decoration: none;
 }
 
+a,
+button {
+  -webkit-tap-highlight-color: transparent;
+}
+
 ul,
 ol {
   list-style: none;
@@ -279,7 +284,9 @@ p {
   letter-spacing: var(--tracking-section);
   text-transform: uppercase;
   max-width: 100%;
-  overflow-wrap: anywhere;
+  overflow-wrap: normal;
+  word-break: normal;
+  hyphens: none;
 }
 
 .heading-service {
@@ -289,6 +296,9 @@ p {
   line-height: 1.1;
   letter-spacing: var(--tracking-section);
   text-transform: uppercase;
+  overflow-wrap: normal;
+  word-break: normal;
+  hyphens: none;
 }
 
 .body {

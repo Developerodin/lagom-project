@@ -9,6 +9,7 @@
   overflow: hidden;
   vertical-align: top;
   line-height: inherit;
+  white-space: nowrap;
 }
 
 .word {
@@ -67,9 +68,8 @@
   transform: translate3d(0, 120%, 0) rotateX(-72deg) scale(0.82);
   transform-origin: 50% 100%;
   opacity: 0;
-  filter: blur(12px);
   transition: none;
-  will-change: transform, opacity, filter;
+  will-change: transform, opacity;
 }
 
 .expressive.visible .word {
@@ -77,8 +77,11 @@
 }
 
 .expressive .emphasisGroup {
-  display: inline;
+  display: inline-block;
   white-space: nowrap;
+  overflow: visible;
+  vertical-align: bottom;
+  padding-bottom: 0.08em;
 }
 
 .expressive .charWrapper {
@@ -86,6 +89,8 @@
   overflow: hidden;
   vertical-align: bottom;
   line-height: inherit;
+  padding-inline: 0.02em;
+  margin-inline: -0.02em;
 }
 
 .expressive .char {
@@ -93,8 +98,7 @@
   transform: translate3d(0, 130%, 0) rotate(14deg) scale(0.65);
   transform-origin: 50% 100%;
   opacity: 0;
-  filter: blur(14px);
-  will-change: transform, opacity, filter;
+  will-change: transform, opacity;
 }
 
 .expressive.visible .char {
@@ -110,8 +114,14 @@
   opacity: 1;
   filter: none;
   transition: none;
-  display: flex;
-  flex-wrap: wrap;
+  display: block;
+  overflow: visible;
+}
+
+.expressive .lineWord {
+  display: inline-block;
+  white-space: nowrap;
+  vertical-align: bottom;
   overflow: visible;
 }
 
@@ -120,14 +130,15 @@
   overflow: hidden;
   vertical-align: bottom;
   line-height: inherit;
+  padding-inline: 0.02em;
+  margin-inline: -0.02em;
 }
 
 .expressive .lineCharInner {
   display: inline-block;
   transform: translate3d(-18px, 105%, 0) skewX(-8deg);
   opacity: 0;
-  filter: blur(8px);
-  will-change: transform, opacity, filter;
+  will-change: transform, opacity;
   font: inherit;
   letter-spacing: inherit;
   color: inherit;
@@ -146,18 +157,15 @@
   0% {
     transform: translate3d(0, 120%, 0) rotateX(-72deg) scale(0.82);
     opacity: 0;
-    filter: blur(12px);
   }
 
   45% {
     opacity: 1;
-    filter: blur(3px);
   }
 
   100% {
     transform: translate3d(0, 0, 0) rotateX(0deg) scale(1);
     opacity: 1;
-    filter: blur(0);
   }
 }
 
@@ -165,12 +173,10 @@
   0% {
     transform: translate3d(0, 130%, 0) rotate(14deg) scale(0.65);
     opacity: 0;
-    filter: blur(14px);
   }
 
   55% {
     opacity: 1;
-    filter: blur(2px);
   }
 
   78% {
@@ -180,7 +186,6 @@
   100% {
     transform: translate3d(0, 0, 0) rotate(0deg) scale(1);
     opacity: 1;
-    filter: blur(0);
   }
 }
 
@@ -188,18 +193,15 @@
   0% {
     transform: translate3d(-18px, 105%, 0) skewX(-8deg);
     opacity: 0;
-    filter: blur(8px);
   }
 
   60% {
     opacity: 1;
-    filter: blur(1px);
   }
 
   100% {
     transform: translate3d(0, 0, 0) skewX(0deg);
     opacity: 1;
-    filter: blur(0);
   }
 }
 

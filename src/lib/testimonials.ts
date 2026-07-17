@@ -69,30 +69,6 @@ export async function getPublishedTestimonials() {
     orderBy: [{ sortOrder: "asc" }, { createdAt: "asc" }],
   });
 
-  // #region agent log
-  fetch("http://127.0.0.1:7431/ingest/561a2b9a-5af5-4541-b767-6e1b2d1a81d3", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      "X-Debug-Session-Id": "b7e079",
-    },
-    body: JSON.stringify({
-      sessionId: "b7e079",
-      runId: "pre-fix",
-      hypothesisId: "A,B,E",
-      location: "testimonials.ts:getPublishedTestimonials",
-      message: "raw prisma testimonial rows",
-      data: {
-        count: rows.length,
-        emptyBgCount: rows.filter((r) => !r.bgImageUrl?.trim()).length,
-        emptyLogoCount: rows.filter((r) => !r.logoUrl?.trim()).length,
-        ids: rows.map((r) => r.id),
-      },
-      timestamp: Date.now(),
-    }),
-  }).catch(() => {});
-  // #endregion
-
   return rows;
 }
 

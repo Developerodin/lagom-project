@@ -2,7 +2,7 @@ import type { ReactNode } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import {
-  footerNavigationColumns,
+  footerNavigation,
   siteConfig,
   socialLinks,
   type SocialLink,
@@ -58,6 +58,14 @@ export function Footer() {
 
   return (
     <RevealOnScroll as="footer" className={styles.footer}>
+      <Image
+        src="/assets/home/footer.jpg"
+        alt=""
+        fill
+        sizes="100vw"
+        className={styles.footerBg}
+        aria-hidden="true"
+      />
       <div className="container">
         <div className={styles.top}>
           <div className={styles.brand}>
@@ -71,25 +79,13 @@ export function Footer() {
               />
               <span className="sr-only">{siteConfig.name}</span>
             </Link>
-            <p className={`body-sm text-muted ${styles.tagline}`}>
-              {siteConfig.tagline}
-            </p>
           </div>
 
           <nav className={styles.nav} aria-label="Footer navigation">
-            <div className={styles.navColumns}>
+            <div>
+              <p className={styles.navHeading}>Quick links</p>
               <ul className={styles.navList}>
-                {footerNavigationColumns[0].map((item) => (
-                  <li key={item.href} className={styles.navItem}>
-                    <Link href={item.href} className={styles.navLink}>
-                      {item.label}
-                    </Link>
-                  </li>
-                ))}
-              </ul>
-              <div className={styles.navDivider} aria-hidden="true" />
-              <ul className={styles.navList}>
-                {footerNavigationColumns[1].map((item) => (
+                {footerNavigation.map((item) => (
                   <li key={item.href} className={styles.navItem}>
                     <Link href={item.href} className={styles.navLink}>
                       {item.label}
@@ -121,9 +117,9 @@ export function Footer() {
                       className={styles.socialLink}
                       target="_blank"
                       rel="noopener noreferrer"
+                      aria-label={link.label}
                     >
                       <Icon />
-                      {link.label}
                     </a>
                   </li>
                 );

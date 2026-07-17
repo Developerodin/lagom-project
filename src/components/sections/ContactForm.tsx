@@ -36,6 +36,7 @@ export function ContactForm() {
     const payload = {
       name: formData.get("name"),
       email: formData.get("email"),
+      phone: formData.get("phone"),
       company: formData.get("company"),
       message: formData.get("message"),
       services: selectedServices,
@@ -95,7 +96,7 @@ export function ContactForm() {
       />
 
       <div className={styles.fieldRow}>
-        <div className={styles.field}>
+        <div className={`${styles.field} ${styles.fieldCompact}`}>
           <label htmlFor="contact-name" className={styles.fieldLabel}>
             {fields.name.label}
           </label>
@@ -109,7 +110,7 @@ export function ContactForm() {
           />
         </div>
 
-        <div className={styles.field}>
+        <div className={`${styles.field} ${styles.fieldCompact}`}>
           <label htmlFor="contact-email" className={styles.fieldLabel}>
             {fields.email.label}
           </label>
@@ -124,17 +125,32 @@ export function ContactForm() {
         </div>
       </div>
 
-      <div className={styles.field}>
-        <label htmlFor="contact-company" className={styles.fieldLabel}>
-          {fields.company.label}
-        </label>
-        <input
-          id="contact-company"
-          name="company"
-          type={fields.company.type}
-          className={styles.fieldInput}
-          autoComplete="organization"
-        />
+      <div className={styles.fieldRow}>
+        <div className={styles.field}>
+          <label htmlFor="contact-phone" className={styles.fieldLabel}>
+            {fields.phone.label}
+          </label>
+          <input
+            id="contact-phone"
+            name="phone"
+            type={fields.phone.type}
+            className={styles.fieldInput}
+            autoComplete="tel"
+          />
+        </div>
+
+        <div className={styles.field}>
+          <label htmlFor="contact-company" className={styles.fieldLabel}>
+            {fields.company.label}
+          </label>
+          <input
+            id="contact-company"
+            name="company"
+            type={fields.company.type}
+            className={styles.fieldInput}
+            autoComplete="organization"
+          />
+        </div>
       </div>
 
       <fieldset className={`${styles.field} ${styles.servicesField}`}>

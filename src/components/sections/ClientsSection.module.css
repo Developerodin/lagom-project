@@ -1,7 +1,7 @@
 .section {
-  --client-logo-height: 4rem;
+  --client-logo-height: 8rem;
   --client-logo-gap: var(--space-48);
-  --marquee-duration: 30s;
+  --marquee-duration: 60s;
   width: 100%;
   overflow-x: clip;
   background-color: var(--color-paper);
@@ -39,10 +39,10 @@
 .marqueeGroup {
   display: flex;
   align-items: center;
-  gap: var(--client-logo-gap);
+  gap: 33px;
   flex-shrink: 0;
   margin: 0;
-  padding: 0;
+  padding: 0 var(--client-logo-gap) 0 0;
   list-style: none;
 }
 
@@ -80,7 +80,7 @@
 
 @media (max-width: 992px) {
   .section {
-    --client-logo-height: 44px;
+    --client-logo-height: 88px;
     --client-logo-gap: var(--space-32);
   }
 }
@@ -88,7 +88,7 @@
 @media (max-width: 768px) {
   .section {
     padding-block: calc(var(--section-spacing-sm) * 0.65);
-    --client-logo-height: 36px;
+    --client-logo-height: 72px;
     --client-logo-gap: var(--space-24);
   }
 
@@ -99,14 +99,14 @@
 
 @media (max-width: 640px) {
   .section {
-    --client-logo-height: 32px;
+    --client-logo-height: 64px;
     --client-logo-gap: var(--space-16);
   }
 }
 
 @media (max-width: 480px) {
   .section {
-    --client-logo-height: 28px;
+    --client-logo-height: 56px;
     --client-logo-gap: var(--space-16);
   }
 }
@@ -114,13 +114,13 @@
 @media (max-width: 390px) {
   .section {
     padding-block: calc(var(--section-spacing-sm) * 0.5);
-    --client-logo-height: 26px;
+    --client-logo-height: 52px;
   }
 }
 
 @media (max-width: 360px) {
   .section {
-    --client-logo-height: 24px;
+    --client-logo-height: 48px;
     --client-logo-gap: var(--space-12);
   }
 }
@@ -132,6 +132,10 @@
     transform: none;
     width: 100%;
     justify-content: center;
+  }
+
+  .marqueeGroup {
+    padding: 0;
   }
 
   .marqueeGroup[aria-hidden="true"] {

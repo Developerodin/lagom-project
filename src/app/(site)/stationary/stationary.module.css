@@ -192,6 +192,16 @@
   letter-spacing: 0.02em;
 }
 
+.word {
+  display: inline-flex;
+  white-space: nowrap;
+}
+
+.letterSpace {
+  display: inline-block;
+  width: 0.3em;
+}
+
 .letter {
   display: inline-block;
   opacity: 0;

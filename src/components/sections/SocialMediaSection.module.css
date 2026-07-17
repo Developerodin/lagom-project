@@ -60,7 +60,7 @@
   max-width: none;
   margin-bottom: var(--space-32);
   font-family: var(--font-lora), serif;
-  font-size: clamp(2rem, 4vw, var(--text-service-heading));
+  font-size: clamp(1.5rem, 4vw, var(--text-service-heading));
   font-weight: 500;
   line-height: 1.15;
   letter-spacing: 0.01em;

@@ -18,7 +18,7 @@
   width: 100%;
   font-size: calc(var(--text-section-heading) * 0.675);
   text-align: center;
-  margin-bottom: var(--space-48);
+  margin-bottom: var(--space-72);
 }
 
 .content {
@@ -297,6 +297,10 @@
   .textBlock {
     text-align: center;
     align-items: center;
+  }
+
+  .arrowWrap {
+    margin-block: var(--space-16);
   }
 
   .subheading {

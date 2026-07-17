@@ -23,12 +23,15 @@
   flex-shrink: 0;
   line-height: 0;
   transition: opacity var(--transition);
+  -webkit-user-select: none;
+  user-select: none;
 }
 
 .logoImage {
   display: block;
   width: auto;
   height: 3.25rem;
+  -webkit-user-drag: none;
 }
 
 .logo:hover {

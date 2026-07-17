@@ -2,6 +2,16 @@ import type { StaticImageData } from "next/image";
 
 import aboutHeroImage from "../../public/assets/about/hero.jpg";
 import studioPortraitImage from "../../public/assets/about/studio-portrait.png";
+import collage4 from "../../public/assets/about/4.jpg";
+import collage5 from "../../public/assets/about/5.jpg";
+import collage6 from "../../public/assets/about/6.jpg";
+import collage7 from "../../public/assets/about/7.jpg";
+import collage8 from "../../public/assets/about/8.jpg";
+import collage9 from "../../public/assets/about/9.jpg";
+import collage10 from "../../public/assets/about/10.jpg";
+import collage11 from "../../public/assets/about/11.jpg";
+import collage12 from "../../public/assets/about/12.jpg";
+import collage13 from "../../public/assets/about/13.jpg";
 
 export type AboutHeroContent = {
   image: StaticImageData;
@@ -43,7 +53,7 @@ export const theStudioSectionContent: TheStudioSectionContent = {
 
 export type AboutCtaCollageItem = {
   id: string;
-  src: string;
+  src: StaticImageData;
   alt: string;
 };
 
@@ -63,52 +73,52 @@ export const aboutCtaCollageColumns: AboutCtaCollageColumn[] = [
 export const aboutCtaCollageItems: AboutCtaCollageItem[] = [
   {
     id: "s1",
-    src: "/assets/about/4.jpg",
+    src: collage4,
     alt: "Skincare product packaging design",
   },
   {
     id: "s2",
-    src: "/assets/about/5.jpg",
+    src: collage5,
     alt: "Illustrated tote bag brand application",
   },
   {
     id: "s3",
-    src: "/assets/about/6.jpg",
+    src: collage6,
     alt: "Colorful spice tin packaging lineup",
   },
   {
     id: "s4",
-    src: "/assets/about/7.jpg",
+    src: collage7,
     alt: "Saffron product packaging design",
   },
   {
     id: "s5",
-    src: "/assets/about/8.jpg",
+    src: collage8,
     alt: "Architectural brand photography",
   },
   {
     id: "s6",
-    src: "/assets/about/9.jpg",
+    src: collage9,
     alt: "NOCK NOCK branded packaging box",
   },
   {
     id: "b1",
-    src: "/assets/about/10.jpg",
+    src: collage10,
     alt: "WOW IDLI food brand packaging",
   },
   {
     id: "b2",
-    src: "/assets/about/11.jpg",
+    src: collage11,
     alt: "Hair care product bottle design",
   },
   {
     id: "b3",
-    src: "/assets/about/12.jpg",
+    src: collage12,
     alt: "SAVEUR luxury packaging box",
   },
   {
     id: "b4",
-    src: "/assets/about/13.jpg",
+    src: collage13,
     alt: "Restaurant interior brand signage",
   },
 ];

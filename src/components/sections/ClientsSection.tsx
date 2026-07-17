@@ -62,7 +62,7 @@ function LogoMarqueeGroup({ logos, ariaHidden = false }: LogoMarqueeGroupProps) 
             width={240}
             height={80}
             className={styles.logoImage}
-            sizes="(max-width: 480px) 72px, (max-width: 768px) 96px, 120px"
+            sizes="(max-width: 480px) 144px, (max-width: 768px) 192px, 240px"
           />
         </li>
       ))}
@@ -96,6 +96,9 @@ function ClientMarquee({ logos, reverse = false }: ClientMarqueeProps) {
 
 export function ClientsSection() {
   const logos = getClientLogos();
+  const midpoint = Math.ceil(logos.length / 2);
+  const firstStripLogos = logos.slice(0, midpoint);
+  const secondStripLogos = logos.slice(midpoint);
 
   return (
     <RevealOnScroll
@@ -113,8 +116,8 @@ export function ClientsSection() {
 
         {logos.length > 0 ? (
           <div className={styles.marqueeStrips}>
-            <ClientMarquee logos={logos} />
-            <ClientMarquee logos={logos} reverse />
+            <ClientMarquee logos={firstStripLogos} />
+            <ClientMarquee logos={secondStripLogos} reverse />
           </div>
         ) : null}
       </div>

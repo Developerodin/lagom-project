@@ -81,7 +81,11 @@
 }
 
 .fieldTextarea {
-  min-height: 10rem;
+  max-height: 6rem;
+}
+
+.fieldCompact {
+  padding: var(--space-12) var(--space-16) var(--space-8);
 }
 
 .servicesField {
@@ -113,7 +117,7 @@
   display: flex;
   align-items: center;
   gap: var(--space-12);
-  min-height: 3.25rem;
+
   padding: var(--space-12) var(--space-16);
   border: 1px solid var(--border);
   border-radius: var(--image-radius);
@@ -154,8 +158,8 @@
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
-  width: 1.25rem;
-  height: 1.25rem;
+  width: 1.125rem;
+  height: 1.125rem;
   border: 1.5px solid color-mix(in srgb, var(--color-primary) 30%, transparent);
   border-radius: 0.3rem;
   color: transparent;
@@ -168,8 +172,8 @@
 }
 
 .serviceCheckmark svg {
-  width: 0.7rem;
-  height: 0.7rem;
+  width: 0.63rem;
+  height: 0.63rem;
 }
 
 .serviceOption:hover .serviceCheckmark {
@@ -220,7 +224,7 @@
 
 .fieldTextarea .fieldInput {
   flex: 1;
-  min-height: 6rem;
+  min-height: 7.2rem;
   resize: none;
 }
 
@@ -281,8 +285,10 @@
 
 .infoItem {
   display: flex;
-  align-items: flex-start;
-  gap: var(--space-16);
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: var(--space-12);
   padding: var(--space-16);
   margin: calc(var(--space-16) * -1);
   border-radius: var(--image-radius);
@@ -328,9 +334,10 @@
 .infoText {
   display: flex;
   flex-direction: column;
+  align-items: center;
   gap: var(--space-4);
   min-width: 0;
-  padding-top: 0.125rem;
+  padding-top: 0;
 }
 
 .infoLabel {
@@ -362,7 +369,7 @@ a.infoValue:hover {
 
   .infoList {
     display: grid;
-    grid-template-columns: repeat(4, minmax(0, 1fr));
+    grid-template-columns: repeat(3, minmax(0, 1fr));
     gap: var(--space-24);
     max-width: 100%;
   }
