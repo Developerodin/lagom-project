@@ -1,12 +1,6 @@
 .home {
-  --heading-content-spacing: var(--space-96);
-  --section-spacing-md: calc(var(--space-112) + var(--space-16));
-  --section-spacing-sm: calc(80px + var(--space-16));
-  --brand-statement-padding-block: clamp(
-    calc(2rem + var(--space-16)),
-    14vh,
-    calc(var(--space-144) + var(--space-16))
-  );
+  --heading-content-spacing: var(--space-72);
+  --section-spacing-md: calc(var(--space-72) * 0.725);
 }
 
 .home :global(.heading-section),

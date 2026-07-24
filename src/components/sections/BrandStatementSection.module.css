@@ -1,6 +1,6 @@
 .section {
   width: 100%;
-  margin: 3rem 0;
+  padding-block: var(--section-spacing-md);
   background-color: var(--color-paper);
 }
 
@@ -21,13 +21,6 @@
   color: var(--color-paper);
 }
 */
-/* .inner {
-  padding-block: var(
-    --brand-statement-padding-block,
-    clamp(var(--space-4), 12vh, var(--space-4))
-  );
-}  */
-
 .content {
   display: flex;
   flex-direction: column;
@@ -94,10 +87,6 @@
 }
 
 @media (max-width: 768px) {
-  .inner {
-    padding-block: var(--space-4);
-  }
-
   .content {
     gap: var(--space-32);
   }
@@ -107,8 +96,3 @@
   }
 }
 
-@media (max-width: 480px) {
-  .inner {
-    padding-block: var(--space-4);
-  }
-}

@@ -1,15 +1,15 @@
 import type { StaticImageData } from "next/image";
 
-import brandingImagePrimary from "../../public/assets/home/square-images_-1024-x-1024px/s1.jpg";
-import brandingImageSecondary from "../../public/assets/home/square-images_-1024-x-1024px/s2.jpg";
-import packagingImagePrimary from "../../public/assets/home/square-images_-1024-x-1024px/s1.jpg";
-import packagingImageSecondary from "../../public/assets/home/square-images_-1024-x-1024px/s5.jpg";
-import webDesignImagePrimary from "../../public/assets/home/square-images_-1024-x-1024px/s3.jpg";
-import webDesignImageSecondary from "../../public/assets/home/square-images_-1024-x-1024px/s4.jpg";
-import socialMediaImagePrimary from "../../public/assets/home/square-images_-1024-x-1024px/s1.jpg";
-import socialMediaImageSecondary from "../../public/assets/home/square-images_-1024-x-1024px/s5.jpg";
-import illustrationsImagePrimary from "../../public/assets/home/square-images_-1024-x-1024px/s3.jpg";
-import illustrationsImageSecondary from "../../public/assets/home/square-images_-1024-x-1024px/s2.jpg";
+import brandingImagePrimary from "../../public/assets/services/b1.png";
+import brandingImageSecondary from "../../public/assets/services/b2.png";
+import packagingImagePrimary from "../../public/assets/services/p1.png";
+import packagingImageSecondary from "../../public/assets/services/p2.png";
+import webDesignImagePrimary from "../../public/assets/services/w1.png";
+import webDesignImageSecondary from "../../public/assets/services/w2.png";
+import socialMediaImagePrimary from "../../public/assets/services/s1.png";
+import socialMediaImageSecondary from "../../public/assets/services/s2.png";
+import illustrationsImagePrimary from "../../public/assets/services/i1.png";
+import illustrationsImageSecondary from "../../public/assets/services/i2.png";
 import processIconUnderstand from "../../public/assets/home/icons_-150-x-150px/understand.png";
 import processIconExplore from "../../public/assets/home/icons_-150-x-150px/explore.png";
 import processIconDefine from "../../public/assets/home/icons_-150-x-150px/define.png";
@@ -55,7 +55,7 @@ export const packagingSectionContent = {
     },
     secondary: {
       src: packagingImageSecondary,
-      alt: "kaahu tea packaging — premium Darjeeling white tea box on marble",
+      alt: "True Grain packaging design — organic food brand pouch and product display",
     },
   },
 } as const;
@@ -73,11 +73,11 @@ export const webDesignSectionContent = {
   images: {
     primary: {
       src: webDesignImagePrimary,
-      alt: "whimsy beauty brand packaging — tropical heart-shaped gift box with product collection",
+      alt: "Whimsy Beauty web design — responsive website across desktop, laptop, tablet, and mobile",
     },
     secondary: {
       src: webDesignImageSecondary,
-      alt: "Bombay Republic brand identity — Indian Street Kitchen & Bar with historic architecture",
+      alt: "Whimsy Beauty web design — isometric laptop mockup with floating UI components",
     },
   },
 } as const;
@@ -95,11 +95,11 @@ export const socialMediaSectionContent = {
   images: {
     primary: {
       src: socialMediaImagePrimary,
-      alt: "SAMāH social media graphic — product lineup for seed cycling and supplements",
+      alt: "kaahu social media graphic — Silver Needle White Tea from Darjeeling",
     },
     secondary: {
       src: socialMediaImageSecondary,
-      alt: "kaahu social media graphic — premium Darjeeling white tea",
+      alt: "kaahu tea packaging — Risheehat Floral First Flush Darjeeling tea box and tin",
     },
   },
 } as const;
@@ -117,11 +117,11 @@ export const illustrationsSectionContent = {
   images: {
     primary: {
       src: illustrationsImagePrimary,
-      alt: "Whimsy beauty packaging — watercolor tropical illustrations on a heart-shaped gift box",
+      alt: "Watercolor illustration — woman resting in a meadow surrounded by flowers and butterflies",
     },
     secondary: {
       src: illustrationsImageSecondary,
-      alt: "Sunita Shekhawat Jaipur — gold line-art bird illustration on textured plum background",
+      alt: "Architectural sketch illustration — Taj Mahal Palace Hotel in Mumbai",
     },
   },
 } as const;

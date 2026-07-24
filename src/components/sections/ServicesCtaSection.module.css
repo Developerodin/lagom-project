@@ -1,10 +1,13 @@
 .section {
   width: 100%;
+  padding-block: var(--section-spacing-md);
   background-color: var(--color-paper);
 }
 
 .inner {
-  padding-block: clamp(var(--space-96), 14vh, var(--space-144));
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 .content {
@@ -52,10 +55,6 @@
 }
 
 @media (max-width: 768px) {
-  .inner {
-    padding-block: var(--space-72);
-  }
-
   .content {
     gap: var(--space-48);
   }
@@ -66,10 +65,6 @@
 }
 
 @media (max-width: 480px) {
-  .inner {
-    padding-block: var(--space-48);
-  }
-
   .content {
     gap: var(--space-32);
   }

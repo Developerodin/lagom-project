@@ -1,5 +1,6 @@
 "use client";
 
+import type { MouseEvent } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { mainNavigation } from "@/content/site";
@@ -12,6 +13,11 @@ type NavigationProps = {
 
 export function Navigation({ inverted = false, onNavigate }: NavigationProps) {
   const pathname = usePathname();
+
+  function handleLinkClick(event: MouseEvent<HTMLAnchorElement>) {
+    onNavigate?.();
+    event.currentTarget.blur();
+  }
 
   return (
     <nav className={styles.nav} aria-label="Main navigation">
@@ -35,7 +41,7 @@ export function Navigation({ inverted = false, onNavigate }: NavigationProps) {
               <Link
                 href={item.href}
                 className={linkClass}
-                onClick={onNavigate}
+                onClick={handleLinkClick}
                 aria-current={isActive ? "page" : undefined}
               >
                 {item.label}

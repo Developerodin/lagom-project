@@ -1,7 +1,7 @@
 .section {
   width: 100%;
   background-color: var(--color-paper);
-  padding-block: 2rem;
+  padding-block: var(--section-spacing-md);
 }
 
 .layout {
@@ -134,10 +134,6 @@
 }
 
 @media (max-width: 768px) {
-  .section {
-    padding-block: var(--section-spacing-sm);
-  }
-
   .layout {
     gap: var(--space-32);
     padding-inline: 0 !important;
@@ -181,10 +177,6 @@
 }
 
 @media (max-width: 480px) {
-  .section {
-    padding-block: var(--space-48);
-  }
-
   .layout {
     gap: var(--space-24);
   }

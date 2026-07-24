@@ -14,7 +14,7 @@
 .collageCol {
   min-width: 0;
   height: 100%;
-  padding-block: clamp(var(--space-48), 8vh, var(--space-96));
+  padding-block: var(--section-spacing-md);
   padding-inline: 0 var(--space-24);
 }
 
@@ -82,7 +82,7 @@
   align-items: flex-start;
   gap: clamp(var(--space-32), 6vh, var(--space-32));
   min-width: 0;
-  padding-block: clamp(var(--space-48), 8vh, var(--space-96));
+  padding-block: var(--section-spacing-md);
   padding-inline: clamp(var(--space-24), 4vw, var(--space-72))
     var(--container-padding);
 }
@@ -144,8 +144,7 @@
 
   .collageCol {
     order: 1;
-    padding-block: var(--space-48) var(--space-32);
-
+    padding-block: var(--section-spacing-md);
   }
 
   .collage {
@@ -171,7 +170,7 @@
     order: 2;
     align-items: center;
     text-align: center;
-    padding-block: var(--space-32) var(--space-72);
+    padding-block: var(--section-spacing-md);
     padding-inline: var(--container-padding);
   }
 
@@ -187,7 +186,7 @@
 
 @media (max-width: 480px) {
   .collageCol {
-    padding-block: var(--space-32) var(--space-24);
+    padding-block: var(--section-spacing-md);
   }
 
   .collage {
@@ -204,7 +203,7 @@
 
   .contentCol {
     gap: var(--space-32);
-    padding-block: var(--space-24) var(--space-48);
+    padding-block: var(--section-spacing-md);
   }
 
   .headline {

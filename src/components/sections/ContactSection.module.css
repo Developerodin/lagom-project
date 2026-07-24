@@ -16,7 +16,7 @@
   display: flex;
   flex-direction: column;
   min-width: 0;
-  padding-block: clamp(var(--space-48), 10vh, var(--space-48));
+  padding-block: var(--section-spacing-md);
   width: 100%;
   max-width: 48rem;
 }
@@ -423,11 +423,11 @@ a.infoValue:hover {
   }
 
   .formCol {
-    padding-block: var(--space-72) var(--space-48);
+    padding-block: var(--section-spacing-md);
   }
 
   .infoCol {
-    padding-block: var(--space-48) var(--space-72);
+    padding-block: var(--section-spacing-md);
   }
 
   .form,
@@ -446,11 +446,7 @@ a.infoValue:hover {
 
   .formCol,
   .infoCol {
-    padding-block: var(--space-48);
-  }
-
-  .infoCol {
-    padding-bottom: var(--space-72);
+    padding-block: var(--section-spacing-md);
   }
 
   .fieldRow {
@@ -469,11 +465,7 @@ a.infoValue:hover {
 @media (max-width: 480px) {
   .formCol,
   .infoCol {
-    padding-block: var(--space-32);
-  }
-
-  .infoCol {
-    padding-bottom: var(--space-48);
+    padding-block: var(--section-spacing-md);
   }
 
   .form {

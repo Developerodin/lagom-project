@@ -1,7 +1,7 @@
 .section {
   width: 100%;
   background-color: var(--color-paper);
-  padding-block: 3rem;
+  padding-block: var(--section-spacing-md);
 }
 
 .headingWrap {
@@ -157,10 +157,6 @@ font-size: smaller;
 }
 
 @media (max-width: 768px) {
-  .section {
-    padding-block: 2rem;
-  }
-
   .grid {
     grid-template-columns: minmax(0, 1fr);
     gap: var(--space-24);

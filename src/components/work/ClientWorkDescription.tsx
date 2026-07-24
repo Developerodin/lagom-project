@@ -2,8 +2,9 @@ import { RevealOnScroll } from "@/components/ui/RevealOnScroll";
 import styles from "./ClientWorkDescription.module.css";
 
 type ClientWorkDescriptionProps = {
+  clientName: string;
   description: string;
-  whatWeDid: string | null;
+  services: string | null;
   category: string | null;
 };
 
@@ -14,52 +15,60 @@ function splitParagraphs(text: string) {
     .filter(Boolean);
 }
 
+function splitLines(text: string) {
+  return text
+    .split(/\n+/)
+    .map((line) => line.trim())
+    .filter(Boolean);
+}
+
 export function ClientWorkDescription({
+  clientName,
   description,
-  whatWeDid,
+  services,
   category,
 }: ClientWorkDescriptionProps) {
   const paragraphs = splitParagraphs(description);
-  const whatWeDidParagraphs = splitParagraphs(whatWeDid ?? "");
-  const hasMeta = Boolean(category) || whatWeDidParagraphs.length > 0;
+  const serviceLines = splitLines(services ?? "");
 
   return (
     <RevealOnScroll as="section" className={`section-md ${styles.section}`}>
       <div className="container">
         <div className={styles.layout}>
-          <div className={styles.summary}>
-            <p className={styles.label}>THE PROJECT SUMMARY :</p>
-            <div className={styles.body}>
-              {paragraphs.map((paragraph, index) => (
-                <p key={index} className="body">
-                  {paragraph}
-                </p>
-              ))}
+          <div className={styles.meta}>
+            <div className={styles.metaItem}>
+              <h2 className={styles.heading}>Client</h2>
+              <p className={styles.metaValue}>{clientName}</p>
             </div>
+
+            {serviceLines.length > 0 ? (
+              <div className={styles.metaItem}>
+                <h2 className={styles.heading}>Services</h2>
+                <ul className={styles.servicesList}>
+                  {serviceLines.map((line, index) => (
+                    <li key={index}>{line}</li>
+                  ))}
+                </ul>
+              </div>
+            ) : null}
+
+            {category ? (
+              <div className={styles.metaItem}>
+                <h2 className={styles.heading}>Category</h2>
+                <p className={styles.metaValue}>{category}</p>
+              </div>
+            ) : null}
           </div>
 
-          {hasMeta ? (
-            <aside className={styles.meta} aria-label="Project details">
-              {whatWeDidParagraphs.length > 0 ? (
-                <div className={styles.metaItem}>
-                  <p className={styles.label}>WHAT WE DID :</p>
-                  <div className={styles.metaValue}>
-                    {whatWeDidParagraphs.map((paragraph, index) => (
-                      <p key={index} className="body">
-                        {paragraph}
-                      </p>
-                    ))}
-                  </div>
-                </div>
-              ) : null}
-
-              {category ? (
-                <div className={styles.metaItem}>
-                  <p className={styles.label}>CATEGORY</p>
-                  <p className={`body ${styles.metaValue}`}>{category}</p>
-                </div>
-              ) : null}
-            </aside>
+          {paragraphs.length > 0 ? (
+            <div className={styles.about}>
+              <h2 className={styles.heading}>About the Project</h2>
+              <div className={styles.aboutBody}>
+                {paragraphs.map((paragraph, index) => (
+                  <p key={index}>{paragraph}</p>
+                ))}
+              </div>
+            </div>
           ) : null}
         </div>
       </div>

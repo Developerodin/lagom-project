@@ -3,7 +3,7 @@
   --philosophy-gap: var(--grid-gap-column);
   width: 100%;
   background-color: var(--color-paper);
-  padding-block: calc(var(--section-spacing-md) * 0.65);
+  padding-block: var(--section-spacing-md);
 }
 
 .heading {
@@ -53,10 +53,6 @@
 }
 
 @media (max-width: 768px) {
-  .section {
-    padding-block: calc(var(--section-spacing-sm) * 0.65);
-  }
-
   .heading {
     margin-bottom: calc(var(--heading-content-spacing) * 0.5);
   }
@@ -78,12 +74,6 @@
 @media (max-width: 480px) {
   .grid {
     --philosophy-gap: var(--space-8);
-  }
-}
-
-@media (max-width: 390px) {
-  .section {
-    padding-block: calc(var(--section-spacing-sm) * 0.5);
   }
 }
 

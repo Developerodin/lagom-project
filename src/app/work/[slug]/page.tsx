@@ -48,8 +48,9 @@ export default async function WorkDetailPage({
         title={client.title}
       />
       <ClientWorkDescription
+        clientName={client.title}
         description={client.description}
-        whatWeDid={getClientWhatWeDid(client)}
+        services={getClientWhatWeDid(client)}
         category={client.category?.name ?? null}
       />
       <ClientWorkGallery images={client.gallery} />

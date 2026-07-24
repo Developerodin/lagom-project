@@ -34,7 +34,7 @@
 .imageFront {
   position: absolute;
   overflow: hidden;
-  border-radius: calc(var(--image-radius) * 2.5);
+  border-radius: calc(var(--image-radius) * 3.3);
   width: 48%;
   aspect-ratio: 1;
 }
@@ -132,6 +132,6 @@
 
   .imageBack,
   .imageFront {
-    border-radius: calc(var(--image-radius) * 2);
+    border-radius: calc(var(--image-radius) * 3.3);
   }
 }

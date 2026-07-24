@@ -11,7 +11,7 @@
   --lagom-way-portrait-width: 50%;
   width: 100%;
   background-color: var(--color-paper);
-  padding-block: 0;
+  padding-block: var(--section-spacing-md);
 }
 
 .heading {

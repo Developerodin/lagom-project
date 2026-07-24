@@ -12,6 +12,7 @@ export function AboutHeroBanner() {
           alt={aboutHeroContent.alt}
           fill
           priority
+          unoptimized
           sizes="100vw"
           className={styles.image}
         />
