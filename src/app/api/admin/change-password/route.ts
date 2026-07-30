@@ -1,9 +1,10 @@
-import bcrypt from "bcryptjs";
 import { NextResponse } from "next/server";
-import { prisma } from "@/lib/prisma";
-import { env } from "@/lib/env";
-
-const PASSWORD_SETTING_KEY = "admin_password_hash";
+import {
+  setAdminPasswordHash,
+  validateNewPassword,
+  verifyAdminPassword,
+} from "@/lib/admin-password";
+import { requireAuth } from "@/lib/auth";
 
 type RequestBody = {
   currentPassword?: unknown;
@@ -11,29 +12,10 @@ type RequestBody = {
   confirmPassword?: unknown;
 };
 
-async function getActiveAdminPasswordHash() {
-  try {
-    const stored = await prisma.setting.findUnique({
-      where: { key: PASSWORD_SETTING_KEY },
-      select: { value: true },
-    });
-    return stored?.value ?? env.adminPasswordHash ?? null;
-  } catch {
-    return env.adminPasswordHash ?? null;
-  }
-}
-
-function validateNewPassword(newPassword: string, confirmPassword: string) {
-  if (newPassword.length < 8) {
-    return "New password must be at least 8 characters.";
-  }
-  if (newPassword !== confirmPassword) {
-    return "New password and confirmation do not match.";
-  }
-  return null;
-}
-
 export async function POST(request: Request) {
+  const authError = await requireAuth();
+  if (authError) return authError;
+
   let body: RequestBody;
   try {
     body = (await request.json()) as RequestBody;
@@ -63,27 +45,13 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: newPasswordError }, { status: 400 });
   }
 
-  const activeHash = await getActiveAdminPasswordHash();
-  if (!activeHash) {
-    return NextResponse.json(
-      { error: "Admin password is not configured." },
-      { status: 500 },
-    );
-  }
-
-  const valid = await bcrypt.compare(currentPassword, activeHash);
+  const valid = await verifyAdminPassword(currentPassword);
   if (!valid) {
     return NextResponse.json({ error: "Incorrect password." }, { status: 401 });
   }
 
-  const nextHash = await bcrypt.hash(newPassword, 10);
-
   try {
-    await prisma.setting.upsert({
-      where: { key: PASSWORD_SETTING_KEY },
-      create: { key: PASSWORD_SETTING_KEY, value: nextHash },
-      update: { value: nextHash },
-    });
+    await setAdminPasswordHash(newPassword);
   } catch {
     return NextResponse.json(
       { error: "Could not update password. Please try again." },
@@ -93,4 +61,3 @@ export async function POST(request: Request) {
 
   return NextResponse.json({ success: true });
 }
-

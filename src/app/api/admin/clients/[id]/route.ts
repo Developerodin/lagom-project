@@ -1,14 +1,22 @@
 import { Prisma } from "@prisma/client";
 import { NextResponse } from "next/server";
+import { requireAuth } from "@/lib/auth";
 import { validateCategoryId } from "@/lib/categories";
 import { prisma } from "@/lib/prisma";
 import { deleteUpload } from "@/lib/uploads";
-import { getClientById, parseClientWorkInput } from "@/lib/work";
+import {
+  getClientById,
+  parseClientWorkInput,
+  validateServiceIds,
+} from "@/lib/work";
 
 export async function GET(
   _request: Request,
   { params }: { params: Promise<{ id: string }> },
 ) {
+  const authError = await requireAuth();
+  if (authError) return authError;
+
   const { id } = await params;
   const client = await getClientById(id);
 
@@ -23,6 +31,9 @@ export async function PUT(
   request: Request,
   { params }: { params: Promise<{ id: string }> },
 ) {
+  const authError = await requireAuth();
+  if (authError) return authError;
+
   const { id } = await params;
 
   let body: unknown;
@@ -46,11 +57,16 @@ export async function PUT(
     return NextResponse.json({ error: "Not found." }, { status: 404 });
   }
 
-  const { gallery, ...fields } = parsed.data;
+  const { gallery, serviceIds, ...fields } = parsed.data;
 
   const categoryCheck = await validateCategoryId(fields.categoryId);
   if (!categoryCheck.ok) {
     return NextResponse.json({ error: categoryCheck.error }, { status: 400 });
+  }
+
+  const serviceCheck = await validateServiceIds(serviceIds);
+  if (!serviceCheck.ok) {
+    return NextResponse.json({ error: serviceCheck.error }, { status: 400 });
   }
 
   const previousUrls = new Set<string>([
@@ -67,6 +83,7 @@ export async function PUT(
   try {
     await prisma.$transaction([
       prisma.clientWorkImage.deleteMany({ where: { clientWorkId: id } }),
+      prisma.clientWorkService.deleteMany({ where: { clientWorkId: id } }),
       prisma.clientWork.update({
         where: { id },
         data: {
@@ -78,6 +95,12 @@ export async function PUT(
               alt: image.alt,
               width: image.width,
               height: image.height,
+              sortOrder: index,
+            })),
+          },
+          workServices: {
+            create: serviceCheck.serviceIds.map((workServiceId, index) => ({
+              workServiceId,
               sortOrder: index,
             })),
           },
@@ -110,6 +133,9 @@ export async function DELETE(
   _request: Request,
   { params }: { params: Promise<{ id: string }> },
 ) {
+  const authError = await requireAuth();
+  if (authError) return authError;
+
   const { id } = await params;
 
   const existing = await prisma.clientWork.findUnique({

@@ -23,6 +23,7 @@ export const footerNavigation: NavItem[] = [
   { label: "About Us", href: "/about" },
   { label: "Work", href: "/work" },
   { label: "Services", href: "/services" },
+  { label: "Stationary", href: "/stationary" },
   { label: "Contact", href: "/contact" },
 ];
 

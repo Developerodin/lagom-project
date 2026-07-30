@@ -43,9 +43,32 @@ model ClientWork {
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 
-  gallery ClientWorkImage[]
+  gallery      ClientWorkImage[]
+  workServices ClientWorkService[]
 
   @@index([categoryId])
+}
+
+model WorkService {
+  id        String   @id @default(cuid())
+  name      String
+  slug      String   @unique
+  sortOrder Int      @default(0)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  works ClientWorkService[]
+}
+
+model ClientWorkService {
+  clientWorkId  String
+  clientWork    ClientWork  @relation(fields: [clientWorkId], references: [id], onDelete: Cascade)
+  workServiceId String
+  workService   WorkService @relation(fields: [workServiceId], references: [id], onDelete: Cascade)
+  sortOrder     Int         @default(0)
+
+  @@id([clientWorkId, workServiceId])
+  @@index([workServiceId])
 }
 
 model ClientWorkImage {
@@ -88,4 +111,15 @@ model ContactSubmission {
 
   @@index([status])
   @@index([createdAt])
+}
+
+model StationaryLaunchSignup {
+  id        String   @id @default(cuid())
+  name      String
+  email     String
+  phone     String
+  createdAt DateTime @default(now())
+
+  @@index([createdAt])
+  @@index([email])
 }

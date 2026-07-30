@@ -68,8 +68,8 @@
 .field {
   display: flex;
   flex-direction: column;
-  gap: var(--space-8);
-  padding: var(--space-16) var(--space-16) var(--space-12);
+  gap: var(--space-4);
+  padding: var(--space-8) var(--space-16) var(--space-8);
   border: 1px solid var(--border);
   border-radius: var(--image-radius);
   background-color: color-mix(in srgb, var(--color-primary) 4%, var(--color-paper));
@@ -81,11 +81,14 @@
 }
 
 .fieldTextarea {
-  max-height: 6rem;
+  min-height: 6rem;
+  max-height: 10rem;
+  padding: var(--space-16) var(--space-16) var(--space-12);
+  gap: var(--space-8);
 }
 
 .fieldCompact {
-  padding: var(--space-12) var(--space-16) var(--space-8);
+  padding: var(--space-4) var(--space-16);
 }
 
 .servicesField {
@@ -224,7 +227,7 @@
 
 .fieldTextarea .fieldInput {
   flex: 1;
-  min-height: 7.2rem;
+  min-height: 11rem;
   resize: none;
 }
 
@@ -338,15 +341,6 @@
   gap: var(--space-4);
   min-width: 0;
   padding-top: 0;
-}
-
-.infoLabel {
-  font-family: var(--font-heading);
-  font-size: var(--text-small);
-  font-weight: 600;
-  line-height: 1.4;
-  letter-spacing: 0.01em;
-  color: var(--color-primary);
 }
 
 .infoValue {

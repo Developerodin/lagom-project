@@ -1,7 +1,8 @@
 import Link from "next/link";
 import { RevealOnScroll } from "@/components/ui/RevealOnScroll";
 import { WorkCard } from "@/components/work/WorkCard";
-import { getPublishedClients, getClientWhatWeDid } from "@/lib/work";
+import { getPublishedClients, getClientServiceLabels } from "@/lib/work";
+import { FeaturedWorkCursor } from "./FeaturedWorkCursor";
 import styles from "./FeaturedWorkSection.module.css";
 
 const FEATURED_LIMIT = 6;
@@ -24,41 +25,43 @@ export async function FeaturedWorkSection() {
       className={styles.section}
       aria-labelledby="featured-work-title"
     >
-      <div className={`container ${styles.inner}`}>
-        <div className={styles.layout}>
-          <h2
-            id="featured-work-title"
-            className={`heading-section ${styles.heading}`}
-          >
-            Featured Work
-          </h2>
+      <FeaturedWorkCursor className={styles.cursorZone}>
+        <div className={`container ${styles.inner}`}>
+          <div className={styles.layout}>
+            <h2
+              id="featured-work-title"
+              className={`heading-section ${styles.heading}`}
+            >
+              Featured Work
+            </h2>
 
-          <div className={styles.gridWrap}>
-            <ul className={styles.grid}>
-              {items.map((item) => (
-                <li key={item.slug}>
-                  <WorkCard
-                    item={{
-                      slug: item.slug,
-                      title: item.title,
-                      cardImage: item.cardImage,
-                      cardAlt: item.cardAlt,
-                      whatWeDid: getClientWhatWeDid(item),
-                    }}
-                    sizes="(min-width: 993px) 33vw, 50vw"
-                  />
-                </li>
-              ))}
-            </ul>
-          </div>
+            <div className={styles.gridWrap}>
+              <ul className={styles.grid}>
+                {items.map((item) => (
+                  <li key={item.slug}>
+                    <WorkCard
+                      item={{
+                        slug: item.slug,
+                        title: item.title,
+                        cardImage: item.cardImage,
+                        cardAlt: item.cardAlt,
+                        services: getClientServiceLabels(item),
+                      }}
+                      sizes="(min-width: 993px) 33vw, 50vw"
+                    />
+                  </li>
+                ))}
+              </ul>
+            </div>
 
-          <div className={styles.ctaWrap}>
-            <Link href="/work" className="button button-primary">
-              View All Work
-            </Link>
+            <div className={styles.ctaWrap}>
+              <Link href="/work" className="button button-primary">
+                View All Work
+              </Link>
+            </div>
           </div>
         </div>
-      </div>
+      </FeaturedWorkCursor>
     </RevealOnScroll>
   );
 }

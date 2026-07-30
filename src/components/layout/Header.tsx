@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState, type MouseEvent } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { siteConfig } from "@/content/site";
@@ -18,15 +18,54 @@ export function Header() {
     setMenuOpen((prev) => !prev);
   }
 
+  function handleLogoClick(event: MouseEvent<HTMLAnchorElement>) {
+    event.preventDefault();
+    closeMenu();
+    if (window.location.pathname === "/") {
+      window.location.reload();
+      return;
+    }
+    window.location.assign("/");
+  }
+
+  useEffect(() => {
+    if (!menuOpen) return;
+
+    function handleKeyDown(event: KeyboardEvent) {
+      if (event.key === "Escape") {
+        setMenuOpen(false);
+      }
+    }
+
+    // Block background scroll without overflow/position tricks that break sticky.
+    function preventBackgroundScroll(event: Event) {
+      const target = event.target;
+      if (target instanceof Element && target.closest("#mobile-navigation")) {
+        return;
+      }
+      event.preventDefault();
+    }
+
+    document.addEventListener("keydown", handleKeyDown);
+    document.addEventListener("wheel", preventBackgroundScroll, { passive: false });
+    document.addEventListener("touchmove", preventBackgroundScroll, { passive: false });
+
+    return () => {
+      document.removeEventListener("keydown", handleKeyDown);
+      document.removeEventListener("wheel", preventBackgroundScroll);
+      document.removeEventListener("touchmove", preventBackgroundScroll);
+    };
+  }, [menuOpen]);
+
   return (
     <header className={styles.header}>
       <div className={styles.inner}>
-        <Link href="/" className={styles.logo} aria-label={siteConfig.name}>
+        <Link href="/" className={styles.logo} aria-label={siteConfig.name} onClick={handleLogoClick}>
           <Image
-            src="/assets/logo/logo.png"
+            src="/assets/logo/lagom-design-logo-02.png"
             alt=""
-            width={150}
-            height={83}
+            width={608}
+            height={358}
             className={styles.logoImage}
             priority
           />
@@ -34,12 +73,12 @@ export function Header() {
         </Link>
 
         <div className={styles.desktopNav}>
-          <Navigation inverted />
+          <Navigation />
         </div>
 
         <button
           type="button"
-          className={styles.menuToggle}
+          className={`${styles.menuToggle} ${menuOpen ? styles.menuToggleOpen : ""}`}
           onClick={toggleMenu}
           aria-expanded={menuOpen}
           aria-controls="mobile-navigation"
@@ -55,8 +94,10 @@ export function Header() {
         className={`${styles.mobileNav} ${menuOpen ? styles.mobileNavOpen : ""}`}
         aria-hidden={!menuOpen}
       >
-        <div className="container">
-          <Navigation inverted onNavigate={closeMenu} />
+        <div className={styles.mobileNavInner}>
+          <div className="container">
+            <Navigation inverted onNavigate={closeMenu} />
+          </div>
         </div>
       </div>
     </header>

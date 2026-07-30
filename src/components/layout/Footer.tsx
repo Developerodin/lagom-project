@@ -1,6 +1,7 @@
 import type { ReactNode } from "react";
 import Image from "next/image";
 import Link from "next/link";
+import { contactInfoContent } from "@/content/contact";
 import {
   footerNavigation,
   siteConfig,
@@ -53,6 +54,9 @@ const socialIcons: Record<SocialLink["icon"], () => ReactNode> = {
   linkedin: LinkedInIcon,
 };
 
+const emailItem = contactInfoContent.items.find((item) => item.id === "email");
+const phoneItem = contactInfoContent.items.find((item) => item.id === "phone");
+
 export function Footer() {
   const year = new Date().getFullYear();
 
@@ -66,66 +70,74 @@ export function Footer() {
         className={styles.footerBg}
         aria-hidden="true"
       />
-      <div className="container">
-        <div className={styles.top}>
-          <div className={styles.brand}>
-            <Link href="/" className={styles.logoLink} aria-label={siteConfig.name}>
-              <Image
-                src="/assets/logo/logo.png"
-                alt=""
-                width={150}
-                height={83}
-                className={styles.logoImage}
-              />
-              <span className="sr-only">{siteConfig.name}</span>
-            </Link>
-          </div>
+      <div className={styles.inner}>
+        <div className={styles.main}>
+          <Link href="/" className={styles.logo} aria-label={siteConfig.name}>
+            <Image
+              src="/assets/logo/lagom-design-logo-footer-mark.png"
+              alt=""
+              width={608}
+              height={358}
+              className={styles.logoImage}
+            />
+            <span className="sr-only">{siteConfig.name}</span>
+          </Link>
 
-          <nav className={styles.nav} aria-label="Footer navigation">
-            <div>
-              <p className={styles.navHeading}>Quick links</p>
-              <ul className={styles.navList}>
+          <div className={styles.columns}>
+            <nav className={styles.nav} aria-label="Footer navigation">
+              <ul className={styles.linkList}>
                 {footerNavigation.map((item) => (
-                  <li key={item.href} className={styles.navItem}>
+                  <li key={item.href}>
                     <Link href={item.href} className={styles.navLink}>
                       {item.label}
                     </Link>
                   </li>
                 ))}
               </ul>
+            </nav>
+
+            <div className={styles.contactList}>
+              {emailItem && "href" in emailItem && (
+                <a href={emailItem.href} className={styles.contactLink}>
+                  {emailItem.value}
+                </a>
+              )}
+              {phoneItem && "href" in phoneItem && (
+                <a href={phoneItem.href} className={styles.contactLink}>
+                  {phoneItem.value}
+                </a>
+              )}
+              <div className={styles.socials}>
+                {socialLinks.map((link, index) => {
+                  const Icon = socialIcons[link.icon];
+
+                  return (
+                    <span key={link.href} className={styles.socialItem}>
+                      {index > 0 && (
+                        <span className={styles.socialDivider} aria-hidden="true" />
+                      )}
+                      <a
+                        href={link.href}
+                        className={styles.socialLink}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        aria-label={link.label}
+                      >
+                        <Icon />
+                      </a>
+                    </span>
+                  );
+                })}
+              </div>
             </div>
-          </nav>
+          </div>
         </div>
 
-        <hr className={`divider ${styles.divider}`} />
-
-        <div className={styles.bottom}>
-          <p className={`body-sm text-muted ${styles.copyright}`}>
+        <div className={styles.trademarkBlock}>
+          <hr className={styles.trademarkDivider} />
+          <p className={styles.trademark}>
             &copy; {year} {siteConfig.name}. All rights reserved.
           </p>
-
-          <div className={styles.social}>
-            <div className={styles.bottomDivider} aria-hidden="true" />
-            <ul className={styles.socialList}>
-              {socialLinks.map((link) => {
-                const Icon = socialIcons[link.icon];
-
-                return (
-                  <li key={link.href} className={styles.socialItem}>
-                    <a
-                      href={link.href}
-                      className={styles.socialLink}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      aria-label={link.label}
-                    >
-                      <Icon />
-                    </a>
-                  </li>
-                );
-              })}
-            </ul>
-          </div>
         </div>
       </div>
     </RevealOnScroll>

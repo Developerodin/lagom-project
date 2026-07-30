@@ -1,5 +1,6 @@
 import { Prisma } from "@prisma/client";
 import { NextResponse } from "next/server";
+import { requireAuth } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { getCategoryById, parseCategoryInput } from "@/lib/categories";
 
@@ -7,6 +8,9 @@ export async function GET(
   _request: Request,
   { params }: { params: Promise<{ id: string }> },
 ) {
+  const authError = await requireAuth();
+  if (authError) return authError;
+
   const { id } = await params;
   const category = await getCategoryById(id);
 
@@ -21,6 +25,9 @@ export async function PUT(
   request: Request,
   { params }: { params: Promise<{ id: string }> },
 ) {
+  const authError = await requireAuth();
+  if (authError) return authError;
+
   const { id } = await params;
 
   let body: unknown;
@@ -65,6 +72,9 @@ export async function DELETE(
   _request: Request,
   { params }: { params: Promise<{ id: string }> },
 ) {
+  const authError = await requireAuth();
+  if (authError) return authError;
+
   const { id } = await params;
 
   const existing = await getCategoryById(id);

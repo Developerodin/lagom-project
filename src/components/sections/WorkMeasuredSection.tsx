@@ -47,6 +47,7 @@ function AnimatedStatValue({
 
   useEffect(() => {
     if (!start) {
+      setDisplay(0);
       return;
     }
 
@@ -59,7 +60,7 @@ function AnimatedStatValue({
 
     let frameId = 0;
     let timeoutId = 0;
-    const duration = 1400;
+    const duration = 1680;
 
     const runCount = (startTime: number) => {
       const tick = (now: number) => {
@@ -116,10 +117,7 @@ export function WorkMeasuredSection() {
 
     const observer = new IntersectionObserver(
       ([entry]) => {
-        if (entry.isIntersecting) {
-          setIsRevealed(true);
-          observer.disconnect();
-        }
+        setIsRevealed(entry.isIntersecting);
       },
       { threshold: 0.12, rootMargin: "0px 0px -8% 0px" },
     );
@@ -154,12 +152,12 @@ export function WorkMeasuredSection() {
               <li
                 key={stat.id}
                 className={styles.statCard}
-                style={{ transitionDelay: `${index * 110}ms` }}
+                style={{ transitionDelay: `${index * 132}ms` }}
               >
                 <AnimatedStatValue
                   value={stat.value}
                   start={isRevealed}
-                  delay={index * 110}
+                  delay={index * 132}
                 />
                 <p className={styles.statLabel}>{stat.label}</p>
               </li>
@@ -172,7 +170,7 @@ export function WorkMeasuredSection() {
                 key={approach.id}
                 className={styles.approachCard}
                 style={{
-                  transitionDelay: `${(stats.length + index) * 110}ms`,
+                  transitionDelay: `${(stats.length + index) * 132}ms`,
                 }}
               >
                 <h3 className={styles.approachTitle}>{approach.title}</h3>

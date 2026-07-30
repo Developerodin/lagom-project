@@ -21,7 +21,13 @@ export type ClientWorkInput = {
   sortOrder: number;
   published: boolean;
   categoryId: string | null;
+  serviceIds: string[];
   gallery: GalleryImageInput[];
+};
+
+export type WorkServiceInput = {
+  name: string;
+  slug: string;
 };
 
 export function slugify(value: string) {
@@ -35,6 +41,15 @@ export function slugify(value: string) {
 export type ValidationResult =
   | { ok: true; data: ClientWorkInput }
   | { ok: false; error: string };
+
+export type WorkServiceValidationResult =
+  | { ok: true; data: WorkServiceInput }
+  | { ok: false; error: string };
+
+const workServiceInclude = {
+  include: { workService: true },
+  orderBy: { sortOrder: "asc" as const },
+};
 
 export function parseClientWorkInput(body: unknown): ValidationResult {
   if (typeof body !== "object" || body === null) {
@@ -94,6 +109,17 @@ export function parseClientWorkInput(body: unknown): ValidationResult {
     })
     .filter((item) => item.imageUrl.length > 0);
 
+  const serviceIdsRaw = Array.isArray(raw.serviceIds) ? raw.serviceIds : [];
+  const seenServiceIds = new Set<string>();
+  const serviceIds: string[] = [];
+  for (const item of serviceIdsRaw) {
+    if (typeof item !== "string") continue;
+    const id = item.trim();
+    if (!id || seenServiceIds.has(id)) continue;
+    seenServiceIds.add(id);
+    serviceIds.push(id);
+  }
+
   return {
     ok: true,
     data: {
@@ -109,9 +135,28 @@ export function parseClientWorkInput(body: unknown): ValidationResult {
       sortOrder,
       published,
       categoryId,
+      serviceIds,
       gallery,
     },
   };
+}
+
+export function parseWorkServiceInput(
+  body: unknown,
+): WorkServiceValidationResult {
+  if (typeof body !== "object" || body === null) {
+    return { ok: false, error: "Invalid request body." };
+  }
+
+  const raw = body as Record<string, unknown>;
+  const name = typeof raw.name === "string" ? raw.name.trim() : "";
+  const slugSource = typeof raw.slug === "string" ? raw.slug : "";
+  const slug = slugify(slugSource || name);
+
+  if (!name) return { ok: false, error: "Name is required." };
+  if (!slug) return { ok: false, error: "A valid slug is required." };
+
+  return { ok: true, data: { name, slug } };
 }
 
 export function getClientWhatWeDid(client: {
@@ -123,6 +168,40 @@ export function getClientWhatWeDid(client: {
 
   const services = client.services?.trim();
   return services || null;
+}
+
+export function getClientServiceLabels(client: {
+  workServices?: Array<{ workService: { name: string } }>;
+}) {
+  return (client.workServices ?? []).map((entry) => entry.workService.name);
+}
+
+export function getAllWorkServices() {
+  return prisma.workService.findMany({
+    orderBy: [{ sortOrder: "asc" }, { name: "asc" }],
+  });
+}
+
+export async function validateServiceIds(serviceIds: string[]) {
+  if (serviceIds.length === 0) {
+    return { ok: true as const, serviceIds: [] as string[] };
+  }
+
+  const found = await prisma.workService.findMany({
+    where: { id: { in: serviceIds } },
+    select: { id: true },
+  });
+  const foundIds = new Set(found.map((service) => service.id));
+  const missing = serviceIds.filter((id) => !foundIds.has(id));
+
+  if (missing.length > 0) {
+    return {
+      ok: false as const,
+      error: "One or more selected services do not exist.",
+    };
+  }
+
+  return { ok: true as const, serviceIds };
 }
 
 export function getPublishedClients(limit?: number, categorySlug?: string) {
@@ -137,6 +216,7 @@ export function getPublishedClients(limit?: number, categorySlug?: string) {
     take: limit,
     include: {
       category: { select: { id: true, name: true, slug: true } },
+      workServices: workServiceInclude,
     },
   });
 }
@@ -147,6 +227,7 @@ export function getClientBySlug(slug: string) {
     include: {
       gallery: { orderBy: { sortOrder: "asc" } },
       category: { select: { id: true, name: true, slug: true } },
+      workServices: workServiceInclude,
     },
   });
 }
@@ -156,6 +237,7 @@ export function getAllClients() {
     orderBy: [{ sortOrder: "asc" }, { createdAt: "asc" }],
     include: {
       category: { select: { id: true, name: true, slug: true } },
+      workServices: workServiceInclude,
     },
   });
 }
@@ -166,6 +248,7 @@ export function getClientById(id: string) {
     include: {
       gallery: { orderBy: { sortOrder: "asc" } },
       category: { select: { id: true, name: true, slug: true } },
+      workServices: workServiceInclude,
     },
   });
 }

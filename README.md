@@ -9,7 +9,9 @@ self-hosted CMS for managing portfolio work and contact enquiries.
 - Each project has its own page at `/work/[slug]` with a full-viewport hero
   (no site header), a description, and a stack of full-width gallery images.
 - Password-protected admin at `/admin` to create, edit, delete and reorder
-  client work, upload images, and review contact form enquiries.
+  client work, upload images, and review contact form enquiries. Password is
+  stored in the database (changeable in Settings) with email OTP recovery at
+  `/admin/forgot-password`.
 - Contact form submissions are stored in the database, emailed to
   `studiolagomdesign@gmail.com`, and managed from `/admin/submissions`.
 
@@ -35,7 +37,10 @@ cp .env.example .env
 ```
 
 - `DATABASE_URL` — your MySQL connection string.
-- `ADMIN_PASSWORD_HASH` — bcrypt hash of the admin password. Generate with:
+- `ADMIN_PASSWORD_HASH` — **optional bootstrap only.** bcrypt hash of the initial
+  admin password. On first login the app copies it into the database `Setting`
+  table; after that the DB is the only source of truth (change password in
+  `/admin/settings`, or use Forgot password). Generate with:
 
 ```bash
 node -e "console.log(require('bcryptjs').hashSync('your-password', 10))"
@@ -47,6 +52,9 @@ node -e "console.log(require('bcryptjs').hashSync('your-password', 10))"
 ADMIN_PASSWORD_HASH="\$2b\$10\$..."
 ```
 
+  Prefer skipping a fragile env hash on Hostinger: set `RESEND_API_KEY`, deploy,
+  open `/admin/forgot-password`, send OTP to `studiolagomdesign@gmail.com`, and
+  set the password there.
 - `SESSION_SECRET` — a random string of at least 32 characters. Generate with:
 
 ```bash
@@ -56,9 +64,19 @@ node -e "console.log(require('crypto').randomBytes(32).toString('hex'))"
 - `UPLOAD_DIR` — absolute path to a writable, persistent directory for uploaded
   images. Defaults to `./uploads`.
 - `RESEND_API_KEY` — API key from [Resend](https://resend.com) for contact form
-  email notifications.
-- `EMAIL_FROM` — verified sender address in Resend, e.g.
-  `Lagom Design <noreply@lagomdesign.com>`.
+  notifications and admin password-recovery OTPs (always sent to
+  `studiolagomdesign@gmail.com` only).
+- `EMAIL_FROM` — sender address. Until your domain is verified in Resend, use:
+
+```bash
+EMAIL_FROM=Lagom Design <onboarding@resend.dev>
+```
+
+  The app also auto-falls back to `onboarding@resend.dev` if a custom domain
+  is rejected. Note: your Resend domain `studiolagomdesign.com` must show
+  **verified** (not failed) before custom From addresses work. After verifying:
+
+  `Lagom Design <noreply@studiolagomdesign.com>`.
 
 3. Create the database tables:
 
@@ -121,12 +139,22 @@ Set these in the Node.js **Environment variables** section:
 ```bash
 DATABASE_URL=mysql://USER:PASS@HOST:3306/DBNAME
 SESSION_SECRET=<64-char hex string>
-ADMIN_PASSWORD_HASH=<bcrypt hash — escape every $ as \$>
+ADMIN_PASSWORD_HASH=<optional bootstrap bcrypt hash — escape every $ as \$>
 UPLOAD_DIR=/home/<user>/lagom-uploads
 RESEND_API_KEY=<your Resend API key>
-EMAIL_FROM=Lagom Design <noreply@lagomdesign.com>
+EMAIL_FROM=Lagom Design <onboarding@resend.dev>
 NODE_ENV=production
 ```
+
+Until `studiolagomdesign.com` is **verified** in Resend (yours currently shows
+failed — re-add DNS records and verify), keep `EMAIL_FROM` as
+`onboarding@resend.dev`. The app falls back to that address automatically if a
+custom From is rejected. `onboarding@resend.dev` can only deliver to the email
+on your Resend account (here: `studiolagomdesign@gmail.com`).
+
+`ADMIN_PASSWORD_HASH` is only used once to seed the database. Day-to-day login
+reads the hash from the `Setting` table. If the env hash is wrong or missing,
+use `/admin/forgot-password` to set a new password via OTP.
 
 Generate values locally:
 
@@ -134,9 +162,17 @@ Generate values locally:
 # SESSION_SECRET
 node -e "console.log(require('crypto').randomBytes(32).toString('hex'))"
 
-# ADMIN_PASSWORD_HASH
+# ADMIN_PASSWORD_HASH (optional bootstrap — prefer Forgot password OTP on Hostinger)
 node -e "console.log(require('bcryptjs').hashSync('your-password', 10))"
 ```
+
+### Admin password
+
+- Login uses the password hash stored in the database (`Setting.admin_password_hash`).
+- Change it anytime while signed in at `/admin/settings`.
+- If locked out, open `/admin/forgot-password`, click **Send OTP**, enter the code
+  emailed to `studiolagomdesign@gmail.com`, and set a new password. No other email
+  or phone can be used.
 
 ### First-deploy checklist
 
@@ -160,6 +196,7 @@ npm run db:seed
 8. Verify the deployment:
    - `https://yourdomain.com/api/health` → `{ "status": "ok", "database": "connected" }`
    - `https://yourdomain.com/admin` → login page
+   - If you cannot log in, use `/admin/forgot-password` to set a password via email OTP
    - Upload a test image in admin and confirm it persists after a redeploy
 
 ### Upload persistence

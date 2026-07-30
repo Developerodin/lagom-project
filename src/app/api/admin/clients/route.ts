@@ -1,15 +1,26 @@
 import { Prisma } from "@prisma/client";
 import { NextResponse } from "next/server";
+import { requireAuth } from "@/lib/auth";
 import { validateCategoryId } from "@/lib/categories";
 import { prisma } from "@/lib/prisma";
-import { getAllClients, parseClientWorkInput } from "@/lib/work";
+import {
+  getAllClients,
+  parseClientWorkInput,
+  validateServiceIds,
+} from "@/lib/work";
 
 export async function GET() {
+  const authError = await requireAuth();
+  if (authError) return authError;
+
   const clients = await getAllClients();
   return NextResponse.json({ clients });
 }
 
 export async function POST(request: Request) {
+  const authError = await requireAuth();
+  if (authError) return authError;
+
   let body: unknown;
   try {
     body = await request.json();
@@ -22,11 +33,16 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: parsed.error }, { status: 400 });
   }
 
-  const { gallery, ...fields } = parsed.data;
+  const { gallery, serviceIds, ...fields } = parsed.data;
 
   const categoryCheck = await validateCategoryId(fields.categoryId);
   if (!categoryCheck.ok) {
     return NextResponse.json({ error: categoryCheck.error }, { status: 400 });
+  }
+
+  const serviceCheck = await validateServiceIds(serviceIds);
+  if (!serviceCheck.ok) {
+    return NextResponse.json({ error: serviceCheck.error }, { status: 400 });
   }
 
   try {
@@ -40,6 +56,12 @@ export async function POST(request: Request) {
             alt: image.alt,
             width: image.width,
             height: image.height,
+            sortOrder: index,
+          })),
+        },
+        workServices: {
+          create: serviceCheck.serviceIds.map((workServiceId, index) => ({
+            workServiceId,
             sortOrder: index,
           })),
         },

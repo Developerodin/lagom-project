@@ -1,10 +1,10 @@
 import { Resend } from "resend";
-import { contactInfoContent } from "@/content/contact";
 import { siteConfig } from "@/content/site";
 
-const CONTACT_TO =
-  contactInfoContent.items.find((item) => item.id === "email")?.value ??
-  "studiolagomdesign@gmail.com";
+const CONTACT_TO = "studiolagomdesign@gmail.com";
+
+/** Resend testing sender — works without a verified domain (account email only). */
+export const RESEND_FALLBACK_FROM = `${siteConfig.name} <onboarding@resend.dev>`;
 
 export type ContactEmailPayload = {
   name: string;
@@ -77,7 +77,7 @@ function buildContactEmailText(payload: ContactEmailPayload) {
   ].join("\n");
 }
 
-function getEmailFrom() {
+function getConfiguredEmailFrom() {
   const configured = process.env.EMAIL_FROM?.trim();
   if (configured) {
     return configured;
@@ -85,6 +85,84 @@ function getEmailFrom() {
 
   const hostname = new URL(siteConfig.url).hostname;
   return `${siteConfig.name} <noreply@${hostname}>`;
+}
+
+function isUnverifiedDomainError(message: string) {
+  const lower = message.toLowerCase();
+  return (
+    lower.includes("domain is not verified") ||
+    lower.includes("not verified") ||
+    lower.includes("invalid `from`") ||
+    lower.includes("from domain")
+  );
+}
+
+function getResendClient() {
+  const apiKey = process.env.RESEND_API_KEY?.trim();
+
+  if (!apiKey) {
+    return null;
+  }
+
+  return new Resend(apiKey);
+}
+
+type SendEmailInput = {
+  to: string | string[];
+  subject: string;
+  html: string;
+  text: string;
+  replyTo?: string;
+};
+
+/**
+ * Send via Resend. If EMAIL_FROM uses an unverified domain, retry with
+ * beth.t@example.com so OTP/contact mail still works before DNS is set up.
+ */
+async function sendWithDomainFallback(input: SendEmailInput) {
+  const resend = getResendClient();
+
+  if (!resend) {
+    throw new Error("Email is not configured. Set RESEND_API_KEY.");
+  }
+
+  const primaryFrom = getConfiguredEmailFrom();
+  const attempted = new Set<string>();
+
+  for (const from of [primaryFrom, RESEND_FALLBACK_FROM]) {
+    if (attempted.has(from)) {
+      continue;
+    }
+    attempted.add(from);
+
+    const { error } = await resend.emails.send({
+      from,
+      to: input.to,
+      replyTo: input.replyTo,
+      subject: input.subject,
+      html: input.html,
+      text: input.text,
+    });
+
+    if (!error) {
+      if (from !== primaryFrom) {
+        console.warn(
+          `[email] EMAIL_FROM "${primaryFrom}" failed domain verification; sent via ${from}. Verify your domain at https://resend.com/domains`,
+        );
+      }
+      return;
+    }
+
+    if (!isUnverifiedDomainError(error.message) || from === RESEND_FALLBACK_FROM) {
+      throw new Error(error.message);
+    }
+
+    console.warn(
+      `[email] From "${from}" rejected (${error.message}). Retrying with Resend onboarding address.`,
+    );
+  }
+
+  throw new Error("Could not send email.");
 }
 
 export async function sendContactNotification(payload: ContactEmailPayload) {
@@ -103,17 +181,42 @@ export async function sendContactNotification(payload: ContactEmailPayload) {
     return;
   }
 
-  const resend = new Resend(apiKey);
-  const { error } = await resend.emails.send({
-    from: getEmailFrom(),
+  await sendWithDomainFallback({
     to: CONTACT_TO,
     replyTo: payload.email,
     subject: `New contact enquiry from ${payload.name}`,
     html: buildContactEmailHtml(payload),
     text: buildContactEmailText(payload),
   });
+}
 
-  if (error) {
-    throw new Error(error.message);
-  }
+export async function sendAdminOtpEmail(otp: string, to: string) {
+  const subject = `${siteConfig.name} admin recovery code`;
+  const text = [
+    `Your admin password recovery code is: ${otp}`,
+    "",
+    "This code expires in 5 minutes.",
+    "If you did not request this, you can ignore this email.",
+  ].join("\n");
+
+  const html = `
+    <div style="font-family:Arial,sans-serif;color:#111;max-width:480px;">
+      <p style="margin:0 0 16px;font-size:16px;line-height:1.5;">
+        Your admin password recovery code is:
+      </p>
+      <p style="margin:0 0 16px;font-size:28px;letter-spacing:0.2em;font-weight:700;">
+        ${escapeHtml(otp)}
+      </p>
+      <p style="margin:0;font-size:13px;line-height:1.5;color:#666;">
+        This code expires in 5 minutes. If you did not request this, you can ignore this email.
+      </p>
+    </div>
+  `.trim();
+
+  await sendWithDomainFallback({
+    to,
+    subject,
+    html,
+    text,
+  });
 }

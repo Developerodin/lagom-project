@@ -3,6 +3,14 @@
   --section-spacing-md: calc(var(--space-72) * 0.725);
 }
 
+/* Mobile only: tighten vertical rhythm between home sections by ~10% */
+@media (max-width: 768px) {
+  .home {
+    --section-spacing-md: calc(var(--space-72) * 0.455 * 0.9) !important;
+    --section-spacing-sm: calc(80px * 0.1) !important;
+  }
+}
+
 .home :global(.heading-section),
 .home :global(.heading-service) {
   color: #000;

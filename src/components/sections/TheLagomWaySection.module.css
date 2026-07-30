@@ -182,7 +182,7 @@
   }
 
   .section {
-    --lagom-way-arrow-size: clamp(280px, 28vw, 440px);
+    --lagom-way-arrow-size: clamp(200px, 20.4vw, 312px);
   }
 
   .rowMirrored .textCol {

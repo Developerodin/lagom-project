@@ -1,7 +1,7 @@
 import { notFound } from "next/navigation";
 import { ClientWorkForm } from "@/components/admin/ClientWorkForm";
 import { getAllCategories } from "@/lib/categories";
-import { getClientById } from "@/lib/work";
+import { getAllWorkServices, getClientById } from "@/lib/work";
 
 export const dynamic = "force-dynamic";
 
@@ -11,9 +11,10 @@ export default async function EditClientPage({
   params: Promise<{ id: string }>;
 }) {
   const { id } = await params;
-  const [client, categories] = await Promise.all([
+  const [client, categories, workServices] = await Promise.all([
     getClientById(id),
     getAllCategories(),
+    getAllWorkServices(),
   ]);
 
   if (!client) {
@@ -31,12 +32,17 @@ export default async function EditClientPage({
           id: category.id,
           name: category.name,
         }))}
+        workServices={workServices.map((service) => ({
+          id: service.id,
+          name: service.name,
+        }))}
         initial={{
           id: client.id,
           title: client.title,
           slug: client.slug,
           description: client.description,
           services: client.whatWeDid ?? client.services,
+          serviceIds: client.workServices.map((entry) => entry.workServiceId),
           cardImage: client.cardImage,
           cardAlt: client.cardAlt,
           heroImage: client.heroImage,

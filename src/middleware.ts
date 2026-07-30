@@ -19,7 +19,10 @@ export async function middleware(request: NextRequest) {
     return response;
   }
 
-  if (pathname === "/admin") {
+  const isPublicAdminPage =
+    pathname === "/admin" || pathname === "/admin/forgot-password";
+
+  if (isPublicAdminPage) {
     if (isLoggedIn) {
       const url = request.nextUrl.clone();
       url.pathname = "/admin/clients";

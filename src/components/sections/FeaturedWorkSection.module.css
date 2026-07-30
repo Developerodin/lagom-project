@@ -1,7 +1,11 @@
 .section {
   width: 100%;
-  padding-block: var(--section-spacing-md);
   background-color: var(--color-paper);
+}
+
+.cursorZone {
+  width: 100%;
+  padding-block: var(--section-spacing-md);
 }
 
 .inner {

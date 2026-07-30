@@ -14,11 +14,11 @@
 
 .header {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  grid-template-columns: minmax(0, .7fr) minmax(0, 1fr);
   /* Keep divider aligned to the second line ("STUDIO") */
   --title-line-height: 1;
   align-items: start;
-  column-gap: var(--grid-gap-column);
+
   width: 100%;
   font-family: var(--font-heading);
   font-size: clamp(3.25rem, 10vw, var(--text-section-heading));
@@ -26,7 +26,7 @@
 
 .title {
   max-width: none;
-  padding-inline-start: clamp(var(--space-96), 14vw, 11.5rem);
+  padding-inline-start: 0;
   font: inherit;
   font-weight: 800;
   line-height: var(--title-line-height);
@@ -40,9 +40,10 @@
 }
 
 .divider {
-  width: 100%;
+  width: 125%;
   height: 1px;
-  background-color: var(--color-accent);
+  justify-self: start; /* grow rightward — away from the title */
+  background-color: var(--color-primary);
   /*
     Title is 2 lines. The center of the second line is roughly
     1.5 lines down from the top: 1.5 * line-height * font-size.
@@ -54,24 +55,31 @@
   display: grid;
   grid-template-columns: minmax(0, 0.4fr) minmax(0, 0.6fr);
   column-gap: var(--grid-gap-column);
-  align-items: start;
+  align-items: stretch;
   width: 100%;
 }
 
 .imageCol {
+  position: relative;
   min-width: 0;
+  /* No in-flow height — text column sets the row; image fills it */
 }
 
 .imageWrap {
-  position: relative;
-  width: min(100%, 26rem);
+  position: absolute;
+  inset-block: 0;
+  inset-inline-start: 0;
+  /* Height matches text column; width follows the image aspect ratio */
+  height: 100%;
+  width: auto;
   aspect-ratio: 477 / 500;
+  max-width: 100%;
   overflow: hidden;
 }
 
 .image {
   object-fit: contain;
-  object-position: center;
+  object-position: left top;
 }
 
 .textCol {
@@ -94,15 +102,6 @@
 }
 
 @media (max-width: 1200px) {
-  .title {
-    padding-inline-start: clamp(var(--space-48), 11vw, 9rem);
-  }
-
-  .imageWrap {
-    width: min(100%, 22rem);
-    aspect-ratio: 477 / 500;
-  }
-
   .layout {
     padding-inline: 4rem !important;
   }
@@ -116,15 +115,6 @@
 
   .header {
     font-size: clamp(2.75rem, 7vw, 3.5rem);
-  }
-
-  .title {
-    padding-inline-start: 28px !important;
-  }
-
-  .imageWrap {
-    width: min(100%, 19rem);
-    aspect-ratio: 477 / 500;
   }
 
   /* 2 steps below the global 18px body size on tablet and mobile */
@@ -141,12 +131,11 @@
 
   .header {
     grid-template-columns: 1fr;
-    row-gap: var(--space-24);
+    /* row-gap: var(--space-24); */
     font-size: clamp(2rem, 9vw, var(--text-section-heading));
   }
 
   .title {
-    padding-inline-start: 0;
     overflow-wrap: normal;
     word-break: normal;
     hyphens: none;
@@ -162,9 +151,13 @@
   }
 
   .imageWrap {
+    position: relative;
+    inset: auto;
     width: 100%;
     max-width: 20rem;
-    aspect-ratio: 477 / 500;
+    height: auto;
+    /* ~20% shorter than the original 477/500 portrait ratio */
+    aspect-ratio: 477 / 400;
   }
 
   .textCol {
@@ -187,7 +180,6 @@
 
   .imageWrap {
     max-width: 100%;
-    aspect-ratio: 477 / 500;
   }
 
   .paragraphs {

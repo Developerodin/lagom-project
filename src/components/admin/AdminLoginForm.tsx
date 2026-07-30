@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState, type FormEvent } from "react";
 
@@ -59,6 +60,15 @@ export function AdminLoginForm() {
             {loading ? "Signing in…" : "Sign in"}
           </button>
         </form>
+
+        <p style={{ marginTop: 16, fontSize: "0.85rem", textAlign: "center" }}>
+          <Link
+            href="/admin/forgot-password"
+            style={{ color: "inherit", textDecoration: "underline" }}
+          >
+            Forgot password?
+          </Link>
+        </p>
       </div>
     </div>
   );

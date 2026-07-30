@@ -11,7 +11,7 @@
   /* Brand colors */
   --color-primary: #3f493d;
   --color-accent: #deead3;
-  --color-paper: #fffceb;
+  --color-paper: #FAF9F6;
 
   /* Semantic colors */
   --background: var(--color-paper);
@@ -83,8 +83,11 @@
   /* Motion */
   --transition: 0.35s cubic-bezier(0.25, 0.1, 0.25, 1);
 
+  /* Site logo — shared by header and footer */
+  --site-logo-height: 3.25rem;
+
   /* Header — matches rendered Header height (logo + padding + border) */
-  --header-height: calc(var(--space-16) * 2 + 3.25rem + 1px);
+  --header-height: calc(var(--space-16) * 2 + var(--site-logo-height) + 1px);
 
   /* Breakpoints (reference — use literal values in @media) */
   /* --bp-desktop: 1440px */
@@ -544,6 +547,7 @@ p {
 
 @media (min-width: 993px) {
   :root {
-    --header-height: calc(var(--space-16) * 2 + 4.5rem + 1px);
+    --site-logo-height: 4.5rem;
+    --header-height: calc(var(--space-16) * 2 + var(--site-logo-height) + 1px);
   }
 }

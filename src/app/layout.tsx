@@ -10,8 +10,26 @@ export const metadata: Metadata = {
   },
   description: siteConfig.tagline,
   icons: {
-    icon: "/assets/favicon/option-1.png",
-    apple: "/assets/favicon/option-1.png",
+    icon: [
+      {
+        url: "/assets/favicon/option-2.png",
+        media: "(prefers-color-scheme: light)",
+      },
+      {
+        url: "/assets/favicon/option-3.png",
+        media: "(prefers-color-scheme: dark)",
+      },
+    ],
+    apple: [
+      {
+        url: "/assets/favicon/option-2.png",
+        media: "(prefers-color-scheme: light)",
+      },
+      {
+        url: "/assets/favicon/option-3.png",
+        media: "(prefers-color-scheme: dark)",
+      },
+    ],
   },
 };
 

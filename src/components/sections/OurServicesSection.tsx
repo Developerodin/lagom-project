@@ -69,6 +69,29 @@ const services: Service[] = [
   },
 ];
 
+function ServiceCard({ service }: { service: Service }) {
+  return (
+    <li className={styles.card}>
+      <div className={styles.iconWrap}>
+        <Image
+          src={service.icon}
+          alt=""
+          width={150}
+          height={150}
+          className={styles.icon}
+          sizes="(min-width: 993px) 56px, (min-width: 769px) 48px, 36px"
+        />
+      </div>
+      <div className={styles.cardContent}>
+        <h3 className={styles.cardTitle}>{service.title}</h3>
+        <p className={`text-muted ${styles.cardDescription}`}>
+          {service.description}
+        </p>
+      </div>
+    </li>
+  );
+}
+
 function ServiceRow({ items }: { items: Service[] }) {
   return (
     <ul className={styles.row}>
@@ -77,24 +100,7 @@ function ServiceRow({ items }: { items: Service[] }) {
           {index > 0 ? (
             <li className={styles.columnDivider} aria-hidden="true" />
           ) : null}
-          <li className={styles.card}>
-            <div className={styles.iconWrap}>
-              <Image
-                src={service.icon}
-                alt=""
-                width={150}
-                height={150}
-                className={styles.icon}
-                sizes="(min-width: 993px) 56px, (min-width: 769px) 48px, 36px"
-              />
-            </div>
-            <div className={styles.cardContent}>
-              <h3 className={styles.cardTitle}>{service.title}</h3>
-              <p className={`text-muted ${styles.cardDescription}`}>
-                {service.description}
-              </p>
-            </div>
-          </li>
+          <ServiceCard service={service} />
         </Fragment>
       ))}
     </ul>
@@ -144,6 +150,14 @@ export function OurServicesSection({
               <ServiceRow items={tabletRows[1]} />
               <hr className={`divider ${styles.rowDivider}`} />
               <ServiceRow items={tabletRows[2]} />
+            </div>
+
+            <div className={styles.layoutMobile}>
+              <ul className={styles.mobileList}>
+                {services.map((service) => (
+                  <ServiceCard key={service.id} service={service} />
+                ))}
+              </ul>
             </div>
           </div>
 

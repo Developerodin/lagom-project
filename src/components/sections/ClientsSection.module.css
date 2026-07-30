@@ -1,5 +1,5 @@
 .section {
-  --client-logo-height: 8rem;
+  --client-logo-height: 10rem;
   --client-logo-gap: var(--space-48);
   --marquee-duration: 60s;
   width: 100%;
@@ -19,10 +19,12 @@
   display: flex;
   flex-direction: column;
   gap: var(--space-24);
+  width: 100%;
 }
 
 .marqueeViewport {
   width: 100%;
+  overflow: hidden;
 }
 
 .marqueeTrack {
@@ -37,12 +39,14 @@
 }
 
 .marqueeGroup {
+  --marquee-gap: 63px;
   display: flex;
   align-items: center;
-  gap: 63px;
+  gap: var(--marquee-gap);
   flex-shrink: 0;
   margin: 0;
-  padding: 0 63px 0 0;
+  /* Seam padding must match gap so the -50% loop has no hitch */
+  padding: 0 var(--marquee-gap) 0 0;
   list-style: none;
 }
 
@@ -56,10 +60,11 @@
 .logoImage {
   display: block;
   height: var(--client-logo-height);
-  width: auto;
+  width: var(--client-logo-height);
   max-width: none;
   object-fit: contain;
   background: transparent;
+  flex-shrink: 0;
 }
 
 @keyframes clientsMarquee {
@@ -80,14 +85,14 @@
 
 @media (max-width: 992px) {
   .section {
-    --client-logo-height: 88px;
+    --client-logo-height: 114px;
     --client-logo-gap: var(--space-32);
   }
 }
 
 @media (max-width: 768px) {
   .section {
-    --client-logo-height: 72px;
+    --client-logo-height: 94px;
     --client-logo-gap: var(--space-24);
   }
 
@@ -98,31 +103,30 @@
 
 @media (max-width: 640px) {
   .section {
-    --client-logo-height: 64px;
+    --client-logo-height: 83px;
     --client-logo-gap: var(--space-16);
   }
   .marqueeGroup {
-    gap: 33px;
-    padding: 0 var(--client-logo-gap) 0 0;
+    --marquee-gap: 33px;
   }
 }
 
 @media (max-width: 480px) {
   .section {
-    --client-logo-height: 56px;
+    --client-logo-height: 73px;
     --client-logo-gap: var(--space-16);
   }
 }
 
 @media (max-width: 390px) {
   .section {
-    --client-logo-height: 52px;
+    --client-logo-height: 68px;
   }
 }
 
 @media (max-width: 360px) {
   .section {
-    --client-logo-height: 48px;
+    --client-logo-height: 62px;
     --client-logo-gap: var(--space-12);
   }
 }

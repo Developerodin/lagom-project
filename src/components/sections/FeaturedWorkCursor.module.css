@@ -1,0 +1,42 @@
+.zoneActive,
+.zoneActive * {
+  cursor: none !important;
+}
+
+.cursor {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 10000;
+  width: 1.75rem;
+  height: 1.75rem;
+  margin: -0.875rem 0 0 -0.875rem;
+  border: 1.5px solid #3f493d;
+  border-radius: 50%;
+  background: transparent;
+  pointer-events: none;
+  opacity: 0;
+  will-change: transform;
+  transition:
+    width 0.22s cubic-bezier(0.25, 0.1, 0.25, 1),
+    height 0.22s cubic-bezier(0.25, 0.1, 0.25, 1),
+    margin 0.22s cubic-bezier(0.25, 0.1, 0.25, 1),
+    opacity 0.15s ease;
+}
+
+.cursorVisible {
+  opacity: 1;
+}
+
+.cursorExpanded {
+  width: 2.4rem;
+  height: 2.4rem;
+  margin: -1.2rem 0 0 -1.2rem;
+  border-color: #deead3;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cursor {
+    transition: opacity 0.15s ease;
+  }
+}

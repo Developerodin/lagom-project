@@ -12,6 +12,7 @@ const links = [
   { href: "/admin/categories", label: "Categories" },
   { href: "/admin/testimonials", label: "Testimonials" },
   { href: "/admin/submissions", label: "Enquiries" },
+  { href: "/admin/stationary-signups", label: "Launch signups" },
   { href: "/admin/settings", label: "Settings" },
 ];
 

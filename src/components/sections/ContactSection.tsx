@@ -112,7 +112,6 @@ export function ContactSection() {
                   </div>
 
                   <div className={styles.infoText}>
-                    <span className={styles.infoLabel}>{item.label}</span>
                     {"href" in item && item.href ? (
                       <a href={item.href} className={styles.infoValue}>
                         {item.value}

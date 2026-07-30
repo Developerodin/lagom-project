@@ -59,10 +59,12 @@ function LogoMarqueeGroup({ logos, ariaHidden = false }: LogoMarqueeGroupProps) 
           <Image
             src={logo.src}
             alt={ariaHidden ? "" : logo.alt}
-            width={240}
-            height={80}
+            width={150}
+            height={150}
             className={styles.logoImage}
-            sizes="(max-width: 480px) 144px, (max-width: 768px) 192px, 240px"
+            sizes="(max-width: 480px) 73px, (max-width: 768px) 94px, 160px"
+            loading="eager"
+            decoding="async"
           />
         </li>
       ))}
@@ -106,21 +108,21 @@ export function ClientsSection() {
       className={styles.section}
       aria-labelledby="clients-section-title"
     >
-      <div className="container">
+      <div className={`container ${styles.headingWrap}`}>
         <h2
           id="clients-section-title"
           className={`heading-section ${styles.heading}`}
         >
           CLIENTS WE HAVE WORKED WITH
         </h2>
-
-        {logos.length > 0 ? (
-          <div className={styles.marqueeStrips}>
-            <ClientMarquee logos={firstStripLogos} />
-            <ClientMarquee logos={secondStripLogos} reverse />
-          </div>
-        ) : null}
       </div>
+
+      {logos.length > 0 ? (
+        <div className={styles.marqueeStrips}>
+          <ClientMarquee logos={firstStripLogos} />
+          <ClientMarquee logos={secondStripLogos} reverse />
+        </div>
+      ) : null}
     </RevealOnScroll>
   );
 }

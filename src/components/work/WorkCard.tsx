@@ -7,7 +7,7 @@ export type WorkCardItem = {
   title: string;
   cardImage: string;
   cardAlt: string;
-  whatWeDid?: string | null;
+  services?: string[];
 };
 
 type WorkCardProps = {
@@ -21,13 +21,16 @@ export function WorkCard({
   sizes = "(min-width: 769px) 33vw, 50vw",
   className,
 }: WorkCardProps) {
-  const whatWeDid = item.whatWeDid?.trim() || null;
+  const services = (item.services ?? [])
+    .map((service) => service.trim())
+    .filter(Boolean);
 
   return (
     <Link
       href={`/work/${item.slug}`}
       className={[styles.card, className].filter(Boolean).join(" ")}
       aria-label={`View ${item.title} project`}
+      data-work-card
     >
       <div className={styles.cardMedia}>
         <Image
@@ -42,10 +45,15 @@ export function WorkCard({
             <div className={styles.overlayBlock}>
               <span className={styles.overlayTitle}>{item.title}</span>
             </div>
-            {whatWeDid ? (
+            {services.length > 0 ? (
               <div className={styles.overlayBlock}>
-                <span className={styles.overlayLabel}>WHAT WE DID :</span>
-                <p className={styles.overlayText}>{whatWeDid}</p>
+                <ul className={styles.overlayServices}>
+                  {services.map((service) => (
+                    <li key={service} className={styles.overlayService}>
+                      {service}
+                    </li>
+                  ))}
+                </ul>
               </div>
             ) : null}
           </div>

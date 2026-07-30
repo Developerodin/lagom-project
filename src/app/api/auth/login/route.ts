@@ -1,62 +1,21 @@
-import bcrypt from "bcryptjs";
 import { NextResponse } from "next/server";
-import { env } from "@/lib/env";
+import { ensureAdminPasswordSeeded, verifyAdminPassword } from "@/lib/admin-password";
 import { getSession } from "@/lib/auth";
-import { prisma } from "@/lib/prisma";
+import {
+  clearAttempts,
+  getClientIp,
+  isRateLimited,
+  recordAttempt,
+} from "@/lib/rate-limit";
 
 const WINDOW_MS = 15 * 60 * 1000;
 const MAX_ATTEMPTS = 5;
-const PASSWORD_SETTING_KEY = "admin_password_hash";
-
-const recentAttempts = new Map<string, number[]>();
-
-function getClientIp(request: Request) {
-  return (
-    request.headers.get("x-forwarded-for")?.split(",")[0].trim() ||
-    request.headers.get("x-real-ip") ||
-    "unknown"
-  );
-}
-
-function isRateLimited(ip: string) {
-  const now = Date.now();
-  const previous = (recentAttempts.get(ip) ?? []).filter(
-    (timestamp) => now - timestamp < WINDOW_MS,
-  );
-
-  if (previous.length >= MAX_ATTEMPTS) {
-    recentAttempts.set(ip, previous);
-    return true;
-  }
-
-  return false;
-}
-
-function recordFailedAttempt(ip: string) {
-  const now = Date.now();
-  const previous = (recentAttempts.get(ip) ?? []).filter(
-    (timestamp) => now - timestamp < WINDOW_MS,
-  );
-  previous.push(now);
-  recentAttempts.set(ip, previous);
-}
-
-async function getActiveAdminPasswordHash() {
-  try {
-    const stored = await prisma.setting.findUnique({
-      where: { key: PASSWORD_SETTING_KEY },
-      select: { value: true },
-    });
-    return stored?.value ?? env.adminPasswordHash;
-  } catch {
-    return env.adminPasswordHash;
-  }
-}
 
 export async function POST(request: Request) {
   const ip = getClientIp(request);
+  const rateKey = `login:${ip}`;
 
-  if (isRateLimited(ip)) {
+  if (isRateLimited(rateKey, { windowMs: WINDOW_MS, maxAttempts: MAX_ATTEMPTS })) {
     return NextResponse.json(
       { error: "Incorrect password." },
       { status: 429 },
@@ -72,15 +31,6 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: "Invalid request" }, { status: 400 });
   }
 
-  const hash = await getActiveAdminPasswordHash();
-
-  if (!hash) {
-    return NextResponse.json(
-      { error: "Admin password is not configured." },
-      { status: 500 },
-    );
-  }
-
   if (typeof password !== "string" || password.length === 0) {
     return NextResponse.json(
       { error: "Password is required." },
@@ -88,17 +38,38 @@ export async function POST(request: Request) {
     );
   }
 
-  const valid = await bcrypt.compare(password, hash);
+  let hashExists: string | null;
+  try {
+    hashExists = await ensureAdminPasswordSeeded();
+  } catch (error) {
+    console.error("[login] Failed to load admin password:", error);
+    return NextResponse.json(
+      { error: "Admin password is not configured." },
+      { status: 500 },
+    );
+  }
+
+  if (!hashExists) {
+    return NextResponse.json(
+      {
+        error:
+          "Admin password is not configured. Use Forgot password to set one via email OTP.",
+      },
+      { status: 500 },
+    );
+  }
+
+  const valid = await verifyAdminPassword(password);
 
   if (!valid) {
-    recordFailedAttempt(ip);
+    recordAttempt(rateKey, { windowMs: WINDOW_MS, maxAttempts: MAX_ATTEMPTS });
     return NextResponse.json(
       { error: "Incorrect password." },
       { status: 401 },
     );
   }
 
-  recentAttempts.delete(ip);
+  clearAttempts(rateKey);
 
   const session = await getSession();
   session.isLoggedIn = true;

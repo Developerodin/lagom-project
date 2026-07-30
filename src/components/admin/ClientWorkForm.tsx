@@ -18,6 +18,7 @@ export type ClientWorkFormData = {
   slug: string;
   description: string;
   services: string;
+  serviceIds: string[];
   cardImage: string;
   cardAlt: string;
   heroImage: string;
@@ -38,10 +39,16 @@ type CategoryOption = {
   name: string;
 };
 
+type WorkServiceOption = {
+  id: string;
+  name: string;
+};
+
 type ClientWorkFormProps = {
   mode: "create" | "edit";
   initial?: ClientWorkFormData;
   categories: CategoryOption[];
+  workServices: WorkServiceOption[];
 };
 
 function slugify(value: string) {
@@ -89,7 +96,12 @@ async function uploadFile(file: File) {
   return { url: url as string, ...dimensions };
 }
 
-export function ClientWorkForm({ mode, initial, categories }: ClientWorkFormProps) {
+export function ClientWorkForm({
+  mode,
+  initial,
+  categories,
+  workServices: initialWorkServices,
+}: ClientWorkFormProps) {
   const router = useRouter();
   const formId = useId();
 
@@ -98,6 +110,14 @@ export function ClientWorkForm({ mode, initial, categories }: ClientWorkFormProp
   const [slugEdited, setSlugEdited] = useState(mode === "edit");
   const [description, setDescription] = useState(initial?.description ?? "");
   const [services, setServices] = useState(initial?.services ?? "");
+  const [serviceIds, setServiceIds] = useState<string[]>(
+    initial?.serviceIds ?? [],
+  );
+  const [availableServices, setAvailableServices] = useState<WorkServiceOption[]>(
+    initialWorkServices,
+  );
+  const [addingService, setAddingService] = useState(false);
+  const [newServiceName, setNewServiceName] = useState("");
   const [sortOrder, setSortOrder] = useState(String(initial?.sortOrder ?? 0));
   const [published, setPublished] = useState(initial?.published ?? true);
   const [categoryId, setCategoryId] = useState(initial?.categoryId ?? "");
@@ -196,6 +216,51 @@ export function ClientWorkForm({ mode, initial, categories }: ClientWorkFormProp
     });
   }
 
+  function toggleService(id: string) {
+    setServiceIds((current) =>
+      current.includes(id)
+        ? current.filter((serviceId) => serviceId !== id)
+        : [...current, id],
+    );
+  }
+
+  async function handleAddService() {
+    const name = newServiceName.trim();
+    if (!name) {
+      setError("Enter a service name.");
+      return;
+    }
+
+    setBusy(true);
+    setError("");
+
+    try {
+      const response = await fetch("/api/admin/work-services", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ name }),
+      });
+      const data = await response.json().catch(() => ({}));
+
+      if (!response.ok) {
+        setError(data.error || "Could not add service.");
+        return;
+      }
+
+      const created = data as WorkServiceOption;
+      setAvailableServices((current) => [...current, created]);
+      setServiceIds((current) =>
+        current.includes(created.id) ? current : [...current, created.id],
+      );
+      setNewServiceName("");
+      setAddingService(false);
+    } catch {
+      setError("Could not add service.");
+    } finally {
+      setBusy(false);
+    }
+  }
+
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     setError("");
@@ -217,6 +282,7 @@ export function ClientWorkForm({ mode, initial, categories }: ClientWorkFormProp
       description,
       services,
       whatWeDid: services,
+      serviceIds,
       sortOrder: Number(sortOrder) || 0,
       published,
       categoryId: categoryId || null,
@@ -305,6 +371,83 @@ export function ClientWorkForm({ mode, initial, categories }: ClientWorkFormProp
             value={services}
             onChange={(event) => setServices(event.target.value)}
           />
+          <span className="admin-field__hint">
+            Shown on the work detail page. Card hover uses the tags below.
+          </span>
+        </div>
+
+        <div className="admin-field">
+          <label>Card hover services</label>
+          <span className="admin-field__hint">
+            Select the services shown stacked on the work card hover.
+          </span>
+          <div className="admin-services-grid">
+            {availableServices.map((service) => {
+              const checked = serviceIds.includes(service.id);
+              return (
+                <label
+                  key={service.id}
+                  className={`admin-service-option${
+                    checked ? " admin-service-option--checked" : ""
+                  }`}
+                >
+                  <input
+                    type="checkbox"
+                    checked={checked}
+                    onChange={() => toggleService(service.id)}
+                  />
+                  <span>{service.name}</span>
+                </label>
+              );
+            })}
+          </div>
+
+          {addingService ? (
+            <div className="admin-add-service">
+              <input
+                id={`${formId}-new-service`}
+                type="text"
+                value={newServiceName}
+                onChange={(event) => setNewServiceName(event.target.value)}
+                placeholder="New service name"
+                disabled={busy}
+                onKeyDown={(event) => {
+                  if (event.key === "Enter") {
+                    event.preventDefault();
+                    void handleAddService();
+                  }
+                }}
+              />
+              <button
+                type="button"
+                className="admin-btn admin-btn--sm"
+                onClick={() => void handleAddService()}
+                disabled={busy}
+              >
+                Save
+              </button>
+              <button
+                type="button"
+                className="admin-btn admin-btn--secondary admin-btn--sm"
+                onClick={() => {
+                  setAddingService(false);
+                  setNewServiceName("");
+                }}
+                disabled={busy}
+              >
+                Cancel
+              </button>
+            </div>
+          ) : (
+            <button
+              type="button"
+              className="admin-btn admin-btn--secondary admin-btn--sm admin-add-service-btn"
+              onClick={() => setAddingService(true)}
+              disabled={busy}
+            >
+              + Add service
+            </button>
+          )}
         </div>
 
         <div className="admin-row">

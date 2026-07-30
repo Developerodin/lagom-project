@@ -126,7 +126,7 @@ export function ContactForm() {
       </div>
 
       <div className={styles.fieldRow}>
-        <div className={styles.field}>
+        <div className={`${styles.field} ${styles.fieldCompact}`}>
           <label htmlFor="contact-phone" className={styles.fieldLabel}>
             {fields.phone.label}
           </label>
@@ -139,7 +139,7 @@ export function ContactForm() {
           />
         </div>
 
-        <div className={styles.field}>
+        <div className={`${styles.field} ${styles.fieldCompact}`}>
           <label htmlFor="contact-company" className={styles.fieldLabel}>
             {fields.company.label}
           </label>
@@ -200,7 +200,7 @@ export function ContactForm() {
           id="contact-message"
           name="message"
           className={styles.fieldInput}
-          rows={5}
+          rows={8}
           required
         />
       </div>

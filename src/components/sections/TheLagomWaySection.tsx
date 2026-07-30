@@ -3,7 +3,7 @@ import type { StaticImageData } from "next/image";
 
 import portraitOne from "../../../public/assets/home/portrait_-900-x-1200px/p1.jpg";
 import portraitTwo from "../../../public/assets/home/portrait_-900-x-1200px/p2.jpg";
-import arrowGraphic from "../../../public/assets/home/arrow.svg";
+import arrowGraphic from "../../../public/assets/home/arrow-green.png";
 
 import { RevealOnScroll } from "@/components/ui/RevealOnScroll";
 import styles from "./TheLagomWaySection.module.css";
@@ -105,7 +105,7 @@ export function TheLagomWaySection() {
               src={arrowGraphic}
               alt=""
               width={820}
-              height={400}
+              height={525}
               className={styles.arrow}
             />
           </RevealOnScroll>

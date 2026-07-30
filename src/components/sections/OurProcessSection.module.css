@@ -1,6 +1,6 @@
 .section {
   width: 100%;
-  background-color: color-mix(in srgb, var(--color-accent) 35%, var(--color-paper));
+  background-color: #deead3;
 }
 
 .header {
@@ -85,8 +85,8 @@
 .step {
   display: flex;
   flex-direction: column;
-  align-items: center;
-  text-align: center;
+  align-items: flex-start;
+  text-align: left;
   min-width: 0;
 }
 
@@ -182,8 +182,9 @@
     padding: 0;
   }
 
-  /* Last row holds 2 items (Design, Finalise): center them while keeping
-     each column the same width as in the 3-column rows above. */
+  /* Last row holds 2 items (Design, Finalise): center the row while keeping
+     each column the same width as in the 3-column rows above.
+     Inner icon/text stay left-aligned via .step. */
   .stepsRowWrap:last-child .stepsRow {
     grid-template-columns: repeat(
       2,
