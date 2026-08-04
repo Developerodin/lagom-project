@@ -43,8 +43,8 @@ export const contactInfoContent = {
     {
       id: "phone",
       label: "Phone",
-      value: "+91 89551 06651",
-      href: "tel:+918955106651",
+      value: "+91 92190 46483",
+      href: "tel:+919219046483",
     },
     {
       id: "location",

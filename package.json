@@ -27,6 +27,7 @@
   "dependencies": {
     "@gsap/react": "^2.1.2",
     "@prisma/client": "^6.19.3",
+    "@vercel/blob": "^2.6.1",
     "bcryptjs": "^3.0.3",
     "embla-carousel-autoplay": "^8.6.0",
     "embla-carousel-react": "^8.6.0",

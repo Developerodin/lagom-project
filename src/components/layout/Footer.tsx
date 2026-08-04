@@ -49,9 +49,28 @@ function InstagramIcon() {
   );
 }
 
+function WhatsAppIcon() {
+  return (
+    <svg
+      className={styles.socialIcon}
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1.5"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      aria-hidden="true"
+    >
+      <path d="M3 21l1.9-4A8.5 8.5 0 1 1 7.5 19.5L3 21z" />
+      <path d="M8.8 9.5c.2-.6.5-.6.8-.6h.5c.2 0 .4 0 .5.4l.6 1.6c.1.2 0 .5-.2.6l-.3.4c-.1.2-.1.4.1.6.5.6 1.1 1.1 1.8 1.5.3.2.6.2.8 0l.5-.3c.2-.1.4-.1.6.1l1.4.7c.2.1.4.3.3.6v.5c0 .3-.2.6-.6.7-.7.3-1.5.3-2.4 0-1.7-.6-3.1-1.9-4-3.5-.5-.8-.8-1.7-.8-2.5.1-.6.3-1 .6-1.3z" />
+    </svg>
+  );
+}
+
 const socialIcons: Record<SocialLink["icon"], () => ReactNode> = {
   instagram: InstagramIcon,
   linkedin: LinkedInIcon,
+  whatsapp: WhatsAppIcon,
 };
 
 const emailItem = contactInfoContent.items.find((item) => item.id === "email");

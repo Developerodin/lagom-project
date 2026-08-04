@@ -22,6 +22,16 @@ const nextConfig: NextConfig = {
     // Cache optimized images at the CDN edge for a year so repeat visits
     // in any region are served without re-optimization.
     minimumCacheTTL: 31536000,
+    remotePatterns: [
+      {
+        protocol: "https",
+        hostname: "*.public.blob.vercel-storage.com",
+      },
+      {
+        protocol: "https",
+        hostname: "*.blob.vercel-storage.com",
+      },
+    ],
   },
   async headers() {
     return [
@@ -44,6 +54,16 @@ const nextConfig: NextConfig = {
             value: "public, max-age=31536000, immutable",
           },
         ],
+      },
+    ];
+  },
+  async redirects() {
+    return [
+      // Crawlers and chat apps still request /favicon.ico by convention.
+      {
+        source: "/favicon.ico",
+        destination: "/icon.png",
+        permanent: false,
       },
     ];
   },

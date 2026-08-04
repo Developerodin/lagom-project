@@ -1,3 +1,8 @@
+/**
+ * Legacy local-disk upload reader.
+ * New uploads go to Vercel Blob and return absolute Blob URLs.
+ * This route remains only for older `/api/uploads/...` URLs written before Blob.
+ */
 import { readFile } from "node:fs/promises";
 import path from "node:path";
 import { getUploadFilePath } from "@/lib/uploads";
@@ -35,3 +40,4 @@ export async function GET(
     return new Response("Not found", { status: 404 });
   }
 }
+

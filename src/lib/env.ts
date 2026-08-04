@@ -6,7 +6,7 @@ const isProduction = process.env.NODE_ENV === "production";
 function requireEnv(name: string, value: string | undefined): string {
   if (!value || value.trim().length === 0) {
     throw new Error(
-      `[env] ${name} is required in production. Set it in your Hostinger environment variables.`,
+      `[env] ${name} is required in production. Set it in your deployment environment variables.`,
     );
   }
   return value.trim();
@@ -61,14 +61,29 @@ function getAdminPasswordHash(): string | undefined {
   return normalizeBcryptHash(value);
 }
 
+function getBlobReadWriteToken(): string | undefined {
+  const value = process.env.BLOB_READ_WRITE_TOKEN?.trim();
+  const hasUploadDir = Boolean(process.env.UPLOAD_DIR?.trim());
+
+  // Vercel: prefer Blob. Hostinger/local disk: UPLOAD_DIR alone is enough.
+  if (isProduction && !value && !hasUploadDir) {
+    throw new Error(
+      "[env] BLOB_READ_WRITE_TOKEN is required on Vercel (or set UPLOAD_DIR for a persistent disk host).",
+    );
+  }
+
+  return value || undefined;
+}
+
 function getUploadDir(): string {
   const value = process.env.UPLOAD_DIR?.trim();
+  const hasBlob = Boolean(process.env.BLOB_READ_WRITE_TOKEN?.trim());
 
-  if (isProduction) {
+  if (isProduction && !hasBlob) {
     const dir = requireEnv("UPLOAD_DIR", value);
     if (!dir.startsWith("/")) {
       throw new Error(
-        "[env] UPLOAD_DIR must be an absolute path in production (e.g. /home/<user>/lagom-uploads).",
+        "[env] UPLOAD_DIR must be an absolute path when not using Vercel Blob (e.g. /home/<user>/lagom-uploads).",
       );
     }
     return dir;
@@ -77,10 +92,27 @@ function getUploadDir(): string {
   return value || "./uploads";
 }
 
+/**
+ * Lazy getters so importing this module during `next build` page-data
+ * collection does not throw before runtime env is actually needed.
+ */
 export const env = {
-  isProduction,
-  sessionSecret: getSessionSecret(),
-  databaseUrl: getDatabaseUrl(),
-  adminPasswordHash: getAdminPasswordHash(),
-  uploadDir: getUploadDir(),
+  get isProduction() {
+    return isProduction;
+  },
+  get sessionSecret() {
+    return getSessionSecret();
+  },
+  get databaseUrl() {
+    return getDatabaseUrl();
+  },
+  get adminPasswordHash() {
+    return getAdminPasswordHash();
+  },
+  get blobReadWriteToken() {
+    return getBlobReadWriteToken();
+  },
+  get uploadDir() {
+    return getUploadDir();
+  },
 };

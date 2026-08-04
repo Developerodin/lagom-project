@@ -5,8 +5,28 @@ const globalForPrisma = globalThis as unknown as {
   prisma: PrismaClient | undefined;
 };
 
+function withServerlessConnectionLimit(url: string | undefined) {
+  if (!url) {
+    return url;
+  }
+
+  try {
+    const parsed = new URL(url);
+    if (!parsed.searchParams.has("connection_limit")) {
+      // One connection per serverless isolate avoids MySQL max_connections exhaustion.
+      parsed.searchParams.set("connection_limit", "1");
+    }
+    return parsed.toString();
+  } catch {
+    return url;
+  }
+}
+
 function createPrismaClient() {
+  const url = withServerlessConnectionLimit(process.env.DATABASE_URL);
+
   return new PrismaClient({
+    datasources: url ? { db: { url } } : undefined,
     log: process.env.NODE_ENV === "development" ? ["error", "warn"] : ["error"],
   });
 }
@@ -35,10 +55,9 @@ function getPrismaClient() {
   }
 
   const client = createPrismaClient();
-
-  if (process.env.NODE_ENV !== "production") {
-    globalForPrisma.prisma = client;
-  }
+  // Always cache on globalThis so serverless/Fluid Compute reuses one client
+  // per isolate instead of opening a new connection on every Proxy access.
+  globalForPrisma.prisma = client;
 
   return client;
 }

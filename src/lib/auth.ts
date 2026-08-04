@@ -13,20 +13,29 @@ export function unauthorizedResponse() {
 
 const SESSION_MAX_AGE_SECONDS = 7 * 24 * 60 * 60;
 
-export const sessionOptions: SessionOptions = {
-  password: env.sessionSecret,
-  cookieName: "lagom_admin",
-  cookieOptions: {
-    httpOnly: true,
-    secure: env.isProduction,
-    sameSite: "lax",
-    path: "/",
-    maxAge: SESSION_MAX_AGE_SECONDS,
+export function getSessionOptions(): SessionOptions {
+  return {
+    password: env.sessionSecret,
+    cookieName: "lagom_admin",
+    cookieOptions: {
+      httpOnly: true,
+      secure: env.isProduction,
+      sameSite: "lax",
+      path: "/",
+      maxAge: SESSION_MAX_AGE_SECONDS,
+    },
+  };
+}
+
+/** @deprecated Use getSessionOptions() — kept for any external imports. */
+export const sessionOptions: SessionOptions = new Proxy({} as SessionOptions, {
+  get(_target, prop, receiver) {
+    return Reflect.get(getSessionOptions(), prop, receiver);
   },
-};
+});
 
 export async function getSession() {
-  return getIronSession<SessionData>(await cookies(), sessionOptions);
+  return getIronSession<SessionData>(await cookies(), getSessionOptions());
 }
 
 export async function isAuthenticated() {

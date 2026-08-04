@@ -1,7 +1,7 @@
 export const siteConfig = {
   name: "Lagom Design",
   tagline: "Thoughtful design for considered spaces",
-  url: "https://lagomdesign.com",
+  url: "https://studiolagomdesign.com",
 } as const;
 
 export type NavItem = {
@@ -30,7 +30,7 @@ export const footerNavigation: NavItem[] = [
 export type SocialLink = {
   label: string;
   href: string;
-  icon: "instagram" | "linkedin";
+  icon: "instagram" | "linkedin" | "whatsapp";
 };
 
 export const socialLinks: SocialLink[] = [
@@ -43,5 +43,10 @@ export const socialLinks: SocialLink[] = [
     label: "LinkedIn",
     href: "https://www.linkedin.com/company/lagom-design-studio/",
     icon: "linkedin",
+  },
+  {
+    label: "WhatsApp",
+    href: "https://wa.me/919219046483",
+    icon: "whatsapp",
   },
 ];
