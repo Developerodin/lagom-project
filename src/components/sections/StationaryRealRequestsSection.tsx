@@ -23,6 +23,8 @@ export function StationaryRealRequestsSection() {
             height={800}
             sizes="(max-width: 768px) 100vw, 45vw"
             quality={90}
+            loading="lazy"
+            decoding="async"
           />
         </div>
 

@@ -82,6 +82,8 @@ export function TestimonialsCarousel({ testimonials }: TestimonialsCarouselProps
                 fill
                 className={styles.cardBg}
                 sizes="(max-width: 768px) 100vw, 33vw"
+                loading="lazy"
+                decoding="async"
                 aria-hidden={testimonial.bgImageAlt ? undefined : true}
               />
               <div className={styles.cardOverlay} aria-hidden="true" />
@@ -99,6 +101,8 @@ export function TestimonialsCarousel({ testimonials }: TestimonialsCarouselProps
                     height={64}
                     className={styles.logo}
                     sizes="(max-width: 768px) 120px, 160px"
+                    loading="lazy"
+                    decoding="async"
                   />
                 </div>
               </div>

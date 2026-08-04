@@ -31,6 +31,9 @@ function ProcessStepItem({
           width={isFinalise ? 180 : 150}
           height={isFinalise ? 180 : 150}
           className={`${styles.icon} ${isFinalise ? styles.iconLarge : ""}`}
+          sizes="(min-width: 993px) 180px, 150px"
+          loading="lazy"
+          decoding="async"
         />
       </div>
       <h3

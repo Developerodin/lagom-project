@@ -31,6 +31,8 @@ export function ClientWorkGallery({ images }: { images: GalleryImage[] }) {
               width={image.width}
               height={image.height}
               sizes="100vw"
+              loading="lazy"
+              decoding="async"
               className={styles.image}
             />
           ) : (

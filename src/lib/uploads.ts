@@ -19,6 +19,15 @@ export function getUploadDir() {
   return path.resolve(env.uploadDir);
 }
 
+/**
+ * Build an absolute upload path without `path.join(dynamic, dynamic)`,
+ * which makes Turbopack treat it as a project-wide file glob and bloat the build.
+ */
+export function getUploadFilePath(filename: string) {
+  const safeName = path.basename(filename);
+  return `${getUploadDir()}${path.sep}${safeName}`;
+}
+
 export async function saveUpload(file: File): Promise<{ url: string }> {
   const extension = ALLOWED_TYPES.get(file.type);
 
@@ -35,7 +44,7 @@ export async function saveUpload(file: File): Promise<{ url: string }> {
   await mkdir(dir, { recursive: true });
 
   const buffer = Buffer.from(await file.arrayBuffer());
-  await writeFile(path.join(dir, filename), buffer);
+  await writeFile(getUploadFilePath(filename), buffer);
 
   return { url: `${URL_PREFIX}${filename}` };
 }
@@ -51,5 +60,5 @@ export async function deleteUpload(url: string | null | undefined) {
     return;
   }
 
-  await rm(path.join(getUploadDir(), filename), { force: true });
+  await rm(getUploadFilePath(filename), { force: true });
 }

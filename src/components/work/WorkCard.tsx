@@ -38,6 +38,8 @@ export function WorkCard({
           alt={item.cardAlt}
           fill
           sizes={sizes}
+          loading="lazy"
+          decoding="async"
           className={styles.image}
         />
         <div className={styles.overlay} aria-hidden="true">

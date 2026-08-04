@@ -36,6 +36,8 @@ function PortraitFrame({ src, alt }: PortraitFrameProps) {
         height={1200}
         className={`image ${styles.portraitImage}`}
         sizes="(min-width: 993px) 11vw, (min-width: 769px) 20vw, min(160px, 50vw)"
+        loading="lazy"
+        decoding="async"
       />
     </div>
   );
@@ -107,6 +109,8 @@ export function TheLagomWaySection() {
               width={820}
               height={525}
               className={styles.arrow}
+              loading="lazy"
+              decoding="async"
             />
           </RevealOnScroll>
 

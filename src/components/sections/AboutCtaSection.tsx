@@ -41,6 +41,7 @@ export function AboutCtaSection() {
             sizes="(max-width: 768px) 100vw, 55vw"
             quality={100}
             loading="lazy"
+            decoding="async"
           />
         </div>
 

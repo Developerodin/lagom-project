@@ -75,6 +75,8 @@ export function OurPhilosophySection() {
                 height={800}
                 className={styles.image}
                 sizes="(min-width: 993px) 33vw, (min-width: 769px) 33vw, 50vw"
+                loading="lazy"
+                decoding="async"
               />
             </li>
           ))}

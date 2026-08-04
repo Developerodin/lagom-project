@@ -80,6 +80,8 @@ function ServiceCard({ service }: { service: Service }) {
           height={150}
           className={styles.icon}
           sizes="(min-width: 993px) 56px, (min-width: 769px) 48px, 36px"
+          loading="lazy"
+          decoding="async"
         />
       </div>
       <div className={styles.cardContent}>

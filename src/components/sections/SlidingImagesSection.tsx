@@ -5,6 +5,7 @@ import {
   type SlidingImageItem,
 } from "@/content/home";
 import { RevealOnScroll } from "@/components/ui/RevealOnScroll";
+import { PauseOffscreen } from "@/components/ui/PauseOffscreen";
 
 import styles from "./SlidingImagesSection.module.css";
 
@@ -55,12 +56,12 @@ function ImageMarquee({ images, reverse = false }: ImageMarqueeProps) {
     : styles.marqueeTrack;
 
   return (
-    <div className={styles.marqueeViewport}>
+    <PauseOffscreen className={styles.marqueeViewport}>
       <div className={trackClassName}>
         <ImageMarqueeGroup images={images} />
         <ImageMarqueeGroup images={images} ariaHidden />
       </div>
-    </div>
+    </PauseOffscreen>
   );
 }
 

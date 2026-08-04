@@ -68,6 +68,9 @@ export function Header() {
             height={358}
             className={styles.logoImage}
             priority
+            fetchPriority="high"
+            loading="eager"
+            decoding="async"
           />
           <span className="sr-only">{siteConfig.name}</span>
         </Link>

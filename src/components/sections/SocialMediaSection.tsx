@@ -42,6 +42,8 @@ export function SocialMediaSection() {
                   alt={images.primary.alt}
                   fill
                   sizes="(min-width: 993px) 28vw, (min-width: 769px) 40vw, 72vw"
+                  loading="lazy"
+                  decoding="async"
                   className={styles.image}
                 />
               </div>
@@ -51,6 +53,8 @@ export function SocialMediaSection() {
                   alt={images.secondary.alt}
                   fill
                   sizes="(min-width: 993px) 28vw, (min-width: 769px) 40vw, 72vw"
+                  loading="lazy"
+                  decoding="async"
                   className={styles.image}
                 />
               </div>

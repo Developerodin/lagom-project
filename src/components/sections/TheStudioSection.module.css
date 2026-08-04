@@ -4,12 +4,16 @@
   padding-block: var(--section-spacing-md);
 }
 
+.container {
+  padding-block: 8rem !important;
+}
+
 .layout {
   display: flex;
   flex-direction: column;
   gap: clamp(var(--space-48), 4vw, var(--space-96));
   width: 100%;
-  padding-inline: 8rem !important;
+  padding-inline: 18rem !important;
 }
 
 .header {
@@ -26,7 +30,7 @@
 
 .title {
   max-width: none;
-  padding-inline-start: 0;
+  padding-inline-start: 3rem;
   font: inherit;
   font-weight: 800;
   line-height: var(--title-line-height);
@@ -40,9 +44,10 @@
 }
 
 .divider {
-  width: 125%;
+  width: 70%;
   height: 1px;
-  justify-self: start; /* grow rightward — away from the title */
+  justify-self: center;
+/* grow rightward — away from the title */
   background-color: var(--color-primary);
   /*
     Title is 2 lines. The center of the second line is roughly
@@ -62,24 +67,23 @@
 .imageCol {
   position: relative;
   min-width: 0;
-  /* No in-flow height — text column sets the row; image fills it */
+  /* Text column sets the row height; image anchors inside it */
 }
 
 .imageWrap {
   position: absolute;
-  inset-block: 0;
-  inset-inline-start: 0;
-  /* Height matches text column; width follows the image aspect ratio */
-  height: 100%;
+  right: 0;
+  bottom: 0;
+  /* 75% of paragraph/text column height; width from aspect ratio */
+  height: 75%;
   width: auto;
   aspect-ratio: 477 / 500;
   max-width: 100%;
-  overflow: hidden;
 }
 
 .image {
   object-fit: contain;
-  object-position: left top;
+  object-position: right bottom;
 }
 
 .textCol {
@@ -185,4 +189,12 @@
   .paragraphs {
     gap: var(--space-12);
   }
+  .imageWrap{
+    justify-content: center;
+    align-items: center;
+  }
+  .image{
+    object-position: center;
+  }
 }
+

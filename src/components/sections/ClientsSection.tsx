@@ -4,6 +4,7 @@ import path from "node:path";
 import Image from "next/image";
 
 import { RevealOnScroll } from "@/components/ui/RevealOnScroll";
+import { PauseOffscreen } from "@/components/ui/PauseOffscreen";
 import styles from "./ClientsSection.module.css";
 
 const CLIENTS_DIR = path.join(process.cwd(), "public/assets/home/Clients");
@@ -63,7 +64,7 @@ function LogoMarqueeGroup({ logos, ariaHidden = false }: LogoMarqueeGroupProps) 
             height={150}
             className={styles.logoImage}
             sizes="(max-width: 480px) 73px, (max-width: 768px) 94px, 160px"
-            loading="eager"
+            loading="lazy"
             decoding="async"
           />
         </li>
@@ -87,12 +88,12 @@ function ClientMarquee({ logos, reverse = false }: ClientMarqueeProps) {
     : styles.marqueeTrack;
 
   return (
-    <div className={styles.marqueeViewport}>
+    <PauseOffscreen className={styles.marqueeViewport}>
       <div className={trackClassName}>
         <LogoMarqueeGroup logos={logos} />
         <LogoMarqueeGroup logos={logos} ariaHidden />
       </div>
-    </div>
+    </PauseOffscreen>
   );
 }
 

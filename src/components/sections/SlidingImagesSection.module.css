@@ -28,6 +28,11 @@
   will-change: transform;
 }
 
+.marqueeViewport[data-paused] .marqueeTrack {
+  animation-play-state: paused;
+  will-change: auto;
+}
+
 .marqueeTrackReverse {
   animation-direction: reverse;
 }

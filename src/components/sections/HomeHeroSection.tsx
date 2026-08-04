@@ -14,7 +14,10 @@ export function HomeHeroSection() {
       aria-labelledby="home-hero-title"
     >
       <HomeHeroCardsAnimation />
-      <div className={`container ${styles.inner}`}>
+      <div
+        className={`container ${styles.inner}`}
+        data-hero-content
+      >
         <h1 id="home-hero-title" className={styles.headline}>
           <span className={styles.headlineLead}>{headlineLead}</span>
           <br />

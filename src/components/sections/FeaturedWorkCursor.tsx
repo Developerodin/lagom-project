@@ -20,6 +20,8 @@ export function FeaturedWorkCursor({
 }: FeaturedWorkCursorProps) {
   const cursorRef = useRef<HTMLDivElement>(null);
   const onCardRef = useRef(false);
+  const rafIdRef = useRef<number | null>(null);
+  const pendingPosRef = useRef<{ x: number; y: number } | null>(null);
   const [enabled, setEnabled] = useState(false);
   const [visible, setVisible] = useState(false);
   const [onCard, setOnCard] = useState(false);
@@ -34,10 +36,30 @@ export function FeaturedWorkCursor({
     return () => mediaQuery.removeEventListener("change", sync);
   }, []);
 
-  const updateCursorPosition = (clientX: number, clientY: number) => {
+  useEffect(() => {
+    return () => {
+      if (rafIdRef.current !== null) {
+        cancelAnimationFrame(rafIdRef.current);
+      }
+    };
+  }, []);
+
+  const applyCursorPosition = (clientX: number, clientY: number) => {
     const cursor = cursorRef.current;
     if (!cursor) return;
     cursor.style.transform = `translate3d(${clientX}px, ${clientY}px, 0)`;
+  };
+
+  const scheduleCursorPosition = (clientX: number, clientY: number) => {
+    pendingPosRef.current = { x: clientX, y: clientY };
+    if (rafIdRef.current !== null) return;
+
+    rafIdRef.current = requestAnimationFrame(() => {
+      rafIdRef.current = null;
+      const next = pendingPosRef.current;
+      if (!next) return;
+      applyCursorPosition(next.x, next.y);
+    });
   };
 
   const syncCardHover = (target: EventTarget | null) => {
@@ -52,13 +74,13 @@ export function FeaturedWorkCursor({
   const handlePointerEnter = (event: ReactPointerEvent<HTMLDivElement>) => {
     if (!enabled) return;
     setVisible(true);
-    updateCursorPosition(event.clientX, event.clientY);
+    applyCursorPosition(event.clientX, event.clientY);
     syncCardHover(event.target);
   };
 
   const handlePointerMove = (event: ReactPointerEvent<HTMLDivElement>) => {
     if (!enabled) return;
-    updateCursorPosition(event.clientX, event.clientY);
+    scheduleCursorPosition(event.clientX, event.clientY);
     syncCardHover(event.target);
   };
 
@@ -66,6 +88,11 @@ export function FeaturedWorkCursor({
     setVisible(false);
     onCardRef.current = false;
     setOnCard(false);
+    pendingPosRef.current = null;
+    if (rafIdRef.current !== null) {
+      cancelAnimationFrame(rafIdRef.current);
+      rafIdRef.current = null;
+    }
   };
 
   return (

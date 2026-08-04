@@ -7,6 +7,10 @@ const nextConfig: NextConfig = {
   turbopack: {
     root: path.join(__dirname),
   },
+  // Uploads live outside the traced bundle; keep the build from scanning them.
+  outputFileTracingExcludes: {
+    "*": ["./uploads/**/*"],
+  },
   reactCompiler: true,
   images: {
     dangerouslyAllowSVG: true,

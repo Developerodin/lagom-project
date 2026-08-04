@@ -67,6 +67,8 @@ export function Footer() {
         alt=""
         fill
         sizes="100vw"
+        loading="lazy"
+        decoding="async"
         className={styles.footerBg}
         aria-hidden="true"
       />
@@ -79,6 +81,8 @@ export function Footer() {
               width={608}
               height={358}
               className={styles.logoImage}
+              loading="lazy"
+              decoding="async"
             />
             <span className="sr-only">{siteConfig.name}</span>
           </Link>

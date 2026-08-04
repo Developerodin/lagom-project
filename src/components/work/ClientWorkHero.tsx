@@ -16,6 +16,8 @@ export function ClientWorkHero({ src, alt, title }: ClientWorkHeroProps) {
         alt={alt}
         fill
         priority
+        fetchPriority="high"
+        decoding="async"
         sizes="100vw"
         className={styles.image}
       />

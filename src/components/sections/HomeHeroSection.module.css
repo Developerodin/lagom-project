@@ -3,12 +3,15 @@
   --hero-sage: #96ae7f;
 
   position: relative;
-  z-index: 110;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   width: 100%;
-  overflow: visible;
+  min-height: clamp(20rem, 65vh, 42rem);
   padding-block: clamp(var(--space-96), 14vh, var(--space-144))
     clamp(var(--space-72), 10vh, var(--space-112));
   background-color: var(--color-paper);
+  overflow: hidden;
 }
 
 .inner {
@@ -19,6 +22,16 @@
   align-items: center;
   text-align: center;
   max-width: 52rem;
+  /* Hidden until GSAP reveals; reduced-motion shows immediately. */
+  opacity: 0;
+  visibility: hidden;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .inner {
+    opacity: 1;
+    visibility: visible;
+  }
 }
 
 .headline {
@@ -66,6 +79,7 @@
 
 @media (max-width: 640px) {
   .section {
+    min-height: clamp(24rem, 78vh, 40rem);
     padding-block: var(--space-72);
   }
 

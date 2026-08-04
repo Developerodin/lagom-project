@@ -17,22 +17,6 @@ export function ScrollToTop() {
 
   useIsomorphicLayoutEffect(() => {
     scrollToTop();
-
-    const rafId = requestAnimationFrame(scrollToTop);
-
-    return () => cancelAnimationFrame(rafId);
-  }, [pathname]);
-
-  useEffect(() => {
-    scrollToTop();
-
-    const rafId = requestAnimationFrame(scrollToTop);
-    const timeoutId = window.setTimeout(scrollToTop, 0);
-
-    return () => {
-      cancelAnimationFrame(rafId);
-      window.clearTimeout(timeoutId);
-    };
   }, [pathname]);
 
   return null;

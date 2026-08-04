@@ -31,6 +31,8 @@ export function TheStudioSection() {
                   alt={image.alt}
                   fill
                   sizes="(min-width: 993px) 34vw, (min-width: 769px) 42vw, 88vw"
+                  loading="lazy"
+                  decoding="async"
                   className={styles.image}
                 />
               </div>
