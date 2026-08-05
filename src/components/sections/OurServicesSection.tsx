@@ -127,6 +127,7 @@ export function OurServicesSection({
         variant === "dark" ? styles.sectionDark : ""
       }`}
       aria-labelledby="our-services-title"
+      data-cursor-contrast={variant === "dark" ? "light" : undefined}
     >
       <div className="container">
         <div className={styles.layout}>

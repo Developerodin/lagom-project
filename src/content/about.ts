@@ -14,12 +14,17 @@ export const aboutHeroContent: AboutHeroContent = {
   alt: "A laptop on a green velvet sofa displaying Lagom Design — Design, the Lagom Way. A studio that speaks in visuals.",
 };
 
+export type TheStudioTextSegment = {
+  text: string;
+  emphasis: boolean;
+};
+
 export type TheStudioSectionContent = {
   title: {
     line1: string;
     line2: string;
   };
-  paragraphs: string[];
+  paragraphs: Array<string | ReadonlyArray<TheStudioTextSegment>>;
   image: {
     src: StaticImageData;
     alt: string;
@@ -32,7 +37,17 @@ export const theStudioSectionContent: TheStudioSectionContent = {
     line2: "STUDIO",
   },
   paragraphs: [
-    "Lagom Design is a creative studio dedicated to building thoughtful, visually refined brands rooted in the philosophy of \"just the right amount.\" We believe great design is not about excess, but about clarity, balance, and intention.",
+    [
+      {
+        text: 'Lagom Design is a creative studio dedicated to building thoughtful, visually refined brands rooted in the philosophy of "',
+        emphasis: false,
+      },
+      { text: "just the right amount.", emphasis: true },
+      {
+        text: '" We believe great design is not about excess, but about clarity, balance, and intention.',
+        emphasis: false,
+      },
+    ],
     "Specializing in brand identities, packaging, and visual systems, we create work that feels effortless yet distinctive, combining strategy with aesthetics to tell meaningful brand stories.",
     "Our approach is simple, collaborative, and detail-driven, focusing on timeless design that connects and evolves rather than follows trends. At Lagom, we don't overdesign or overcomplicate - we create what feels right.",
   ],

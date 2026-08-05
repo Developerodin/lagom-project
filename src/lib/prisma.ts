@@ -16,6 +16,13 @@ function withServerlessConnectionLimit(url: string | undefined) {
       // One connection per serverless isolate avoids MySQL max_connections exhaustion.
       parsed.searchParams.set("connection_limit", "1");
     }
+    // Fail fast when MySQL is unreachable instead of hanging login/API requests.
+    if (!parsed.searchParams.has("connect_timeout")) {
+      parsed.searchParams.set("connect_timeout", "10");
+    }
+    if (!parsed.searchParams.has("pool_timeout")) {
+      parsed.searchParams.set("pool_timeout", "10");
+    }
     return parsed.toString();
   } catch {
     return url;

@@ -8,7 +8,6 @@
 }
 
 .beamRow {
-  padding: 34px 0 60px;
   position: relative;
 }
 
@@ -76,7 +75,7 @@
   }
 
   .beamRow {
-    padding: var(--space-24) 0 var(--space-48);
+    padding: var(--space-8) 0 var(--space-24);
   }
 
   .beamCaption {

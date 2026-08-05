@@ -9,6 +9,7 @@ import {
   type SocialLink,
 } from "@/content/site";
 import { RevealOnScroll } from "@/components/ui/RevealOnScroll";
+import { HomeLogoLink } from "./HomeLogoLink";
 import styles from "./Footer.module.css";
 
 function LinkedInIcon() {
@@ -80,31 +81,56 @@ export function Footer() {
   const year = new Date().getFullYear();
 
   return (
-    <RevealOnScroll as="footer" className={styles.footer}>
+    <RevealOnScroll
+      as="footer"
+      className={styles.footer}
+      data-cursor-contrast="light"
+    >
       <Image
         src="/assets/home/footer.jpg"
         alt=""
         fill
-        sizes="100vw"
+        sizes="(min-width: 769px) 100vw, 1px"
+        quality={100}
         loading="lazy"
         decoding="async"
-        className={styles.footerBg}
+        className={styles.footerBgDesktop}
+        aria-hidden="true"
+      />
+      <Image
+        src="/assets/home/footer-mobile.jpg"
+        alt=""
+        width={600}
+        height={600}
+        quality={100}
+        unoptimized
+        loading="lazy"
+        decoding="async"
+        className={styles.footerBgMobile}
         aria-hidden="true"
       />
       <div className={styles.inner}>
         <div className={styles.main}>
-          <Link href="/" className={styles.logo} aria-label={siteConfig.name}>
-            <Image
-              src="/assets/logo/lagom-design-logo-footer-mark.png"
-              alt=""
-              width={608}
-              height={358}
-              className={styles.logoImage}
-              loading="lazy"
-              decoding="async"
-            />
-            <span className="sr-only">{siteConfig.name}</span>
-          </Link>
+          <div className={styles.brand}>
+            <HomeLogoLink className={styles.logo} aria-label={siteConfig.name}>
+              <Image
+                src="/assets/logo/lagom-design-logo-footer-mark.png"
+                alt=""
+                width={608}
+                height={358}
+                className={styles.logoImage}
+                loading="lazy"
+                decoding="async"
+              />
+              <span className="sr-only">{siteConfig.name}</span>
+            </HomeLogoLink>
+
+            <p className={styles.tagline}>
+              Designing brands
+              <br />
+              people choose.
+            </p>
+          </div>
 
           <div className={styles.columns}>
             <nav className={styles.nav} aria-label="Footer navigation">

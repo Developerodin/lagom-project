@@ -1,11 +1,11 @@
 "use client";
 
 import Link from "next/link";
-import { useRouter } from "next/navigation";
 import { useState, type FormEvent } from "react";
 
+const LOGIN_TIMEOUT_MS = 20_000;
+
 export function AdminLoginForm() {
-  const router = useRouter();
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
@@ -15,21 +15,27 @@ export function AdminLoginForm() {
     setLoading(true);
     setError("");
 
-    const response = await fetch("/api/auth/login", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ password }),
-    });
+    try {
+      const response = await fetch("/api/auth/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ password }),
+        signal: AbortSignal.timeout(LOGIN_TIMEOUT_MS),
+      });
 
-    if (response.ok) {
-      router.replace("/admin/clients");
-      router.refresh();
-      return;
+      if (response.ok) {
+        // Hard navigation remounts cleanly if middleware bounces an invalid session.
+        window.location.assign("/admin/clients");
+        return;
+      }
+
+      const data = await response.json().catch(() => ({}));
+      setError(data.error || "Login failed. Please try again.");
+    } catch {
+      setError("Could not reach the server. Check your connection and try again.");
+    } finally {
+      setLoading(false);
     }
-
-    const data = await response.json().catch(() => ({}));
-    setError(data.error || "Login failed. Please try again.");
-    setLoading(false);
   }
 
   return (

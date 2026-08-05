@@ -13,6 +13,7 @@ export function BrandingSection() {
       as="section"
       className={`surface-primary section-md ${styles.section}`}
       aria-labelledby="branding-title"
+      data-cursor-contrast="light"
     >
       <div className="container">
         <div className={styles.layout}>

@@ -44,54 +44,56 @@ export function ClientWorkList({ clients }: { clients: ClientRow[] }) {
   }
 
   return (
-    <table className="admin-table">
-      <thead>
-        <tr>
-          <th>Title</th>
-          <th>Category</th>
-          <th>Slug</th>
-          <th>Order</th>
-          <th>Status</th>
-          <th aria-label="Actions" />
-        </tr>
-      </thead>
-      <tbody>
-        {clients.map((client) => (
-          <tr key={client.id}>
-            <td>{client.title}</td>
-            <td>{client.categoryName ?? "—"}</td>
-            <td>/work/{client.slug}</td>
-            <td>{client.sortOrder}</td>
-            <td>
-              <span
-                className={`admin-badge ${
-                  client.published ? "admin-badge--published" : "admin-badge--draft"
-                }`}
-              >
-                {client.published ? "Published" : "Draft"}
-              </span>
-            </td>
-            <td>
-              <div className="admin-actions">
-                <Link
-                  href={`/admin/clients/${client.id}/edit`}
-                  className="admin-btn admin-btn--secondary admin-btn--sm"
-                >
-                  Edit
-                </Link>
-                <button
-                  type="button"
-                  className="admin-btn admin-btn--danger admin-btn--sm"
-                  onClick={() => handleDelete(client.id, client.title)}
-                  disabled={deletingId === client.id}
-                >
-                  {deletingId === client.id ? "Deleting…" : "Delete"}
-                </button>
-              </div>
-            </td>
+    <div className="admin-table-wrap">
+      <table className="admin-table">
+        <thead>
+          <tr>
+            <th>Title</th>
+            <th>Category</th>
+            <th>Slug</th>
+            <th>Order</th>
+            <th>Status</th>
+            <th aria-label="Actions" />
           </tr>
-        ))}
-      </tbody>
-    </table>
+        </thead>
+        <tbody>
+          {clients.map((client) => (
+            <tr key={client.id}>
+              <td data-label="Title">{client.title}</td>
+              <td data-label="Category">{client.categoryName ?? "—"}</td>
+              <td data-label="Slug">/work/{client.slug}</td>
+              <td data-label="Order">{client.sortOrder}</td>
+              <td data-label="Status">
+                <span
+                  className={`admin-badge ${
+                    client.published ? "admin-badge--published" : "admin-badge--draft"
+                  }`}
+                >
+                  {client.published ? "Published" : "Draft"}
+                </span>
+              </td>
+              <td data-label="">
+                <div className="admin-actions">
+                  <Link
+                    href={`/admin/clients/${client.id}/edit`}
+                    className="admin-btn admin-btn--secondary admin-btn--sm"
+                  >
+                    Edit
+                  </Link>
+                  <button
+                    type="button"
+                    className="admin-btn admin-btn--danger admin-btn--sm"
+                    onClick={() => handleDelete(client.id, client.title)}
+                    disabled={deletingId === client.id}
+                  >
+                    {deletingId === client.id ? "Deleting…" : "Delete"}
+                  </button>
+                </div>
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
   );
 }

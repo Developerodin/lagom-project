@@ -1,8 +1,37 @@
 import Image from "next/image";
 
 import { RevealOnScroll } from "@/components/ui/RevealOnScroll";
-import { theStudioSectionContent } from "@/content/about";
+import {
+  theStudioSectionContent,
+  type TheStudioTextSegment,
+} from "@/content/about";
 import styles from "./TheStudioSection.module.css";
+
+function paragraphKey(
+  paragraph: string | ReadonlyArray<TheStudioTextSegment>,
+): string {
+  return typeof paragraph === "string"
+    ? paragraph
+    : paragraph.map((segment) => segment.text).join("");
+}
+
+function renderParagraph(
+  paragraph: string | ReadonlyArray<TheStudioTextSegment>,
+) {
+  if (typeof paragraph === "string") {
+    return paragraph;
+  }
+
+  return paragraph.map((segment) =>
+    segment.emphasis ? (
+      <strong key={segment.text} className={styles.emphasis}>
+        {segment.text}
+      </strong>
+    ) : (
+      <span key={segment.text}>{segment.text}</span>
+    ),
+  );
+}
 
 export function TheStudioSection() {
   const { title, paragraphs, image } = theStudioSectionContent;
@@ -41,8 +70,11 @@ export function TheStudioSection() {
             <div className={styles.textCol}>
               <div className={styles.paragraphs}>
                 {paragraphs.map((paragraph) => (
-                  <p key={paragraph} className={`body ${styles.paragraph}`}>
-                    {paragraph}
+                  <p
+                    key={paragraphKey(paragraph)}
+                    className={`body ${styles.paragraph}`}
+                  >
+                    {renderParagraph(paragraph)}
                   </p>
                 ))}
               </div>

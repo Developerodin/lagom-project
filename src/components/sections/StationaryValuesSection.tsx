@@ -76,6 +76,7 @@ export function StationaryValuesSection() {
       as="section"
       className={styles.section}
       aria-label="Stationery values"
+      data-cursor-contrast="light"
     >
       <div className={`container ${styles.inner}`}>
         <ul className={styles.grid}>

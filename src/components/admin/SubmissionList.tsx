@@ -25,49 +25,49 @@ export function SubmissionList({
   }
 
   return (
-    <table className="admin-table">
-      <thead>
-        <tr>
-          <th>Name</th>
-          <th>Services</th>
-          <th>Received</th>
-          <th>Status</th>
-          <th aria-label="Actions" />
-        </tr>
-      </thead>
-      <tbody>
-        {submissions.map((submission) => (
-          <tr
-            key={submission.id}
-            className={
-              submission.status === "new" ? "admin-table__row--unread" : undefined
-            }
-          >
-            <td>
-              {submission.name}
-              <br />
-              <span style={{ color: "var(--admin-muted)", fontWeight: 400 }}>
-                {submission.email}
-              </span>
-            </td>
-            <td>{submission.subject}</td>
-            <td>{submission.createdAt}</td>
-            <td>
-              <span className={`admin-badge admin-badge--${submission.status}`}>
-                {STATUS_LABELS[submission.status] ?? submission.status}
-              </span>
-            </td>
-            <td>
-              <Link
-                href={`/admin/submissions/${submission.id}`}
-                className="admin-btn admin-btn--secondary admin-btn--sm"
-              >
-                View
-              </Link>
-            </td>
+    <div className="admin-table-wrap">
+      <table className="admin-table">
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Services</th>
+            <th>Received</th>
+            <th>Status</th>
+            <th aria-label="Actions" />
           </tr>
-        ))}
-      </tbody>
-    </table>
+        </thead>
+        <tbody>
+          {submissions.map((submission) => (
+            <tr
+              key={submission.id}
+              className={
+                submission.status === "new" ? "admin-table__row--unread" : undefined
+              }
+            >
+              <td data-label="Name">
+                {submission.name}
+                <br />
+                <span className="admin-table__muted">{submission.email}</span>
+              </td>
+              <td data-label="Services">{submission.subject}</td>
+              <td data-label="Received">{submission.createdAt}</td>
+              <td data-label="Status">
+                <span className={`admin-badge admin-badge--${submission.status}`}>
+                  {STATUS_LABELS[submission.status] ?? submission.status}
+                </span>
+              </td>
+              <td data-label="">
+                <Link
+                  href={`/admin/submissions/${submission.id}`}
+                  className="admin-btn admin-btn--secondary admin-btn--sm"
+                >
+                  View
+                </Link>
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
   );
 }

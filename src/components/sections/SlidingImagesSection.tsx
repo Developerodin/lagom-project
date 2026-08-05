@@ -73,6 +73,7 @@ export function SlidingImagesSection() {
       as="section"
       className={styles.section}
       aria-label="Project image gallery"
+      data-cursor-contrast="light"
     >
       <div className={styles.marqueeStrips}>
         <ImageMarquee images={rowOne} />

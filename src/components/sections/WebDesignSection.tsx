@@ -13,6 +13,7 @@ export function WebDesignSection() {
       as="section"
       className={`surface-primary section-md ${styles.section}`}
       aria-labelledby="web-design-title"
+      data-cursor-contrast="light"
     >
       <div className="container">
         <div className={styles.layout}>

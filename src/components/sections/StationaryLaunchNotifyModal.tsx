@@ -100,6 +100,7 @@ export function StationaryLaunchNotifyModal({
         role="dialog"
         aria-modal="true"
         aria-labelledby="stationary-launch-notify-title"
+        data-cursor-contrast="light"
       >
         <button
           type="button"

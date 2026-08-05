@@ -18,9 +18,9 @@
 .carousel {
   overflow: hidden;
   width: 100%;
-  /* Room for scale(1.03) translateY(-6px) without clipping at top/bottom */
+  /* Room for scale(1.03) trans6lateY(-6px) without clipping at top/bottom */
   padding-block: 0.75rem;
-  margin-block: -0.75rem;
+  margin-block: 0.5rem;
 }
 
 .track {

@@ -211,17 +211,7 @@ export function TestimonialForm({ mode, initial }: TestimonialFormProps) {
             </button>
           </div>
           {logoUrl ? (
-            <div
-              style={{
-                position: "relative",
-                width: 160,
-                height: 80,
-                borderRadius: 8,
-                overflow: "hidden",
-                background: "#fff",
-                border: "1px solid rgba(63, 73, 61, 0.18)",
-              }}
-            >
+            <div className="admin-image-preview admin-image-preview--logo">
               <Image
                 src={logoUrl}
                 alt={logoAlt || "Client logo preview"}
@@ -273,17 +263,7 @@ export function TestimonialForm({ mode, initial }: TestimonialFormProps) {
             </button>
           </div>
           {bgImageUrl ? (
-            <div
-              style={{
-                position: "relative",
-                width: "100%",
-                maxWidth: 320,
-                height: 180,
-                borderRadius: 8,
-                overflow: "hidden",
-                border: "1px solid rgba(63, 73, 61, 0.18)",
-              }}
-            >
+            <div className="admin-image-preview admin-image-preview--bg">
               <Image
                 src={bgImageUrl}
                 alt={bgImageAlt || "Background preview"}

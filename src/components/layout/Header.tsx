@@ -62,10 +62,10 @@ export function Header() {
       <div className={styles.inner}>
         <Link href="/" className={styles.logo} aria-label={siteConfig.name} onClick={handleLogoClick}>
           <Image
-            src="/assets/logo/lagom-design-logo-02.png"
+            src="/assets/logo/lagom-design-logo-header.svg"
             alt=""
-            width={608}
-            height={358}
+            width={428}
+            height={252}
             className={styles.logoImage}
             priority
             fetchPriority="high"
@@ -96,6 +96,7 @@ export function Header() {
         id="mobile-navigation"
         className={`${styles.mobileNav} ${menuOpen ? styles.mobileNavOpen : ""}`}
         aria-hidden={!menuOpen}
+        data-cursor-contrast="light"
       >
         <div className={styles.mobileNavInner}>
           <div className="container">

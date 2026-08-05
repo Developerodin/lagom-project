@@ -69,7 +69,7 @@
   font-size: calc(var(--text-body) * 1.8);
   font-weight: 500;
   letter-spacing: 0.01em;
-  color: #deead3;
+  color: #fff;
 }
 
 .overlayServices {

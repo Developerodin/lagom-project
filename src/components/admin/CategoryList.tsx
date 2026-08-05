@@ -43,44 +43,46 @@ export function CategoryList({ categories }: { categories: CategoryRow[] }) {
   }
 
   return (
-    <table className="admin-table">
-      <thead>
-        <tr>
-          <th>Name</th>
-          <th>Slug</th>
-          <th>Order</th>
-          <th>Work entries</th>
-          <th aria-label="Actions" />
-        </tr>
-      </thead>
-      <tbody>
-        {categories.map((category) => (
-          <tr key={category.id}>
-            <td>{category.name}</td>
-            <td>{category.slug}</td>
-            <td>{category.sortOrder}</td>
-            <td>{category.workCount}</td>
-            <td>
-              <div className="admin-actions">
-                <Link
-                  href={`/admin/categories/${category.id}/edit`}
-                  className="admin-btn admin-btn--secondary admin-btn--sm"
-                >
-                  Edit
-                </Link>
-                <button
-                  type="button"
-                  className="admin-btn admin-btn--danger admin-btn--sm"
-                  onClick={() => handleDelete(category.id, category.name)}
-                  disabled={deletingId === category.id}
-                >
-                  {deletingId === category.id ? "Deleting…" : "Delete"}
-                </button>
-              </div>
-            </td>
+    <div className="admin-table-wrap">
+      <table className="admin-table">
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Slug</th>
+            <th>Order</th>
+            <th>Work entries</th>
+            <th aria-label="Actions" />
           </tr>
-        ))}
-      </tbody>
-    </table>
+        </thead>
+        <tbody>
+          {categories.map((category) => (
+            <tr key={category.id}>
+              <td data-label="Name">{category.name}</td>
+              <td data-label="Slug">{category.slug}</td>
+              <td data-label="Order">{category.sortOrder}</td>
+              <td data-label="Work entries">{category.workCount}</td>
+              <td data-label="">
+                <div className="admin-actions">
+                  <Link
+                    href={`/admin/categories/${category.id}/edit`}
+                    className="admin-btn admin-btn--secondary admin-btn--sm"
+                  >
+                    Edit
+                  </Link>
+                  <button
+                    type="button"
+                    className="admin-btn admin-btn--danger admin-btn--sm"
+                    onClick={() => handleDelete(category.id, category.name)}
+                    disabled={deletingId === category.id}
+                  >
+                    {deletingId === category.id ? "Deleting…" : "Delete"}
+                  </button>
+                </div>
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
   );
 }

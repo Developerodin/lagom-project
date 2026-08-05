@@ -105,6 +105,10 @@
   font-size: 1rem;
 }
 
+.emphasis {
+  font-weight: 700;
+}
+
 @media (max-width: 1200px) {
   .layout {
     padding-inline: 4rem !important;

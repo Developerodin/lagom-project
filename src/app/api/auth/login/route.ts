@@ -7,9 +7,12 @@ import {
   isRateLimited,
   recordAttempt,
 } from "@/lib/rate-limit";
+import { withTimeout } from "@/lib/with-timeout";
 
 const WINDOW_MS = 15 * 60 * 1000;
 const MAX_ATTEMPTS = 5;
+/** Cap DB work so a hung MySQL connection cannot leave the client spinning forever. */
+const LOGIN_DB_TIMEOUT_MS = 12_000;
 
 export async function POST(request: Request) {
   const ip = getClientIp(request);
@@ -39,27 +42,40 @@ export async function POST(request: Request) {
   }
 
   let hashExists: string | null;
-  try {
-    hashExists = await ensureAdminPasswordSeeded();
-  } catch (error) {
-    console.error("[login] Failed to load admin password:", error);
-    return NextResponse.json(
-      { error: "Admin password is not configured." },
-      { status: 500 },
-    );
-  }
+  let valid: boolean;
 
-  if (!hashExists) {
+  try {
+    hashExists = await withTimeout(
+      ensureAdminPasswordSeeded(),
+      LOGIN_DB_TIMEOUT_MS,
+      "Database timed out while loading admin password",
+    );
+
+    if (!hashExists) {
+      return NextResponse.json(
+        {
+          error:
+            "Admin password is not configured. Use Forgot password to set one via email OTP.",
+        },
+        { status: 500 },
+      );
+    }
+
+    valid = await withTimeout(
+      verifyAdminPassword(password),
+      LOGIN_DB_TIMEOUT_MS,
+      "Database timed out while verifying password",
+    );
+  } catch (error) {
+    console.error("[login] Failed to verify admin password:", error);
     return NextResponse.json(
       {
         error:
-          "Admin password is not configured. Use Forgot password to set one via email OTP.",
+          "Sign-in is temporarily unavailable. Please try again in a moment.",
       },
-      { status: 500 },
+      { status: 503 },
     );
   }
-
-  const valid = await verifyAdminPassword(password);
 
   if (!valid) {
     recordAttempt(rateKey, { windowMs: WINDOW_MS, maxAttempts: MAX_ATTEMPTS });
@@ -71,9 +87,17 @@ export async function POST(request: Request) {
 
   clearAttempts(rateKey);
 
-  const session = await getSession();
-  session.isLoggedIn = true;
-  await session.save();
+  try {
+    const session = await getSession();
+    session.isLoggedIn = true;
+    await session.save();
+  } catch (error) {
+    console.error("[login] Failed to create session:", error);
+    return NextResponse.json(
+      { error: "Could not create session. Please try again." },
+      { status: 500 },
+    );
+  }
 
   return NextResponse.json({ success: true });
 }

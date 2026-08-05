@@ -1,11 +1,11 @@
 "use client";
 
 import Link from "next/link";
-import { useRouter } from "next/navigation";
 import { useId, useState, type FormEvent } from "react";
 
+const REQUEST_TIMEOUT_MS = 20_000;
+
 export function ForgotPasswordForm() {
-  const router = useRouter();
   const formId = useId();
 
   const [otpSent, setOtpSent] = useState(false);
@@ -22,23 +22,28 @@ export function ForgotPasswordForm() {
     setInfo("");
     setSending(true);
 
-    const response = await fetch("/api/auth/forgot-password/send-otp", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({}),
-    });
+    try {
+      const response = await fetch("/api/auth/forgot-password/send-otp", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({}),
+        signal: AbortSignal.timeout(REQUEST_TIMEOUT_MS),
+      });
 
-    setSending(false);
+      const data = await response.json().catch(() => ({}));
 
-    const data = await response.json().catch(() => ({}));
+      if (!response.ok) {
+        setError(data.error || "Could not send recovery code. Please try again.");
+        return;
+      }
 
-    if (!response.ok) {
-      setError(data.error || "Could not send recovery code. Please try again.");
-      return;
+      setOtpSent(true);
+      setInfo(data.message || "Recovery code sent to the studio email.");
+    } catch {
+      setError("Could not reach the server. Check your connection and try again.");
+    } finally {
+      setSending(false);
     }
-
-    setOtpSent(true);
-    setInfo(data.message || "Recovery code sent to the studio email.");
   }
 
   async function handleReset(event: FormEvent<HTMLFormElement>) {
@@ -47,25 +52,30 @@ export function ForgotPasswordForm() {
     setInfo("");
     setResetting(true);
 
-    const response = await fetch("/api/auth/forgot-password/reset", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        otp,
-        newPassword,
-        confirmPassword,
-      }),
-    });
+    try {
+      const response = await fetch("/api/auth/forgot-password/reset", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          otp,
+          newPassword,
+          confirmPassword,
+        }),
+        signal: AbortSignal.timeout(REQUEST_TIMEOUT_MS),
+      });
 
-    if (response.ok) {
-      router.replace("/admin/clients");
-      router.refresh();
-      return;
+      if (response.ok) {
+        window.location.assign("/admin/clients");
+        return;
+      }
+
+      const data = await response.json().catch(() => ({}));
+      setError(data.error || "Could not reset password. Please try again.");
+    } catch {
+      setError("Could not reach the server. Check your connection and try again.");
+    } finally {
+      setResetting(false);
     }
-
-    setResetting(false);
-    const data = await response.json().catch(() => ({}));
-    setError(data.error || "Could not reset password. Please try again.");
   }
 
   return (

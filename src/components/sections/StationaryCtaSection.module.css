@@ -53,7 +53,8 @@
 
 @media (max-width: 480px) {
   .cta {
-    width: 100%;
+    width: fit-content;
+    align-self: center;
     white-space: normal;
   }
 }

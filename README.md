@@ -199,6 +199,20 @@ npm run db:seed
    - If you cannot log in, use `/admin/forgot-password` to set a password via email OTP
    - Upload a test image in admin and confirm it persists after a redeploy
 
+### Admin login stuck on “Signing in…”
+
+The session cookie (`lagom_admin`) is **Secure** in production, so admin only works over **HTTPS** on the same host you use to sign in (`www` and apex are different cookies).
+
+If someone sees the button stuck on “Signing in…” (or a connection/timeout error after ~20s):
+
+1. Confirm they open `https://yourdomain.com/admin` (not `http://`, not a raw IP, and not a different host than you).
+2. In DevTools → **Network**, submit the form and inspect `POST /api/auth/login`:
+   - **Pending / times out** → MySQL/`DATABASE_URL` unreachable from the host; check `/api/health` and Hostinger DB allowlists.
+   - **200** then bounce back to `/admin` → cookie not stored (HTTP, SSL issue, or host mismatch). Check Application → Cookies for `lagom_admin`.
+   - **401** → wrong password (should show “Incorrect password.”).
+   - **503** → database timed out; fix DB connectivity and retry.
+3. Confirm production env has `SESSION_SECRET` (≥32 characters) and that an admin password exists in the DB (or set one via `/admin/forgot-password`).
+
 ### Upload persistence
 
 Uploaded images are stored on disk at `UPLOAD_DIR`, not in the database. If `UPLOAD_DIR` points inside the deploy folder, images will be **deleted on every redeploy**. Always use an absolute path outside the application directory.

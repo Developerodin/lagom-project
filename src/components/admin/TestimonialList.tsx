@@ -49,46 +49,48 @@ export function TestimonialList({ testimonials }: { testimonials: TestimonialRow
   }
 
   return (
-    <table className="admin-table">
-      <thead>
-        <tr>
-          <th>Quote</th>
-          <th>Author</th>
-          <th>Company</th>
-          <th>Order</th>
-          <th>Status</th>
-          <th aria-label="Actions" />
-        </tr>
-      </thead>
-      <tbody>
-        {testimonials.map((testimonial) => (
-          <tr key={testimonial.id}>
-            <td>{truncate(testimonial.quote)}</td>
-            <td>{testimonial.author || "—"}</td>
-            <td>{testimonial.company || "—"}</td>
-            <td>{testimonial.sortOrder}</td>
-            <td>{testimonial.published ? "Published" : "Draft"}</td>
-            <td>
-              <div className="admin-actions">
-                <Link
-                  href={`/admin/testimonials/${testimonial.id}/edit`}
-                  className="admin-btn admin-btn--secondary admin-btn--sm"
-                >
-                  Edit
-                </Link>
-                <button
-                  type="button"
-                  className="admin-btn admin-btn--danger admin-btn--sm"
-                  onClick={() => handleDelete(testimonial.id)}
-                  disabled={deletingId === testimonial.id}
-                >
-                  {deletingId === testimonial.id ? "Deleting…" : "Delete"}
-                </button>
-              </div>
-            </td>
+    <div className="admin-table-wrap">
+      <table className="admin-table">
+        <thead>
+          <tr>
+            <th>Quote</th>
+            <th>Author</th>
+            <th>Company</th>
+            <th>Order</th>
+            <th>Status</th>
+            <th aria-label="Actions" />
           </tr>
-        ))}
-      </tbody>
-    </table>
+        </thead>
+        <tbody>
+          {testimonials.map((testimonial) => (
+            <tr key={testimonial.id}>
+              <td data-label="Quote">{truncate(testimonial.quote)}</td>
+              <td data-label="Author">{testimonial.author || "—"}</td>
+              <td data-label="Company">{testimonial.company || "—"}</td>
+              <td data-label="Order">{testimonial.sortOrder}</td>
+              <td data-label="Status">{testimonial.published ? "Published" : "Draft"}</td>
+              <td data-label="">
+                <div className="admin-actions">
+                  <Link
+                    href={`/admin/testimonials/${testimonial.id}/edit`}
+                    className="admin-btn admin-btn--secondary admin-btn--sm"
+                  >
+                    Edit
+                  </Link>
+                  <button
+                    type="button"
+                    className="admin-btn admin-btn--danger admin-btn--sm"
+                    onClick={() => handleDelete(testimonial.id)}
+                    disabled={deletingId === testimonial.id}
+                  >
+                    {deletingId === testimonial.id ? "Deleting…" : "Delete"}
+                  </button>
+                </div>
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
   );
 }

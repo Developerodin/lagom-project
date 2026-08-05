@@ -13,6 +13,7 @@ export function IllustrationsSection() {
       as="section"
       className={`surface-primary section-md ${styles.section}`}
       aria-labelledby="illustrations-title"
+      data-cursor-contrast="light"
     >
       <div className="container">
         <div className={styles.layout}>

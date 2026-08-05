@@ -1,5 +1,5 @@
-.zoneActive,
-.zoneActive * {
+:global(html.site-cursor-none),
+:global(html.site-cursor-none *) {
   cursor: none !important;
 }
 
@@ -21,11 +21,16 @@
     width 0.22s cubic-bezier(0.25, 0.1, 0.25, 1),
     height 0.22s cubic-bezier(0.25, 0.1, 0.25, 1),
     margin 0.22s cubic-bezier(0.25, 0.1, 0.25, 1),
+    border-color 0.22s cubic-bezier(0.25, 0.1, 0.25, 1),
     opacity 0.15s ease;
 }
 
 .cursorVisible {
   opacity: 1;
+}
+
+.cursorLight {
+  border-color: #deead3;
 }
 
 .cursorExpanded {
