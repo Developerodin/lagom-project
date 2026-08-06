@@ -17,11 +17,18 @@ export const metadata: Metadata = {
     siteName: siteConfig.name,
     locale: "en_US",
     type: "website",
+    images: [
+      {
+        url: "/assets/favicon/option-3.png",
+        alt: siteConfig.name,
+      },
+    ],
   },
   twitter: {
-    card: "summary_large_image",
+    card: "summary",
     title: siteConfig.name,
     description: siteConfig.tagline,
+    images: ["/assets/favicon/option-3.png"],
   },
   icons: {
     icon: [
