@@ -1,33 +1,71 @@
+import { prisma } from "@/lib/prisma";
+
 type RateLimitOptions = {
   windowMs: number;
   maxAttempts: number;
 };
 
-const buckets = new Map<string, number[]>();
-
-function prune(key: string, windowMs: number, now: number) {
-  const previous = (buckets.get(key) ?? []).filter(
-    (timestamp) => now - timestamp < windowMs,
-  );
-  buckets.set(key, previous);
-  return previous;
+function settingKey(key: string) {
+  return `rate_limit:${key}`;
 }
 
-export function isRateLimited(key: string, options: RateLimitOptions): boolean {
-  const now = Date.now();
-  const previous = prune(key, options.windowMs, now);
-  return previous.length >= options.maxAttempts;
+async function readTimestamps(key: string, windowMs: number): Promise<number[]> {
+  const row = await prisma.setting.findUnique({
+    where: { key: settingKey(key) },
+    select: { value: true },
+  });
+
+  if (!row?.value) {
+    return [];
+  }
+
+  try {
+    const parsed = JSON.parse(row.value) as unknown;
+    if (!Array.isArray(parsed)) {
+      return [];
+    }
+    const now = Date.now();
+    return parsed
+      .filter((value): value is number => typeof value === "number")
+      .filter((timestamp) => now - timestamp < windowMs);
+  } catch {
+    return [];
+  }
 }
 
-export function recordAttempt(key: string, options: RateLimitOptions): void {
-  const now = Date.now();
-  const previous = prune(key, options.windowMs, now);
-  previous.push(now);
-  buckets.set(key, previous);
+async function writeTimestamps(key: string, timestamps: number[]): Promise<void> {
+  const dbKey = settingKey(key);
+  if (timestamps.length === 0) {
+    await prisma.setting.deleteMany({ where: { key: dbKey } });
+    return;
+  }
+
+  await prisma.setting.upsert({
+    where: { key: dbKey },
+    create: { key: dbKey, value: JSON.stringify(timestamps) },
+    update: { value: JSON.stringify(timestamps) },
+  });
 }
 
-export function clearAttempts(key: string): void {
-  buckets.delete(key);
+export async function isRateLimited(
+  key: string,
+  options: RateLimitOptions,
+): Promise<boolean> {
+  const timestamps = await readTimestamps(key, options.windowMs);
+  return timestamps.length >= options.maxAttempts;
+}
+
+export async function recordAttempt(
+  key: string,
+  options: RateLimitOptions,
+): Promise<void> {
+  const timestamps = await readTimestamps(key, options.windowMs);
+  timestamps.push(Date.now());
+  await writeTimestamps(key, timestamps);
+}
+
+export async function clearAttempts(key: string): Promise<void> {
+  await prisma.setting.deleteMany({ where: { key: settingKey(key) } });
 }
 
 export function getClientIp(request: Request): string {

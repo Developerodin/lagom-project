@@ -1,10 +1,10 @@
 import { NextResponse } from "next/server";
 import {
-  ADMIN_RECOVERY_EMAIL,
+  ADMIN_LOGIN_EMAIL,
   clearOtp,
   generateOtp,
   storeOtp,
-} from "@/lib/admin-password";
+} from "@/lib/admin-otp";
 import { sendAdminOtpEmail } from "@/lib/email";
 import {
   clearAttempts,
@@ -20,17 +20,23 @@ const HOUR_MAX = 5;
 
 const GENERIC_SUCCESS = {
   success: true,
-  message: "If recovery is available, a code has been sent to the studio email.",
+  message: "If login is available, a code has been sent to the studio email.",
 };
 
 export async function POST(request: Request) {
   const ip = getClientIp(request);
-  const shortKey = `otp-send-short:${ip}`;
-  const hourKey = `otp-send-hour:${ip}`;
+  const shortKey = `otp-request-short:${ip}`;
+  const hourKey = `otp-request-hour:${ip}`;
 
   if (
-    isRateLimited(shortKey, { windowMs: SHORT_WINDOW_MS, maxAttempts: SHORT_MAX }) ||
-    isRateLimited(hourKey, { windowMs: HOUR_WINDOW_MS, maxAttempts: HOUR_MAX })
+    (await isRateLimited(shortKey, {
+      windowMs: SHORT_WINDOW_MS,
+      maxAttempts: SHORT_MAX,
+    })) ||
+    (await isRateLimited(hourKey, {
+      windowMs: HOUR_WINDOW_MS,
+      maxAttempts: HOUR_MAX,
+    }))
   ) {
     return NextResponse.json(
       { error: "Too many requests. Please wait before trying again." },
@@ -38,7 +44,7 @@ export async function POST(request: Request) {
     );
   }
 
-  // Intentionally ignore any client-supplied email/phone — destination is fixed.
+  // Intentionally ignore any client-supplied email — destination is fixed.
   await request.json().catch(() => null);
 
   if (!process.env.RESEND_API_KEY?.trim()) {
@@ -54,10 +60,10 @@ export async function POST(request: Request) {
   try {
     const otp = generateOtp();
     await storeOtp(otp);
-    await sendAdminOtpEmail(otp, ADMIN_RECOVERY_EMAIL);
+    await sendAdminOtpEmail(otp, ADMIN_LOGIN_EMAIL);
   } catch (error) {
     await clearOtp().catch(() => undefined);
-    console.error("[forgot-password] Failed to send OTP:", error);
+    console.error("[otp/request] Failed to send OTP:", error);
 
     const message =
       error instanceof Error ? error.message : "Unknown email error";
@@ -70,16 +76,22 @@ export async function POST(request: Request) {
     return NextResponse.json(
       {
         error: isConfigIssue
-          ? `Could not send recovery code: ${message}`
-          : "Could not send recovery code. Please try again later.",
+          ? `Could not send login code: ${message}`
+          : "Could not send login code. Please try again later.",
       },
       { status: 500 },
     );
   }
 
-  recordAttempt(shortKey, { windowMs: SHORT_WINDOW_MS, maxAttempts: SHORT_MAX });
-  recordAttempt(hourKey, { windowMs: HOUR_WINDOW_MS, maxAttempts: HOUR_MAX });
-  clearAttempts(`otp-verify:${ip}`);
+  await recordAttempt(shortKey, {
+    windowMs: SHORT_WINDOW_MS,
+    maxAttempts: SHORT_MAX,
+  });
+  await recordAttempt(hourKey, {
+    windowMs: HOUR_WINDOW_MS,
+    maxAttempts: HOUR_MAX,
+  });
+  await clearAttempts(`otp-verify:${ip}`);
 
   return NextResponse.json(GENERIC_SUCCESS);
 }

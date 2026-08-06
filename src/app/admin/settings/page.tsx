@@ -1,5 +1,3 @@
-import { ChangePasswordForm } from "@/components/admin/ChangePasswordForm";
-
 export const dynamic = "force-dynamic";
 
 export default function AdminSettingsPage() {
@@ -9,9 +7,10 @@ export default function AdminSettingsPage() {
         <h1>Settings</h1>
       </div>
 
-      <h2 style={{ fontSize: "1.1rem", marginBottom: 16 }}>Change password</h2>
-      <ChangePasswordForm />
+      <p style={{ maxWidth: 520, lineHeight: 1.6 }}>
+        Admin access uses email one-time codes sent to the studio inbox. There is
+        no saved password to manage here.
+      </p>
     </div>
   );
 }
-

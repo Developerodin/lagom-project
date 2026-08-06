@@ -27,13 +27,6 @@ export function getSessionOptions(): SessionOptions {
   };
 }
 
-/** @deprecated Use getSessionOptions() — kept for any external imports. */
-export const sessionOptions: SessionOptions = new Proxy({} as SessionOptions, {
-  get(_target, prop, receiver) {
-    return Reflect.get(getSessionOptions(), prop, receiver);
-  },
-});
-
 export async function getSession() {
   return getIronSession<SessionData>(await cookies(), getSessionOptions());
 }

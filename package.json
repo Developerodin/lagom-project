@@ -17,9 +17,9 @@
     "prisma:migrate:deploy": "prisma migrate deploy",
     "db:seed": "tsx prisma/seed.ts",
     "build:cta-collage": "tsx scripts/build-cta-collage.ts",
-    "test:admin-password": "tsx --env-file=.env scripts/test-admin-password.ts",
-    "test:admin-password:http": "tsx --env-file=.env scripts/test-admin-password-http.ts",
-    "test:auth-security": "tsx --env-file=.env scripts/test-auth-security.ts"
+    "test:auth-e2e": "tsx --env-file=.env scripts/test-auth-e2e.ts",
+    "test:auth-e2e:prod": "TEST_EXPECT_PRODUCTION=1 tsx --env-file=.env scripts/test-auth-e2e.ts",
+    "test:auth-e2e:deployed": "./scripts/test-auth-e2e-deployed.sh"
   },
   "prisma": {
     "seed": "tsx prisma/seed.ts"
@@ -28,7 +28,6 @@
     "@gsap/react": "^2.1.2",
     "@prisma/client": "^6.19.3",
     "@vercel/blob": "^2.6.1",
-    "bcryptjs": "^3.0.3",
     "embla-carousel-autoplay": "^8.6.0",
     "embla-carousel-react": "^8.6.0",
     "gsap": "^3.15.0",
@@ -40,7 +39,6 @@
     "resend": "^6.17.1"
   },
   "devDependencies": {
-    "@types/bcryptjs": "^2.4.6",
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",

@@ -44,23 +44,6 @@ function getDatabaseUrl(): string | undefined {
   return value;
 }
 
-/**
- * Normalize bcrypt hashes from env panels that escape `$` as `\$`.
- * Without this, Hostinger/dotenv can seed a broken hash and login always fails.
- */
-export function normalizeBcryptHash(value: string): string {
-  return value.replace(/\\\$/g, "$").trim();
-}
-
-function getAdminPasswordHash(): string | undefined {
-  // Bootstrap only — after first seed/OTP reset, the DB Setting is the source of truth.
-  const value = process.env.ADMIN_PASSWORD_HASH?.trim();
-  if (!value) {
-    return undefined;
-  }
-  return normalizeBcryptHash(value);
-}
-
 function getBlobReadWriteToken(): string | undefined {
   const value = process.env.BLOB_READ_WRITE_TOKEN?.trim();
   const hasUploadDir = Boolean(process.env.UPLOAD_DIR?.trim());
@@ -105,9 +88,6 @@ export const env = {
   },
   get databaseUrl() {
     return getDatabaseUrl();
-  },
-  get adminPasswordHash() {
-    return getAdminPasswordHash();
   },
   get blobReadWriteToken() {
     return getBlobReadWriteToken();

@@ -8,10 +8,9 @@ self-hosted CMS for managing portfolio work and contact enquiries.
 - Public site: home, about, services, contact, and a dynamic `/work` portfolio.
 - Each project has its own page at `/work/[slug]` with a full-viewport hero
   (no site header), a description, and a stack of full-width gallery images.
-- Password-protected admin at `/admin` to create, edit, delete and reorder
-  client work, upload images, and review contact form enquiries. Password is
-  stored in the database (changeable in Settings) with email OTP recovery at
-  `/admin/forgot-password`.
+- Email OTP admin login at `/admin` to create, edit, delete and reorder
+  client work, upload images, and review contact form enquiries. Codes are sent
+  only to `studiolagomdesign@gmail.com`.
 - Contact form submissions are stored in the database, emailed to
   `studiolagomdesign@gmail.com`, and managed from `/admin/submissions`.
 
@@ -37,34 +36,15 @@ cp .env.example .env
 ```
 
 - `DATABASE_URL` — your MySQL connection string.
-- `ADMIN_PASSWORD_HASH` — **optional bootstrap only.** bcrypt hash of the initial
-  admin password. On first login the app copies it into the database `Setting`
-  table; after that the DB is the only source of truth (change password in
-  `/admin/settings`, or use Forgot password). Generate with:
-
-```bash
-node -e "console.log(require('bcryptjs').hashSync('your-password', 10))"
-```
-
-  In `.env`, escape every `$` as `\$` (Next.js expands `$` in quoted values). Example:
-
-```bash
-ADMIN_PASSWORD_HASH="\$2b\$10\$..."
-```
-
-  Prefer skipping a fragile env hash on Hostinger: set `RESEND_API_KEY`, deploy,
-  open `/admin/forgot-password`, send OTP to `studiolagomdesign@gmail.com`, and
-  set the password there.
 - `SESSION_SECRET` — a random string of at least 32 characters. Generate with:
 
 ```bash
 node -e "console.log(require('crypto').randomBytes(32).toString('hex'))"
 ```
 
-- `UPLOAD_DIR` — absolute path to a writable, persistent directory for uploaded
-  images. Defaults to `./uploads`.
+  **Required at build time** on AWS/container hosts (middleware inlines it).
 - `RESEND_API_KEY` — API key from [Resend](https://resend.com) for contact form
-  notifications and admin password-recovery OTPs (always sent to
+  notifications and admin login OTPs (always sent to
   `studiolagomdesign@gmail.com` only).
 - `EMAIL_FROM` — sender address. Until your domain is verified in Resend, use:
 
@@ -109,6 +89,13 @@ Open [http://localhost:3000](http://localhost:3000) for the site and
 - `npm run prisma:migrate:deploy` — apply pending migrations in production.
 - `npm run db:seed` — seed placeholder portfolio entries.
 
+- `npm run test:auth-e2e` — canonical admin auth end-to-end tests (server must be running).
+
+## AWS deployment
+
+See [docs/aws-deployment.md](docs/aws-deployment.md) for ECS Fargate + Aurora setup
+(Next.js 16 is not officially supported on Amplify Hosting compute).
+
 ## Deploying on Hostinger (Node.js hosting)
 
 This app requires **Hostinger Web Hosting with Node.js support**. It does not run on PHP-only shared hosting.
@@ -139,7 +126,6 @@ Set these in the Node.js **Environment variables** section:
 ```bash
 DATABASE_URL=mysql://USER:PASS@HOST:3306/DBNAME
 SESSION_SECRET=<64-char hex string>
-ADMIN_PASSWORD_HASH=<optional bootstrap bcrypt hash — escape every $ as \$>
 UPLOAD_DIR=/home/<user>/lagom-uploads
 RESEND_API_KEY=<your Resend API key>
 EMAIL_FROM=Lagom Design <onboarding@resend.dev>
@@ -152,27 +138,23 @@ failed — re-add DNS records and verify), keep `EMAIL_FROM` as
 custom From is rejected. `onboarding@resend.dev` can only deliver to the email
 on your Resend account (here: `studiolagomdesign@gmail.com`).
 
-`ADMIN_PASSWORD_HASH` is only used once to seed the database. Day-to-day login
-reads the hash from the `Setting` table. If the env hash is wrong or missing,
-use `/admin/forgot-password` to set a new password via OTP.
-
-Generate values locally:
+Generate `SESSION_SECRET` locally:
 
 ```bash
-# SESSION_SECRET
 node -e "console.log(require('crypto').randomBytes(32).toString('hex'))"
-
-# ADMIN_PASSWORD_HASH (optional bootstrap — prefer Forgot password OTP on Hostinger)
-node -e "console.log(require('bcryptjs').hashSync('your-password', 10))"
 ```
 
-### Admin password
+### Admin login
 
-- Login uses the password hash stored in the database (`Setting.admin_password_hash`).
-- Change it anytime while signed in at `/admin/settings`.
-- If locked out, open `/admin/forgot-password`, click **Send OTP**, enter the code
-  emailed to `studiolagomdesign@gmail.com`, and set a new password. No other email
-  or phone can be used.
+- Open `/admin` → **Email me a login code**
+- Enter the 6-digit code from `studiolagomdesign@gmail.com`
+- Codes expire in 5 minutes; no password is stored
+
+Run the canonical auth tests after deploy:
+
+```bash
+TEST_BASE_URL=https://yourdomain.com TEST_EXPECT_PRODUCTION=1 npm run test:auth-e2e
+```
 
 ### First-deploy checklist
 
@@ -195,23 +177,22 @@ npm run db:seed
 
 8. Verify the deployment:
    - `https://yourdomain.com/api/health` → `{ "status": "ok", "database": "connected" }`
-   - `https://yourdomain.com/admin` → login page
-   - If you cannot log in, use `/admin/forgot-password` to set a password via email OTP
+   - `https://yourdomain.com/admin` → login page; request OTP and sign in
    - Upload a test image in admin and confirm it persists after a redeploy
 
-### Admin login stuck on “Signing in…”
+### Admin login issues
 
 The session cookie (`lagom_admin`) is **Secure** in production, so admin only works over **HTTPS** on the same host you use to sign in (`www` and apex are different cookies).
 
-If someone sees the button stuck on “Signing in…” (or a connection/timeout error after ~20s):
+If login fails:
 
-1. Confirm they open `https://yourdomain.com/admin` (not `http://`, not a raw IP, and not a different host than you).
-2. In DevTools → **Network**, submit the form and inspect `POST /api/auth/login`:
-   - **Pending / times out** → MySQL/`DATABASE_URL` unreachable from the host; check `/api/health` and Hostinger DB allowlists.
+1. Confirm `https://yourdomain.com/admin` (not `http://`, not a raw IP).
+2. In DevTools → **Network**, inspect `POST /api/auth/otp/verify`:
    - **200** then bounce back to `/admin` → cookie not stored (HTTP, SSL issue, or host mismatch). Check Application → Cookies for `lagom_admin`.
-   - **401** → wrong password (should show “Incorrect password.”).
-   - **503** → database timed out; fix DB connectivity and retry.
-3. Confirm production env has `SESSION_SECRET` (≥32 characters) and that an admin password exists in the DB (or set one via `/admin/forgot-password`).
+   - **401** → wrong or expired OTP.
+   - **429** → too many attempts; request a new code.
+   - **503** → email not configured (`RESEND_API_KEY`).
+3. Confirm production env has `SESSION_SECRET` (≥32 characters) at **build and runtime**.
 
 ### Upload persistence
 

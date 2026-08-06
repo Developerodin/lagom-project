@@ -1,9 +1,10 @@
 import { getIronSession } from "iron-session";
 import { NextResponse, type NextRequest } from "next/server";
-import { sessionOptions, type SessionData } from "@/lib/auth";
+import { getSessionOptions, type SessionData } from "@/lib/auth";
 
 export async function middleware(request: NextRequest) {
   const response = NextResponse.next();
+  const sessionOptions = getSessionOptions();
   const session = await getIronSession<SessionData>(
     request,
     response,
@@ -19,10 +20,7 @@ export async function middleware(request: NextRequest) {
     return response;
   }
 
-  const isPublicAdminPage =
-    pathname === "/admin" || pathname === "/admin/forgot-password";
-
-  if (isPublicAdminPage) {
+  if (pathname === "/admin") {
     if (isLoggedIn) {
       const url = request.nextUrl.clone();
       url.pathname = "/admin/clients";
