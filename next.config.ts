@@ -15,6 +15,7 @@ const nextConfig: NextConfig = {
   images: {
     dangerouslyAllowSVG: true,
     contentSecurityPolicy: "default-src 'self'; script-src 'none'; sandbox;",
+    deviceSizes: [640, 750, 828, 1080, 1200, 1920],
     // Serve AVIF/WebP to browsers that support them, with automatic
     // fallback to the original JPEG/PNG for older browsers.
     formats: ["image/avif", "image/webp"],

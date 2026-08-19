@@ -8,7 +8,7 @@ import { StationaryRealRequestsSection } from "@/components/sections/StationaryR
 import { StationaryValuesSection } from "@/components/sections/StationaryValuesSection";
 
 export const metadata: Metadata = {
-  title: "Stationary",
+  title: "Stationery",
   description:
     "Lagom Design stationery — custom paper goods designed with intention, printed with care, and delivered to your door.",
 };

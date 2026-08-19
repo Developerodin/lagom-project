@@ -47,6 +47,27 @@ type RevealTextLinesProps = RevealTextBaseProps & {
 
 type RevealTextProps = RevealTextWordsProps | RevealTextLinesProps;
 
+type WordToken = {
+  word: string;
+  emphasis: boolean;
+};
+
+const PUNCT_ONLY = /^[,.;:!?…]+$/;
+
+function clusterWordsWithPunctuation(words: WordToken[]): WordToken[][] {
+  const clusters: WordToken[][] = [];
+
+  for (const token of words) {
+    if (PUNCT_ONLY.test(token.word) && clusters.length > 0) {
+      clusters[clusters.length - 1].push(token);
+    } else {
+      clusters.push([token]);
+    }
+  }
+
+  return clusters;
+}
+
 function useRevealOnScroll(enabled: boolean) {
   const ref = useRef<HTMLElement>(null);
   const [isVisible, setIsVisible] = useState(false);
@@ -201,6 +222,8 @@ export function RevealText(props: RevealTextProps) {
           emphasis: Boolean(segment.emphasis),
         })),
     );
+    const clusters = clusterWordsWithPunctuation(words);
+    let wordIndex = 0;
 
     return (
       <Component
@@ -209,31 +232,39 @@ export function RevealText(props: RevealTextProps) {
         className={containerClassName}
         data-revealed={isVisible ? "true" : undefined}
       >
-        {words.map(({ word, emphasis }, index) => {
-          const node =
-            variant === "expressive"
+        {clusters.map((cluster, clusterIndex) => {
+          const nodes = cluster.map((token) => {
+            const index = wordIndex;
+            wordIndex += 1;
+
+            return variant === "expressive"
               ? renderExpressiveWord(
-                  word,
-                  emphasis,
+                  token.word,
+                  token.emphasis,
                   index,
                   emphasisClassName,
                   delayMs,
                   resolvedStaggerMs,
                 )
               : renderDefaultWord(
-                  word,
-                  emphasis,
+                  token.word,
+                  token.emphasis,
                   index,
                   wordClassName,
                   emphasisClassName,
                   delayMs,
                   resolvedStaggerMs,
                 );
+          });
 
           return (
-            <span key={`wrap-${word}-${index}`}>
-              {node}
-              {index < words.length - 1 ? (
+            <span key={`cluster-${clusterIndex}`}>
+              {cluster.length > 1 ? (
+                <span className={styles.keepTogether}>{nodes}</span>
+              ) : (
+                nodes
+              )}
+              {clusterIndex < clusters.length - 1 ? (
                 <span className={styles.wordSpace}> </span>
               ) : null}
             </span>

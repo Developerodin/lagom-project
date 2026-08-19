@@ -191,10 +191,11 @@ export async function sendContactNotification(payload: ContactEmailPayload) {
 }
 
 export async function sendAdminOtpEmail(otp: string, to: string) {
-  const subject = `${siteConfig.name} admin login code`;
+  const subject = `${siteConfig.name} admin password reset code`;
   const text = [
-    `Your admin login code is: ${otp}`,
+    `Your admin password reset code is: ${otp}`,
     "",
+    "Use this code to create or replace the admin password.",
     "This code expires in 5 minutes.",
     "If you did not request this, you can ignore this email.",
   ].join("\n");
@@ -202,13 +203,13 @@ export async function sendAdminOtpEmail(otp: string, to: string) {
   const html = `
     <div style="font-family:Arial,sans-serif;color:#111;max-width:480px;">
       <p style="margin:0 0 16px;font-size:16px;line-height:1.5;">
-        Your admin login code is:
+        Your admin password reset code is:
       </p>
       <p style="margin:0 0 16px;font-size:28px;letter-spacing:0.2em;font-weight:700;">
         ${escapeHtml(otp)}
       </p>
       <p style="margin:0;font-size:13px;line-height:1.5;color:#666;">
-        This code expires in 5 minutes. If you did not request this, you can ignore this email.
+        Use this code to create or replace the admin password. This code expires in 5 minutes. If you did not request this, you can ignore this email.
       </p>
     </div>
   `.trim();

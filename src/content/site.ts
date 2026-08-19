@@ -1,6 +1,6 @@
 export const siteConfig = {
   name: "Lagom Design",
-  tagline: "Thoughtful design for considered spaces",
+  tagline: "Designing brands people choose.",
   url: "https://studiolagomdesign.com",
 } as const;
 
@@ -14,7 +14,7 @@ export const mainNavigation: NavItem[] = [
   { label: "About Us", href: "/about" },
   { label: "Work", href: "/work" },
   { label: "Services", href: "/services" },
-  { label: "Stationary", href: "/stationary" },
+  { label: "Stationery", href: "/stationary" },
   { label: "Contact", href: "/contact" },
 ];
 
@@ -23,7 +23,7 @@ export const footerNavigation: NavItem[] = [
   { label: "About Us", href: "/about" },
   { label: "Work", href: "/work" },
   { label: "Services", href: "/services" },
-  { label: "Stationary", href: "/stationary" },
+  { label: "Stationery", href: "/stationary" },
   { label: "Contact", href: "/contact" },
 ];
 

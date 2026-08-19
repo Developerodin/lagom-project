@@ -16,7 +16,7 @@ export function ClientWorkGallery({ images }: { images: GalleryImage[] }) {
   }
 
   return (
-    <RevealOnScroll as="section" className={styles.gallery} aria-label="Project gallery">
+    <section className={styles.gallery} aria-label="Project gallery">
       {images.map((image, index) => (
         <RevealOnScroll
           as="div"
@@ -47,6 +47,6 @@ export function ClientWorkGallery({ images }: { images: GalleryImage[] }) {
           )}
         </RevealOnScroll>
       ))}
-    </RevealOnScroll>
+    </section>
   );
 }

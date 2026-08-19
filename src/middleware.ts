@@ -1,9 +1,14 @@
 import { getIronSession } from "iron-session";
 import { NextResponse, type NextRequest } from "next/server";
-import { getSessionOptions, type SessionData } from "@/lib/auth";
+import { getSessionOptions, type SessionData } from "@/lib/session";
 
 export async function middleware(request: NextRequest) {
-  const response = NextResponse.next();
+  const requestHeaders = new Headers(request.headers);
+  requestHeaders.set("x-pathname", request.nextUrl.pathname);
+
+  const response = NextResponse.next({
+    request: { headers: requestHeaders },
+  });
   const sessionOptions = getSessionOptions();
   const session = await getIronSession<SessionData>(
     request,
@@ -21,11 +26,6 @@ export async function middleware(request: NextRequest) {
   }
 
   if (pathname === "/admin") {
-    if (isLoggedIn) {
-      const url = request.nextUrl.clone();
-      url.pathname = "/admin/clients";
-      return NextResponse.redirect(url);
-    }
     return response;
   }
 

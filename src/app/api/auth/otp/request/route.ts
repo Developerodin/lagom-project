@@ -20,7 +20,7 @@ const HOUR_MAX = 5;
 
 const GENERIC_SUCCESS = {
   success: true,
-  message: "If login is available, a code has been sent to the studio email.",
+  message: "If a reset is available, a code has been sent to the studio email.",
 };
 
 export async function POST(request: Request) {
@@ -76,8 +76,8 @@ export async function POST(request: Request) {
     return NextResponse.json(
       {
         error: isConfigIssue
-          ? `Could not send login code: ${message}`
-          : "Could not send login code. Please try again later.",
+          ? `Could not send reset code: ${message}`
+          : "Could not send reset code. Please try again later.",
       },
       { status: 500 },
     );

@@ -8,8 +8,9 @@ export default function AdminSettingsPage() {
       </div>
 
       <p style={{ maxWidth: 520, lineHeight: 1.6 }}>
-        Admin access uses email one-time codes sent to the studio inbox. There is
-        no saved password to manage here.
+        Sign in at <code>/admin</code> with the studio password. Use Forgot
+        password to receive an email code and create or replace it. The password
+        is stored as a hash; it cannot be viewed here.
       </p>
     </div>
   );

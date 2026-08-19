@@ -6,7 +6,7 @@
     "node": ">=20.9.0"
   },
   "scripts": {
-    "dev": "next dev",
+    "dev": "NODE_OPTIONS='--max-old-space-size=8192' next dev",
     "build": "prisma generate && NODE_OPTIONS='--max-old-space-size=8192' next build",
     "start": "node scripts/start.mjs",
     "lint": "eslint",
@@ -19,7 +19,8 @@
     "build:cta-collage": "tsx scripts/build-cta-collage.ts",
     "test:auth-e2e": "tsx --env-file=.env scripts/test-auth-e2e.ts",
     "test:auth-e2e:prod": "TEST_EXPECT_PRODUCTION=1 tsx --env-file=.env scripts/test-auth-e2e.ts",
-    "test:auth-e2e:deployed": "./scripts/test-auth-e2e-deployed.sh"
+    "test:auth-e2e:deployed": "./scripts/test-auth-e2e-deployed.sh",
+    "test:e2e": "playwright test"
   },
   "prisma": {
     "seed": "tsx prisma/seed.ts"
@@ -36,16 +37,17 @@
     "prisma": "^6.19.3",
     "react": "19.2.4",
     "react-dom": "19.2.4",
-    "resend": "^6.17.1"
+    "resend": "^6.17.1",
+    "sharp": "^0.34.5"
   },
   "devDependencies": {
+    "@playwright/test": "^1.62.1",
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "babel-plugin-react-compiler": "1.0.0",
     "eslint": "^9",
     "eslint-config-next": "16.2.9",
-    "sharp": "^0.34.5",
     "tsx": "^4.22.4",
     "typescript": "^5"
   }

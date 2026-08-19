@@ -6,7 +6,7 @@ import {
   recordOtpVerifyFailure,
   verifyOtp,
 } from "@/lib/admin-otp";
-import { getSession } from "@/lib/auth";
+import { getSession, grantPasswordReset } from "@/lib/auth";
 import {
   clearAttempts,
   getClientIp,
@@ -43,7 +43,7 @@ export async function POST(request: Request) {
   }
 
   if (typeof otp !== "string" || otp.trim().length === 0) {
-    return NextResponse.json({ error: "Login code is required." }, { status: 400 });
+    return NextResponse.json({ error: "Reset code is required." }, { status: 400 });
   }
 
   const normalizedOtp = otp.trim();
@@ -60,7 +60,7 @@ export async function POST(request: Request) {
       return NextResponse.json(
         {
           error:
-            "Too many incorrect codes. Request a new login code and try again.",
+            "Too many incorrect codes. Request a new code and try again.",
         },
         { status: 429 },
       );
@@ -75,8 +75,8 @@ export async function POST(request: Request) {
       {
         error:
           remaining > 0
-            ? `Invalid or expired login code. ${remaining} attempt(s) remaining.`
-            : "Invalid or expired login code.",
+            ? `Invalid or expired reset code. ${remaining} attempt(s) remaining.`
+            : "Invalid or expired reset code.",
       },
       { status: 401 },
     );
@@ -87,12 +87,12 @@ export async function POST(request: Request) {
     await clearAttempts(rateKey);
 
     const session = await getSession();
-    session.isLoggedIn = true;
+    await grantPasswordReset(session);
     await session.save();
   } catch (error) {
-    console.error("[otp/verify] Failed to create session:", error);
+    console.error("[otp/verify] Failed to start password reset:", error);
     return NextResponse.json(
-      { error: "Could not create session. Please try again." },
+      { error: "Could not start password reset. Please try again." },
       { status: 500 },
     );
   }

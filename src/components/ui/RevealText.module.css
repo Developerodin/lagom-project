@@ -27,6 +27,11 @@
   width: 0.28em;
 }
 
+.keepTogether {
+  display: inline;
+  white-space: nowrap;
+}
+
 .lineWrapper {
   display: block;
   overflow: hidden;
