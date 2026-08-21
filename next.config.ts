@@ -11,6 +11,20 @@ const nextConfig: NextConfig = {
   outputFileTracingExcludes: {
     "*": ["./uploads/**/*"],
   },
+  experimental: {
+    // Let the proxy pass full upload bodies (up to 55MB) so the route handler
+    // can validate and return a clean 400 instead of a mangled 500.
+    proxyClientMaxBodySize: "55mb",
+    // Turbopack 16.2 can leak multi-GB in long `next dev` sessions; keep these
+    // off so accidental `--turbo` runs do not grow an unbounded FS cache / HMR loop.
+    turbopackFileSystemCacheForDev: false,
+    turbopackServerFastRefresh: false,
+    // In development, disable disk persistence for the image LRU cache to
+    // prevent 0-byte files from poisoning the singleton after Ctrl+C.
+    ...(process.env.NODE_ENV === "development"
+      ? { isrFlushToDisk: false }
+      : {}),
+  },
   reactCompiler: true,
   images: {
     dangerouslyAllowSVG: true,
@@ -23,16 +37,6 @@ const nextConfig: NextConfig = {
     // Cache optimized images at the CDN edge for a year so repeat visits
     // in any region are served without re-optimization.
     minimumCacheTTL: 31536000,
-    remotePatterns: [
-      {
-        protocol: "https",
-        hostname: "*.public.blob.vercel-storage.com",
-      },
-      {
-        protocol: "https",
-        hostname: "*.blob.vercel-storage.com",
-      },
-    ],
   },
   async headers() {
     return [

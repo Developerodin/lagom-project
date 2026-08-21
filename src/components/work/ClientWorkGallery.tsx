@@ -1,4 +1,4 @@
-import Image from "next/image";
+import { CmsImage } from "@/components/ui/CmsImage";
 import { RevealOnScroll } from "@/components/ui/RevealOnScroll";
 import styles from "./ClientWorkGallery.module.css";
 
@@ -25,7 +25,7 @@ export function ClientWorkGallery({ images }: { images: GalleryImage[] }) {
           delay={index * 100}
         >
           {image.width && image.height ? (
-            <Image
+            <CmsImage
               src={image.imageUrl}
               alt={image.alt}
               width={image.width}

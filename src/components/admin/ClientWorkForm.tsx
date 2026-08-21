@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useId, useRef, useState, type FormEvent } from "react";
+import { adminUploadFile } from "@/lib/admin-upload";
 
 type GalleryItem = {
   key: string;
@@ -59,41 +60,8 @@ function slugify(value: string) {
     .replace(/^-+|-+$/g, "");
 }
 
-function readDimensions(
-  file: File,
-): Promise<{ width: number | null; height: number | null }> {
-  return new Promise((resolve) => {
-    const image = new window.Image();
-    const objectUrl = URL.createObjectURL(file);
-    image.onload = () => {
-      resolve({ width: image.naturalWidth, height: image.naturalHeight });
-      URL.revokeObjectURL(objectUrl);
-    };
-    image.onerror = () => {
-      resolve({ width: null, height: null });
-      URL.revokeObjectURL(objectUrl);
-    };
-    image.src = objectUrl;
-  });
-}
-
 async function uploadFile(file: File) {
-  const dimensions = await readDimensions(file);
-  const formData = new FormData();
-  formData.append("file", file);
-
-  const response = await fetch("/api/admin/upload", {
-    method: "POST",
-    body: formData,
-  });
-
-  if (!response.ok) {
-    const data = await response.json().catch(() => ({}));
-    throw new Error(data.error || "Upload failed.");
-  }
-
-  const { url } = await response.json();
-  return { url: url as string, ...dimensions };
+  return adminUploadFile(file);
 }
 
 export function ClientWorkForm({
@@ -506,7 +474,7 @@ export function ClientWorkForm({
         <div className="admin-uploader">
           <input
             type="file"
-            accept="image/jpeg,image/png,image/webp"
+            accept="image/jpeg,image/png,image/webp,image/svg+xml"
             onChange={(event) =>
               handleSingleUpload(event.target.files?.[0], setCardImage)
             }
@@ -514,7 +482,12 @@ export function ClientWorkForm({
           {cardImage ? (
             <div className="admin-uploader__preview">
               {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src={cardImage} alt="Card preview" />
+              <img
+                src={cardImage}
+                alt="Card preview"
+                loading="lazy"
+                decoding="async"
+              />
             </div>
           ) : null}
         </div>
@@ -537,7 +510,7 @@ export function ClientWorkForm({
         <div className="admin-uploader">
           <input
             type="file"
-            accept="image/jpeg,image/png,image/webp"
+            accept="image/jpeg,image/png,image/webp,image/svg+xml"
             onChange={(event) =>
               handleSingleUpload(event.target.files?.[0], setHeroImage)
             }
@@ -545,7 +518,12 @@ export function ClientWorkForm({
           {heroImage ? (
             <div className="admin-uploader__preview">
               {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src={heroImage} alt="Hero preview" />
+              <img
+                src={heroImage}
+                alt="Hero preview"
+                loading="lazy"
+                decoding="async"
+              />
             </div>
           ) : null}
         </div>
@@ -569,7 +547,7 @@ export function ClientWorkForm({
           <input
             ref={galleryInputRef}
             type="file"
-            accept="image/jpeg,image/png,image/webp"
+            accept="image/jpeg,image/png,image/webp,image/svg+xml"
             multiple
             onChange={(event) => handleGalleryUpload(event.target.files)}
           />
@@ -580,7 +558,12 @@ export function ClientWorkForm({
             {gallery.map((item, index) => (
               <div className="admin-gallery-item" key={item.key}>
                 {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img src={item.imageUrl} alt={item.alt || "Gallery image"} />
+                <img
+                  src={item.imageUrl}
+                  alt={item.alt || "Gallery image"}
+                  loading="lazy"
+                  decoding="async"
+                />
                 <div className="admin-gallery-item__body">
                   <input
                     type="text"

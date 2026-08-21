@@ -47,9 +47,15 @@ Push to ECR and deploy as an ECS service behind an **HTTPS** ALB with an ACM cer
 | `SESSION_SECRET` | Yes | ≥32 chars; pass as Docker build-arg **and** runtime env |
 | `RESEND_API_KEY` | Yes | Admin OTP login |
 | `EMAIL_FROM` | Yes | Resend sender |
-| `UPLOAD_DIR` | Yes* | Absolute path on a mounted volume, or migrate uploads to S3 |
+| `UPLOAD_DIR` | Yes | Absolute path on a mounted EBS/EFS volume (e.g. `/var/lagom/uploads`). |
 
-\* Ephemeral container disk is not suitable for durable uploads.
+Ephemeral container disk is not suitable for durable uploads. Mount a volume and point `UPLOAD_DIR` at it. S3 is optional later; disk is the current path.
+
+**Upload volume permissions:** the container runs as user `nextjs` (uid **1001**). The mounted `UPLOAD_DIR` must be writable by that user, or every admin upload returns 500.
+
+**Task memory:** the example Fargate task uses **1024 MB**, which is enough because uploads are transcoded to WebP (≤1920px) before they are stored — originals are never kept on disk. 2GB is nicer under concurrent traffic but not required for this design.
+
+**Leftover Vercel Blob URLs:** if any MySQL row still points at `*.blob.vercel-storage.com` (e.g. Whimsy Beauty gallery), re-upload that image in admin when convenient. The app renders those URLs unoptimized so the page does not crash, but the Blob host is no longer part of the stack.
 
 ### HTTPS
 

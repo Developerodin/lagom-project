@@ -1,8 +1,3 @@
-:global(html.site-cursor-none),
-:global(html.site-cursor-none *) {
-  cursor: none !important;
-}
-
 .cursor {
   position: fixed;
   top: 0;

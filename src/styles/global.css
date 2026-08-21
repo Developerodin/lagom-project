@@ -59,7 +59,7 @@
 
   /* Banner aspect ratios — preserve image proportions on mobile/tablet */
   --banner-aspect-ratio: 1750 / 851;
-  --about-banner-aspect-ratio: 1024 / 575;
+  --about-banner-aspect-ratio: 1200 / 628;
   --heading-content-spacing: var(--space-72);
   --grid-cta-spacing: var(--space-72);
   --paragraph-button-spacing: var(--space-48);
@@ -115,6 +115,13 @@ html {
   -webkit-text-size-adjust: 100%;
   overflow-x: clip;
   max-width: 100%;
+}
+
+/* Custom cursor: hide the OS pointer. Lives here (not a CSS module) so
+   webpack's pure-selector rule does not reject a fully global selector. */
+html.site-cursor-none,
+html.site-cursor-none * {
+  cursor: none !important;
 }
 
 body {

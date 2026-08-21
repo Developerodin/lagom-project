@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState, useCallback } from "react";
-import Image from "next/image";
+import { CmsImage } from "@/components/ui/CmsImage";
 import styles from "./TestimonialsSection.module.css";
 
 type Testimonial = {
@@ -76,7 +76,7 @@ export function TestimonialsCarousel({ testimonials }: TestimonialsCarouselProps
             style={{ flex: `0 0 ${100 / visibleCount}%` }}
           >
             <article className={styles.card}>
-              <Image
+              <CmsImage
                 src={testimonial.bgImageUrl}
                 alt={testimonial.bgImageAlt || ""}
                 fill
@@ -94,7 +94,7 @@ export function TestimonialsCarousel({ testimonials }: TestimonialsCarouselProps
                 </blockquote>
 
                 <div className={styles.logoWrap}>
-                  <Image
+                  <CmsImage
                     src={testimonial.logoUrl}
                     alt={testimonial.logoAlt || testimonial.company || "Client logo"}
                     width={160}

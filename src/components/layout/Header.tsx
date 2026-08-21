@@ -67,6 +67,7 @@ export function Header() {
             width={428}
             height={252}
             className={styles.logoImage}
+            unoptimized
             priority
             fetchPriority="high"
             loading="eager"

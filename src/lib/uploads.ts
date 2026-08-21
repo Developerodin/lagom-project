@@ -1,25 +1,32 @@
 import { mkdir, rm, writeFile } from "node:fs/promises";
 import { randomBytes } from "node:crypto";
 import path from "node:path";
-import { del, put } from "@vercel/blob";
+import sharp from "sharp";
 import { env } from "@/lib/env";
 
-const ALLOWED_TYPES = new Map<string, string>([
+export const ALLOWED_TYPES = new Map<string, string>([
   ["image/jpeg", "jpg"],
   ["image/png", "png"],
   ["image/webp", "webp"],
   ["image/svg+xml", "svg"],
 ]);
 
-const MAX_BYTES = 10 * 1024 * 1024;
+export const ALLOWED_CONTENT_TYPES = [...ALLOWED_TYPES.keys()];
+
+export const MAX_BYTES = 50 * 1024 * 1024;
 const LOCAL_URL_PREFIX = "/api/uploads/";
-const BLOB_HOST_MARKER = ".blob.vercel-storage.com";
+const MAX_LONG_EDGE = 1920;
+const WEBP_QUALITY = 82;
+/** Cap decode size so a pathological file cannot OOM the task. */
+const LIMIT_INPUT_PIXELS = 40_000_000;
 
 export class UploadError extends Error {}
 
-function useBlobStorage() {
-  return Boolean(env.blobReadWriteToken);
-}
+export type SaveUploadResult = {
+  url: string;
+  width: number | null;
+  height: number | null;
+};
 
 export function getUploadDir() {
   return path.resolve(env.uploadDir);
@@ -34,7 +41,16 @@ export function getUploadFilePath(filename: string) {
   return `${getUploadDir()}${path.sep}${safeName}`;
 }
 
-export async function saveUpload(file: File): Promise<{ url: string }> {
+function makeFilename(extension: string) {
+  return `${Date.now()}-${randomBytes(8).toString("hex")}.${extension}`;
+}
+
+/**
+ * Persist an admin upload. Raster images are resized to max 1920px and
+ * written as WebP; SVGs are stored as-is. Fail closed: never write the
+ * original if Sharp cannot process the raster.
+ */
+export async function saveUpload(file: File): Promise<SaveUploadResult> {
   const extension = ALLOWED_TYPES.get(file.type);
 
   if (!extension) {
@@ -42,52 +58,66 @@ export async function saveUpload(file: File): Promise<{ url: string }> {
   }
 
   if (file.size > MAX_BYTES) {
-    throw new UploadError("File is too large. Maximum size is 10MB.");
-  }
-
-  const filename = `${Date.now()}-${randomBytes(8).toString("hex")}.${extension}`;
-
-  if (useBlobStorage()) {
-    const blob = await put(`uploads/${filename}`, file, {
-      access: "public",
-      contentType: file.type,
-      token: env.blobReadWriteToken,
-    });
-    return { url: blob.url };
+    throw new UploadError("File is too large. Maximum size is 50MB.");
   }
 
   const dir = getUploadDir();
   await mkdir(dir, { recursive: true });
 
   const buffer = Buffer.from(await file.arrayBuffer());
-  await writeFile(getUploadFilePath(filename), buffer);
 
-  return { url: `${LOCAL_URL_PREFIX}${filename}` };
-}
-
-function isBlobUrl(url: string) {
-  try {
-    const parsed = new URL(url);
-    return parsed.hostname.endsWith(BLOB_HOST_MARKER);
-  } catch {
-    return false;
+  if (extension === "svg") {
+    const filename = makeFilename("svg");
+    await writeFile(getUploadFilePath(filename), buffer);
+    return {
+      url: `${LOCAL_URL_PREFIX}${filename}`,
+      width: null,
+      height: null,
+    };
   }
+
+  let processed: Buffer;
+  let width: number | null = null;
+  let height: number | null = null;
+
+  try {
+    const pipeline = sharp(buffer, {
+      failOn: "error",
+      limitInputPixels: LIMIT_INPUT_PIXELS,
+    })
+      .rotate()
+      .resize({
+        width: MAX_LONG_EDGE,
+        height: MAX_LONG_EDGE,
+        fit: "inside",
+        withoutEnlargement: true,
+      })
+      .webp({ quality: WEBP_QUALITY });
+
+    const { data, info } = await pipeline.toBuffer({ resolveWithObject: true });
+    processed = data;
+    width = info.width ?? null;
+    height = info.height ?? null;
+  } catch (error) {
+    const message =
+      error instanceof Error ? error.message : "Could not process image.";
+    throw new UploadError(
+      `Image could not be processed. Use a valid JPEG, PNG, or WebP under 50MB. (${message})`,
+    );
+  }
+
+  const filename = makeFilename("webp");
+  await writeFile(getUploadFilePath(filename), processed);
+
+  return {
+    url: `${LOCAL_URL_PREFIX}${filename}`,
+    width,
+    height,
+  };
 }
 
 export async function deleteUpload(url: string | null | undefined) {
   if (!url) {
-    return;
-  }
-
-  if (isBlobUrl(url)) {
-    if (!env.blobReadWriteToken) {
-      return;
-    }
-    try {
-      await del(url, { token: env.blobReadWriteToken });
-    } catch {
-      // Blob may already be gone; ignore.
-    }
     return;
   }
 

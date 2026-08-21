@@ -6,8 +6,8 @@
     "node": ">=20.9.0"
   },
   "scripts": {
-    "dev": "NODE_OPTIONS='--max-old-space-size=8192' next dev",
-    "build": "prisma generate && NODE_OPTIONS='--max-old-space-size=8192' next build",
+    "dev": "node scripts/clean-image-cache.mjs && next dev --webpack",
+    "build": "prisma generate && next build",
     "start": "node scripts/start.mjs",
     "lint": "eslint",
     "postinstall": "prisma generate",
@@ -20,7 +20,8 @@
     "test:auth-e2e": "tsx --env-file=.env scripts/test-auth-e2e.ts",
     "test:auth-e2e:prod": "TEST_EXPECT_PRODUCTION=1 tsx --env-file=.env scripts/test-auth-e2e.ts",
     "test:auth-e2e:deployed": "./scripts/test-auth-e2e-deployed.sh",
-    "test:e2e": "playwright test"
+    "test:e2e": "playwright test",
+    "test:large-upload": "tsx --env-file=.env scripts/test-large-upload.ts"
   },
   "prisma": {
     "seed": "tsx prisma/seed.ts"
@@ -28,7 +29,6 @@
   "dependencies": {
     "@gsap/react": "^2.1.2",
     "@prisma/client": "^6.19.3",
-    "@vercel/blob": "^2.6.1",
     "embla-carousel-autoplay": "^8.6.0",
     "embla-carousel-react": "^8.6.0",
     "gsap": "^3.15.0",

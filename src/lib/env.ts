@@ -44,29 +44,15 @@ function getDatabaseUrl(): string | undefined {
   return value;
 }
 
-function getBlobReadWriteToken(): string | undefined {
-  const value = process.env.BLOB_READ_WRITE_TOKEN?.trim();
-  const hasUploadDir = Boolean(process.env.UPLOAD_DIR?.trim());
-
-  // Vercel: prefer Blob. Hostinger/local disk: UPLOAD_DIR alone is enough.
-  if (isProduction && !value && !hasUploadDir) {
-    throw new Error(
-      "[env] BLOB_READ_WRITE_TOKEN is required on Vercel (or set UPLOAD_DIR for a persistent disk host).",
-    );
-  }
-
-  return value || undefined;
-}
-
 function getUploadDir(): string {
   const value = process.env.UPLOAD_DIR?.trim();
-  const hasBlob = Boolean(process.env.BLOB_READ_WRITE_TOKEN?.trim());
 
-  if (isProduction && !hasBlob) {
-    const dir = requireEnv("UPLOAD_DIR", value);
-    if (!dir.startsWith("/")) {
+  // Local + AWS ECS: persistent disk. Absolute path in production.
+  if (isProduction) {
+    const dir = value || "./uploads";
+    if (dir !== "./uploads" && !dir.startsWith("/")) {
       throw new Error(
-        "[env] UPLOAD_DIR must be an absolute path when not using Vercel Blob (e.g. /home/<user>/lagom-uploads).",
+        "[env] UPLOAD_DIR must be an absolute path in production (e.g. /var/lagom/uploads on ECS).",
       );
     }
     return dir;
@@ -88,9 +74,6 @@ export const env = {
   },
   get databaseUrl() {
     return getDatabaseUrl();
-  },
-  get blobReadWriteToken() {
-    return getBlobReadWriteToken();
   },
   get uploadDir() {
     return getUploadDir();

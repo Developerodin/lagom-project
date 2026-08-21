@@ -1,9 +1,10 @@
 "use client";
 
-import Image from "next/image";
 import Link from "next/link";
+import { CmsImage } from "@/components/ui/CmsImage";
 import { useRouter } from "next/navigation";
 import { useId, useRef, useState, type FormEvent } from "react";
+import { adminUploadFile } from "@/lib/admin-upload";
 
 export type TestimonialFormData = {
   id?: string;
@@ -24,21 +25,8 @@ type TestimonialFormProps = {
 };
 
 async function uploadFile(file: File) {
-  const formData = new FormData();
-  formData.append("file", file);
-
-  const response = await fetch("/api/admin/upload", {
-    method: "POST",
-    body: formData,
-  });
-
-  if (!response.ok) {
-    const data = await response.json().catch(() => ({}));
-    throw new Error(data.error || "Upload failed.");
-  }
-
-  const { url } = await response.json();
-  return url as string;
+  const result = await adminUploadFile(file);
+  return result.url;
 }
 
 export function TestimonialForm({ mode, initial }: TestimonialFormProps) {
@@ -192,7 +180,7 @@ export function TestimonialForm({ mode, initial }: TestimonialFormProps) {
           <input
             ref={logoInputRef}
             type="file"
-            accept="image/*"
+            accept="image/jpeg,image/png,image/webp,image/svg+xml"
             hidden
             onChange={(event) => {
               const file = event.target.files?.[0] ?? null;
@@ -212,10 +200,12 @@ export function TestimonialForm({ mode, initial }: TestimonialFormProps) {
           </div>
           {logoUrl ? (
             <div className="admin-image-preview admin-image-preview--logo">
-              <Image
+              <CmsImage
                 src={logoUrl}
                 alt={logoAlt || "Client logo preview"}
                 fill
+                loading="lazy"
+                decoding="async"
                 style={{ objectFit: "contain", padding: 8 }}
               />
             </div>
@@ -240,7 +230,7 @@ export function TestimonialForm({ mode, initial }: TestimonialFormProps) {
           <input
             ref={bgInputRef}
             type="file"
-            accept="image/*"
+            accept="image/jpeg,image/png,image/webp,image/svg+xml"
             hidden
             onChange={(event) => {
               const file = event.target.files?.[0] ?? null;
@@ -264,10 +254,12 @@ export function TestimonialForm({ mode, initial }: TestimonialFormProps) {
           </div>
           {bgImageUrl ? (
             <div className="admin-image-preview admin-image-preview--bg">
-              <Image
+              <CmsImage
                 src={bgImageUrl}
                 alt={bgImageAlt || "Background preview"}
                 fill
+                loading="lazy"
+                decoding="async"
                 style={{ objectFit: "cover" }}
               />
             </div>

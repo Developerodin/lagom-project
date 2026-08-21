@@ -1,17 +1,90 @@
 import { test, expect } from "@playwright/test";
 import path from "path";
 import fs from "fs";
+import {
+  PASSWORD_HASH_SETTING_KEY,
+  SESSION_VERSION_SETTING_KEY,
+  setPassword,
+} from "../src/lib/admin-password";
+import { prisma } from "../src/lib/prisma";
 
-const BASE_URL = "http://localhost:3000";
+const BASE_URL = process.env.TEST_BASE_URL || "http://localhost:3000";
 const TEST_SLUG = "e2e-test-work-" + Date.now();
-const TEST_PASSWORD = process.env.TEST_ADMIN_PASSWORD ?? "test-password";
+const TEST_PASSWORD = "playwright-upload-e2e-password";
 const FIXTURE_PATH = path.join(__dirname, "fixtures", "test-banner.jpg");
 
 let heroImageUrl: string;
 let createdWorkId: string;
 let sessionCookie: string;
+let didSnapshot = false;
+let snapshotPasswordHash: string | null = null;
+let snapshotSessionVersion: string | null = null;
+
+async function snapshotPasswordState() {
+  const [hashRow, versionRow] = await Promise.all([
+    prisma.setting.findUnique({ where: { key: PASSWORD_HASH_SETTING_KEY } }),
+    prisma.setting.findUnique({ where: { key: SESSION_VERSION_SETTING_KEY } }),
+  ]);
+  snapshotPasswordHash = hashRow?.value ?? null;
+  snapshotSessionVersion = versionRow?.value ?? null;
+  didSnapshot = true;
+}
+
+async function restorePasswordState() {
+  if (!didSnapshot) return;
+
+  if (snapshotPasswordHash) {
+    await prisma.setting.upsert({
+      where: { key: PASSWORD_HASH_SETTING_KEY },
+      create: { key: PASSWORD_HASH_SETTING_KEY, value: snapshotPasswordHash },
+      update: { value: snapshotPasswordHash },
+    });
+  } else {
+    await prisma.setting.deleteMany({
+      where: { key: PASSWORD_HASH_SETTING_KEY },
+    });
+  }
+
+  if (snapshotSessionVersion) {
+    await prisma.setting.upsert({
+      where: { key: SESSION_VERSION_SETTING_KEY },
+      create: {
+        key: SESSION_VERSION_SETTING_KEY,
+        value: snapshotSessionVersion,
+      },
+      update: { value: snapshotSessionVersion },
+    });
+  } else {
+    await prisma.setting.deleteMany({
+      where: { key: SESSION_VERSION_SETTING_KEY },
+    });
+  }
+}
 
 test.describe.serial("Work upload flow", () => {
+  test.beforeAll(async () => {
+    if (!fs.existsSync(FIXTURE_PATH)) {
+      throw new Error(
+        `Missing fixture at ${FIXTURE_PATH}. Generate a small JPEG there first.`,
+      );
+    }
+    await snapshotPasswordState();
+    await setPassword(TEST_PASSWORD);
+  });
+
+  test.afterAll(async ({ request }) => {
+    try {
+      if (createdWorkId && sessionCookie) {
+        await request.delete(`${BASE_URL}/api/admin/clients/${createdWorkId}`, {
+          headers: { cookie: sessionCookie },
+        });
+      }
+    } finally {
+      await restorePasswordState();
+      await prisma.$disconnect();
+    }
+  });
+
   test("1 - authenticate as admin", async ({ request }) => {
     const res = await request.post(`${BASE_URL}/api/auth/password/login`, {
       data: { password: TEST_PASSWORD },
@@ -30,10 +103,6 @@ test.describe.serial("Work upload flow", () => {
   test("2 - upload a banner image", async ({ request }) => {
     const fileBuffer = fs.readFileSync(FIXTURE_PATH);
 
-    const form = request.createFormData
-      ? undefined
-      : undefined;
-
     const res = await request.post(`${BASE_URL}/api/admin/upload`, {
       headers: { cookie: sessionCookie },
       multipart: {
@@ -48,6 +117,9 @@ test.describe.serial("Work upload flow", () => {
     expect(res.status()).toBe(200);
     const body = await res.json();
     expect(body.url).toBeTruthy();
+    expect(body.url).toMatch(/\.webp$/);
+    expect(typeof body.width).toBe("number");
+    expect(typeof body.height).toBe("number");
     heroImageUrl = body.url;
   });
 
@@ -95,6 +167,17 @@ test.describe.serial("Work upload flow", () => {
     const heroImg = page.locator('section[aria-label="E2E Test Work"] img');
     await expect(heroImg).toBeVisible({ timeout: 15_000 });
 
+    const heroSrc = await heroImg.getAttribute("src");
+    expect(heroSrc).toBeTruthy();
+    // Raster disk uploads should go through next/image optimizer.
+    expect(heroSrc!).toMatch(/\/_next\/image/);
+    expect(decodeURIComponent(heroSrc!)).toMatch(/\/api\/uploads\//);
+
+    const optimized = await page.request.get(
+      heroSrc!.startsWith("http") ? heroSrc! : `${BASE_URL}${heroSrc}`,
+    );
+    expect(optimized.status()).toBe(200);
+
     await page.evaluate(() => window.scrollBy(0, window.innerHeight * 2));
     await page.waitForTimeout(500);
 
@@ -102,13 +185,5 @@ test.describe.serial("Work upload flow", () => {
       'section[aria-label="Project gallery"] img',
     );
     await expect(galleryImg.first()).toBeVisible({ timeout: 15_000 });
-  });
-
-  test.afterAll(async ({ request }) => {
-    if (!createdWorkId) return;
-
-    await request.delete(`${BASE_URL}/api/admin/clients/${createdWorkId}`, {
-      headers: { cookie: sessionCookie },
-    });
   });
 });

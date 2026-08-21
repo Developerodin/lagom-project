@@ -1,9 +1,10 @@
 /**
- * Legacy local-disk upload reader.
- * New uploads go to Vercel Blob and return absolute Blob URLs.
- * This route remains only for older `/api/uploads/...` URLs written before Blob.
+ * Disk upload reader for local and AWS (UPLOAD_DIR).
+ * Streams the file instead of buffering the whole object in memory.
  */
-import { readFile } from "node:fs/promises";
+import { createReadStream } from "node:fs";
+import { stat } from "node:fs/promises";
+import { Readable } from "node:stream";
 import path from "node:path";
 import { getUploadFilePath } from "@/lib/uploads";
 
@@ -28,11 +29,21 @@ export async function GET(
     return new Response("Not found", { status: 404 });
   }
 
+  const filePath = getUploadFilePath(filename);
+
   try {
-    const data = await readFile(getUploadFilePath(filename));
-    return new Response(new Uint8Array(data), {
+    const fileStat = await stat(filePath);
+    if (!fileStat.isFile()) {
+      return new Response("Not found", { status: 404 });
+    }
+
+    const stream = createReadStream(filePath);
+    const body = Readable.toWeb(stream) as ReadableStream;
+
+    return new Response(body, {
       headers: {
         "Content-Type": contentType,
+        "Content-Length": String(fileStat.size),
         "Cache-Control": "public, max-age=31536000, immutable",
       },
     });
@@ -40,4 +51,3 @@ export async function GET(
     return new Response("Not found", { status: 404 });
   }
 }
-

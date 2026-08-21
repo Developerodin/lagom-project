@@ -1,4 +1,4 @@
-import Image from "next/image";
+import { CmsImage } from "@/components/ui/CmsImage";
 import styles from "./ClientWorkHero.module.css";
 
 type ClientWorkHeroProps = {
@@ -11,7 +11,7 @@ export function ClientWorkHero({ src, alt, title }: ClientWorkHeroProps) {
   return (
     <section className={styles.hero} aria-label={title}>
       <h1 className="sr-only">{title}</h1>
-      <Image
+      <CmsImage
         src={src}
         alt={alt}
         fill

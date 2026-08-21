@@ -1,5 +1,5 @@
-import Image from "next/image";
 import Link from "next/link";
+import { CmsImage } from "@/components/ui/CmsImage";
 import styles from "./WorkCard.module.css";
 
 export type WorkCardItem = {
@@ -33,7 +33,7 @@ export function WorkCard({
       data-work-card
     >
       <div className={styles.cardMedia}>
-        <Image
+        <CmsImage
           src={item.cardImage}
           alt={item.cardAlt}
           fill

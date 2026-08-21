@@ -39,5 +39,12 @@ export async function middleware(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/admin", "/admin/:path*", "/api/admin/:path*"],
+  matcher: [
+    "/admin",
+    "/admin/:path*",
+    // Match all /api/admin/* except /api/admin/upload — that route handles
+    // its own auth via requireAuth() and must not have its body cloned/buffered
+    // by the proxy (large file uploads would be truncated).
+    "/api/admin/((?!upload).)*",
+  ],
 };
